@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Lollipop.iml" filepath="$PROJECT_DIR$/Lollipop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Waffle_Android.iml" filepath="$PROJECT_DIR$/Waffle_Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
