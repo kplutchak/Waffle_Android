@@ -2,5 +2,19 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
+
+            <item name="colorPrimary">@color/primary</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+
+    <!-- colorAccent is used as the default value for colorControlActivated,
+         which is used to tint widgets -->
+    <item name="colorAccent">@color/accent</item>
+
+        <item name="android:navigationBarColor">@color/primary_dark</item>
+
+    <!-- You can also set colorControlNormal, colorControlActivated
+         colorControlHighlight, and colorSwitchThumbNormal. -->
     </style>
 </resources>
