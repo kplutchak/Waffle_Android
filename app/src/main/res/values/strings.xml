@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Waffle</string>
+    <string name="app_name"></string>
     <string name="action_settings">Settings</string>
     <string name="close">Close</string>
     <string name="open">Open</string>
@@ -11,8 +11,5 @@
     <color name="off_white">#fff7f7f7</color>
     <color name="grey">#ffefefef</color>
     <color name="accent">#ffe91e63</color>
-
-
-
 
 </resources>
