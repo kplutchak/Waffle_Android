@@ -14,6 +14,12 @@
         <item name="android:textColorPrimary">@color/off_white</item>
         <item name="android:navigationBarColor">@color/primary_dark</item>
 
+        <!-- enable window content transitions -->
+
+        <item name="android:windowContentTransitions">true</item>
+        <!-- specify enter and exit transitions -->
+
+
     <!-- You can also set colorControlNormal, colorControlActivated
          colorControlHighlight, and colorSwitchThumbNormal. -->
     </style>
