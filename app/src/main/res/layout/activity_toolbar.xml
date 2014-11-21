@@ -65,15 +65,18 @@
             android:layout_below="@id/toolbar"/>
 
         <Button
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:stateListAnimator="@anim/anim"
-            android:text="A"
-            android:textSize="25sp"
+            android:text="+"
+            android:paddingBottom="5dp"
+            android:textSize="35sp"
             android:gravity="center"
             android:background="@drawable/ripple"
             android:id="@+id/fab"
-            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="26dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end|top" />
 

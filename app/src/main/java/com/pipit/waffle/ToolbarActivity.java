@@ -96,6 +96,11 @@ public class ToolbarActivity extends ActionBarActivity {
     }
 
     public void switchFragments() {
+        if (current_fragment_id == 1) {
+            getFragmentManager().popBackStack();
+            this.current_fragment_id = 0;
+            return;
+        }
         if(current_fragment_id == 0)
         {
             // Create a new Fragment to be placed in the activity layout
@@ -106,11 +111,7 @@ public class ToolbarActivity extends ActionBarActivity {
             frag.setArguments(getIntent().getExtras());
 
 
-            if (current_fragment_id == 1) {
-                getFragmentManager().popBackStack();
-                this.current_fragment_id = 0;
-                return;
-            }
+
 
             current_fragment_id = 1;
             // Flip to the back.
@@ -145,6 +146,15 @@ public class ToolbarActivity extends ActionBarActivity {
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
 
