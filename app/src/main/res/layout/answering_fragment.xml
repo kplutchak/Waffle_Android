@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Creating Question"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:stateListAnimator="@anim/anim"
+            android:text="A"
+            android:paddingBottom="5dp"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="@drawable/ripple_brown"
+            android:id="@+id/answer_text"
+            android:layout_marginBottom="110dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:stateListAnimator="@anim/anim"
+            android:text="B"
+            android:paddingBottom="5dp"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="@drawable/ripple_brown"
+            android:id="@+id/answer_camera"
+            android:layout_below="@id/answer_text"
+            android:layout_marginBottom="110dp"
+            android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:stateListAnimator="@anim/anim"
+                android:text="C"
+                android:paddingBottom="5dp"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:background="@drawable/ripple_brown"
+                android:id="@+id/answer_voice"
+                android:layout_below="@id/answer_camera"
+                android:layout_marginBottom="10dp"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+</LinearLayout>

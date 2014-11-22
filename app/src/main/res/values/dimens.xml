@@ -6,6 +6,7 @@
 
     <dimen name="fab_size">50dp</dimen>
     <dimen name="profile_size">70dp</dimen>
+    <dimen name="button_answering_size">60dp</dimen>
 
     <dimen name="button_elevation">8dp</dimen>
     <dimen name="button_press_elevation">16dp</dimen>
