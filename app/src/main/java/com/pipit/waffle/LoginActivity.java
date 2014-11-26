@@ -9,6 +9,7 @@ import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 
 /**
  * Created by Kyle on 11/18/2014.
@@ -27,7 +28,7 @@ public class LoginActivity extends Activity {
 
 
 
-        Button login = (Button) findViewById(R.id.login_button);
+        ImageView login = (ImageView) findViewById(R.id.fb_test_login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, ToolbarActivity.class);

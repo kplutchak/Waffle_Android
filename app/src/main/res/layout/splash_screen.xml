@@ -2,29 +2,57 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary">
+    android:background="@drawable/sunset_3_cropped">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/dick_icon"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/splash_title"
-        android:layout_centerInParent="true"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="155dp"
         android:paddingBottom="200dp"
         android:text="@string/true_name"
-        android:textSize="30dp"
+        android:textSize="60sp"
         android:textColor="@color/off_white"
        />
 
-    <Button
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/login_button"
-        android:layout_below="@+id/splash_title"
+
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/dick_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="64dp"
+        android:layout_marginLeft="32dp"/>
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/googleplus_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="64dp"
+        android:layout_marginRight="32dp"/>
+
+    <ImageView
+        android:id="@+id/fb_test_login"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/facebook_icon"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:background="@color/primary_dark"/>
-
+        android:layout_marginBottom="64dp"
+        android:layout_marginRight="32dp"/>
 
 </RelativeLayout>

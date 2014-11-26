@@ -133,6 +133,8 @@ public class ModeSelectionFragment extends Fragment implements SpringListener {
                         });
                         //anim.setFillAfter(true);
                         anim.setFillEnabled(true);
+
+                        // magical custom formula for creating appropriate slide speeds varying by travel distance
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
