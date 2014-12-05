@@ -1,5 +1,6 @@
 package com.pipit.waffle;
 
+import android.app.FragmentManager;
 import android.graphics.Outline;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -7,20 +8,15 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
-
-import com.pipit.waffle.R;
 
 
 public class ToolbarActivity extends ActionBarActivity {
     private ActionBarDrawerToggle toggle;
-    private int current_fragment_id;
+    public int current_fragment_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,7 @@ public class ToolbarActivity extends ActionBarActivity {
             }
 
             // Create a new Fragment to be placed in the activity layout
-            ModeSelectionFragment firstFragment = new ModeSelectionFragment();
+            AnsweringPictureFragment firstFragment = new AnsweringPictureFragment();
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
@@ -101,10 +97,17 @@ public class ToolbarActivity extends ActionBarActivity {
             this.current_fragment_id = 0;
             return;
         }
+
+        if (current_fragment_id == 2) {
+            getFragmentManager().popBackStack(getFragmentManager().getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            this.current_fragment_id = 0;
+            return;
+        }
+
         if(current_fragment_id == 0)
         {
             // Create a new Fragment to be placed in the activity layout
-            AnsweringFragment frag = new AnsweringFragment();
+            QuestionCreationModeFragment frag = new QuestionCreationModeFragment();
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments

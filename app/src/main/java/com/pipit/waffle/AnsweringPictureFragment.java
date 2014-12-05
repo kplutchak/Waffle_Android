@@ -29,7 +29,7 @@ import com.facebook.rebound.SpringSystem;
 /**
  * Created by Kyle on 11/19/2014.
  */
-public class ModeSelectionFragment extends Fragment implements SpringListener {
+public class AnsweringPictureFragment extends Fragment implements SpringListener {
 
     private static double TENSION = 800;
     private static double DAMPER = 20; //friction

@@ -12,7 +12,7 @@ import android.widget.Button;
 /**
  * Created by Kyle on 11/19/2014.
  */
-public class AnsweringFragment extends Fragment {
+public class QuestionCreationModeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +34,22 @@ public class AnsweringFragment extends Fragment {
         fab.setOutlineProvider(viewOutlineProvider);
 
         fab.setClipToOutline(true);
+
+        // press behaivor
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ToolbarActivity) getActivity()).current_fragment_id = 2;
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, Camera2BasicFragment.newInstance()).addToBackStack(null)
+                        .commit();
+            }
+        });
+
+
+
+
 
         Button fab2 = (Button) v.findViewById(R.id.answer_camera);
 

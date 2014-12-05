@@ -9,7 +9,7 @@
         android:layout_height="100dp"
         android:src="@drawable/dick_icon"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:layout_centerHorizontal="true"/>
 
     <TextView
@@ -18,7 +18,7 @@
         android:id="@+id/splash_title"
 
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="155dp"
+        android:layout_marginTop="205dp"
         android:paddingBottom="200dp"
         android:text="@string/true_name"
         android:textSize="60sp"
