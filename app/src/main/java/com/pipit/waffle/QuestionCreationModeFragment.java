@@ -42,10 +42,8 @@ public class QuestionCreationModeFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ToolbarActivity) getActivity()).current_fragment_id = 2;
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, Camera2BasicFragment.newInstance()).addToBackStack(null)
-                        .commit();
+                Intent intent = new Intent(getActivity(), CameraActivity.class);
+                startActivity(intent);
 
             }
         });
