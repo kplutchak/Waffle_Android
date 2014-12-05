@@ -1,8 +1,10 @@
 package com.pipit.waffle;
 
+import android.content.Intent;
 import android.graphics.Outline;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.internal.app.ToolbarActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,7 @@ public class QuestionCreationModeFragment extends Fragment {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, Camera2BasicFragment.newInstance()).addToBackStack(null)
                         .commit();
+
             }
         });
 
