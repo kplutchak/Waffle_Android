@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     >
 
+
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +20,7 @@
             android:textSize="30sp"
             android:gravity="center"
             android:background="@drawable/ripple_brown"
-            android:id="@+id/answering_button"
+            android:id="@+id/answer_text"
             android:layout_marginBottom="110dp"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true" />
@@ -32,8 +34,8 @@
             android:textSize="30sp"
             android:gravity="center"
             android:background="@drawable/ripple_brown"
-            android:id="@+id/question_button"
-            android:layout_below="@id/answering_button"
+            android:id="@+id/answer_camera"
+            android:layout_below="@id/answer_text"
             android:layout_marginBottom="110dp"
             android:layout_centerHorizontal="true" />
 
@@ -46,8 +48,8 @@
                 android:textSize="30sp"
                 android:gravity="center"
                 android:background="@drawable/ripple_brown"
-                android:id="@+id/me_button"
-                android:layout_below="@id/question_button"
+                android:id="@+id/answer_voice"
+                android:layout_below="@id/answer_camera"
                 android:layout_marginBottom="30dp"
 
                 android:layout_centerHorizontal="true" />

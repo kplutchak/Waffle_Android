@@ -1,25 +1,16 @@
 package com.pipit.waffle;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Outline;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -29,7 +20,7 @@ import com.facebook.rebound.SpringSystem;
 /**
  * Created by Kyle on 11/19/2014.
  */
-public class AnsweringPictureFragment extends Fragment implements SpringListener {
+public class AnsweringFragment extends Fragment implements SpringListener {
 
     private static double TENSION = 800;
     private static double DAMPER = 20; //friction
@@ -49,7 +40,7 @@ public class AnsweringPictureFragment extends Fragment implements SpringListener
         // Inflate the layout for this fragment
         // Outline
 
-        View v = inflater.inflate(R.layout.mode_selection_fragment, container, false);
+        View v = inflater.inflate(R.layout.answering_fragment, container, false);
 
         mImageToAnimate = (CardView) v.findViewById(R.id.card_view);
         mImageToAnimate2 = (CardView) v.findViewById(R.id.card_view2);
@@ -143,11 +134,6 @@ public class AnsweringPictureFragment extends Fragment implements SpringListener
 
                         anim.setDuration(dur);
                         mImageToAnimate.startAnimation(anim);
-
-
-
-
-
                         break;
                     default:
                         break;

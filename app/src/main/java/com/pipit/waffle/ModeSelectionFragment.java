@@ -1,9 +1,9 @@
 package com.pipit.waffle;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Outline;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +13,16 @@ import android.widget.Button;
 /**
  * Created by Kyle on 11/19/2014.
  */
-public class QuestionCreationModeFragment extends Fragment {
+public class ModeSelectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.question_creation_mode_fragment, container, false);
+        View v = inflater.inflate(R.layout.mode_selection_fragment, container, false);
 
-        //Outline(s)
-        Button fab = (Button) v.findViewById(R.id.answer_text);
+        // Mode selection buttons
+        Button answering_button = (Button) v.findViewById(R.id.answering_button);
 
         ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
             @Override
@@ -32,26 +32,19 @@ public class QuestionCreationModeFragment extends Fragment {
                 outline.setOval(0, 0, size, size);
             }
         };
-        fab.setOutlineProvider(viewOutlineProvider);
+        answering_button.setOutlineProvider(viewOutlineProvider);
+        answering_button.setClipToOutline(true);
 
-        fab.setClipToOutline(true);
-
-        // press behaivor
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        // Click behavior: switch to Answering
+        answering_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CameraActivity.class);
-                startActivity(intent);
+                ((ToolbarActivity) getActivity()).switchFragments(0);
 
             }
         });
 
-
-
-
-
-        Button fab2 = (Button) v.findViewById(R.id.answer_camera);
+        Button question_button = (Button) v.findViewById(R.id.question_button);
 
         ViewOutlineProvider viewOutlineProvider2 = new ViewOutlineProvider() {
             @Override
@@ -61,11 +54,19 @@ public class QuestionCreationModeFragment extends Fragment {
                 outline.setOval(0, 0, size, size);
             }
         };
-        fab2.setOutlineProvider(viewOutlineProvider);
+        question_button.setOutlineProvider(viewOutlineProvider);
+        question_button.setClipToOutline(true);
 
-        fab2.setClipToOutline(true);
+        // Click behavior: switch to Question Creation
+        question_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ToolbarActivity) getActivity()).switchFragments(1);
 
-        Button fab3 = (Button) v.findViewById(R.id.answer_voice);
+            }
+        });
+
+        Button me_button = (Button) v.findViewById(R.id.me_button);
 
         ViewOutlineProvider viewOutlineProvider3 = new ViewOutlineProvider() {
             @Override
@@ -75,9 +76,9 @@ public class QuestionCreationModeFragment extends Fragment {
                 outline.setOval(0, 0, size, size);
             }
         };
-        fab3.setOutlineProvider(viewOutlineProvider);
+        me_button.setOutlineProvider(viewOutlineProvider);
+        me_button.setClipToOutline(true);
 
-        fab3.setClipToOutline(true);
 
         return v;
     }
