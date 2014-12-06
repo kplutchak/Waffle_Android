@@ -1,16 +1,22 @@
 package com.pipit.waffle;
 
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -44,6 +50,29 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
         mImageToAnimate = (CardView) v.findViewById(R.id.card_view);
         mImageToAnimate2 = (CardView) v.findViewById(R.id.card_view2);
+        // Set the CardViews' size and margins
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int width = size.x;
+        int height = size.y;
+
+        int margin = (int) (8 * getActivity().getResources().getDisplayMetrics().density);
+
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int dp_width = (int) ((width/displayMetrics.density)+0.5);
+
+        CardView.LayoutParams card_params = (CardView.LayoutParams) mImageToAnimate.getLayoutParams();
+        card_params.width = width - (2*margin);
+        card_params.setMargins(margin, margin, margin, margin);
+       // card_params.bottomMargin = margin;
+
+        mImageToAnimate.setLayoutParams(card_params);
+
+        CardView.LayoutParams card_params2 = (CardView.LayoutParams) mImageToAnimate2.getLayoutParams();
+        card_params2.width = width - (2*margin);
+        card_params2.setMargins(margin, 0, margin, margin);
+        mImageToAnimate2.setLayoutParams(card_params2);
 
 
 
@@ -87,7 +116,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // display.getMetrics(metrics);
                         //int width = metrics.widthPixels;
                         //int height = metrics.heightPixels;
-                        //if (!(newX < 20))
+                        if (!(newX < 5))
                             v.setX(newX);
                         //v.setY(newY);
                         break;
@@ -100,7 +129,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                         float xValue = v.getX();
                         float yValue = v.getY();
-
+                        if(xValue > (width/2))
+                            Log.d("AnsweringFragment", "Beyond threshold!");
                         float dist = px - xValue;
                         TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
                         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -169,8 +199,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // display.getMetrics(metrics);
                         //int width = metrics.widthPixels;
                         //int height = metrics.heightPixels;
-                        //if (!(newX < 20))
-                        v.setX(newX);
+                        if (!(newX < 5))
+                            v.setX(newX);
                         //v.setY(newY);
                         break;
                     case MotionEvent.ACTION_UP:

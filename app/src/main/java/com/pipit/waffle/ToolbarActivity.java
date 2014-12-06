@@ -85,8 +85,7 @@ public class ToolbarActivity extends ActionBarActivity {
             }
         });
 
-        // Set the current fragment ID
-        this.current_fragment_id = Constants.MODE_SELECTION_FRAGMENT_ID;
+
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -101,6 +100,9 @@ public class ToolbarActivity extends ActionBarActivity {
 
             // Create a new Fragment to be placed in the activity layout
             ModeSelectionFragment firstFragment = new ModeSelectionFragment();
+
+            // Set the current fragment ID
+            this.current_fragment_id = Constants.MODE_SELECTION_FRAGMENT_ID;
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
