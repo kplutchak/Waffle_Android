@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,9 +12,12 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -22,6 +26,9 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringListener;
 import com.facebook.rebound.SpringSystem;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Kyle on 11/19/2014.
@@ -35,6 +42,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
     private CardView mImageToAnimate2;
     private SpringSystem mSpringSystem;
     private Spring mSpring;
+
+    private VelocityTracker velocity = null;
 
     private boolean mMovedUp = false;
     private float mOrigY;
@@ -92,22 +101,58 @@ public class AnsweringFragment extends Fragment implements SpringListener {
         final View.OnTouchListener tl = new View.OnTouchListener() {
             public float offsetX;
             public float offsetY;
+            private ArrayList<Float> last_velocities = new ArrayList<Float>(3);
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int theAction = event.getAction();
+
+                int index = event.getActionIndex();
+                int action = event.getActionMasked();
+                int pointerId = event.getPointerId(index);
+
+
+
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
+                        last_velocities.clear();
+
+                        last_velocities.add(0, 0.0f);
+                        last_velocities.add(1, 0.0f);
+                        last_velocities.add(2, 0.0f);
+
+                        if(velocity == null) {
+                            // Retrieve a new VelocityTracker object to watch the velocity of a motion.
+                            velocity = VelocityTracker.obtain();
+                        }
+                        else {
+                            // Reset the velocity tracker back to its initial state.
+                            velocity.clear();
+                        }
 
                         mOrigX = v.getX();
                         mOrigY = v.getY();
                         offsetX = v.getX() - event.getRawX();
                         offsetY = v.getY() - event.getRawY();
+
+                        velocity.addMovement(event);
                         break;
                     case MotionEvent.ACTION_MOVE:
                         // Button moved
+                        velocity.addMovement(event);
+                        velocity.computeCurrentVelocity(1000);
+                        float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
+                                pointerId);
+                        Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
+                        // Remember the last 3 velocities
+                        last_velocities.set(2, last_velocities.get(1));
+                        last_velocities.set(1, last_velocities.get(0));
+                        last_velocities.set(0, current_vel);
+
+
+                        //Log.d("AnsweringFragment", Float.toString(x_velocity));
                         float newX = event.getRawX() + offsetX;
                         float newY = event.getRawY() + offsetY;
                         //WindowManager wm = (WindowManager) v.getSystemService(Context.WINDOW_SERVICE);
@@ -123,16 +168,31 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                     case MotionEvent.ACTION_UP:
                         // Button up
 
+                        // Currently, the options for a "choice selection" are:
+                        // 1) a velocity of 10,000 and at least 1/3 of the screen width in the positive
+                        // x direction on ACTION_UP
+                        // 2) at least 4/7 of the screen width in the positive x direction on
+                        // ACTION_UP
+                        // For case 2, we will (plan to - TODO) release the CardView at some set velocity
+                        // For case 1, we will (plan to - TODO) release the CardView at some velocity near
+                        // max_vel and slow it down as it approaches the right edge of the screen
 
+                        Float max_vel = Collections.max(last_velocities);
 
-
+                        Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                         float xValue = v.getX();
-                        float yValue = v.getY();
-                        if(xValue > (width/2))
-                            Log.d("AnsweringFragment", "Beyond threshold!");
+                        // float yValue = v.getY();
+
+
+                        if((xValue > ((float) width/3.0f)) && (max_vel > 12000))
+                            Log.d("AnsweringFragment", "Selected - beyond threshold 1 and achieved sufficient velocity!");
+                        if(xValue > ((4.0f/7.0f)*(float) width))
+                            Log.d("AnsweringFragment", "Selected - beyond threshold 2!");
+
                         float dist = px - xValue;
                         TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
+                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
                         anim.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -159,8 +219,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 150)
-                            dur = 150;
+                        if(dur < 200)
+                            dur = 200;
 
                         anim.setDuration(dur);
                         mImageToAnimate.startAnimation(anim);
@@ -215,6 +275,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                         float dist = px - xValue;
                         TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
+                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
                         anim.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -239,8 +300,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 150)
-                            dur = 150;
+                        if(dur < 200)
+                            dur = 200;
 
                         anim.setDuration(dur);
                         mImageToAnimate2.startAnimation(anim);
