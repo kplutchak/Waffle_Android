@@ -19,11 +19,7 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url "https://repo.commonsware.com.s3.amazonaws.com"
-    }
-}
+
 
 
 
@@ -34,7 +30,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.facebook.rebound:rebound:0.3.3'
-    compile 'com.commonsware.cwac:camera:0.6.+'
 
 
 }

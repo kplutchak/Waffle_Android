@@ -170,7 +170,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // Button up
 
                         // Currently, the options for a "choice selection" are:
-                        // 1) a velocity of 10,000 and at least 1/3 of the screen width in the positive
+                        // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
                         // x direction on ACTION_UP
                         // 2) at least 4/7 of the screen width in the positive x direction on
                         // ACTION_UP

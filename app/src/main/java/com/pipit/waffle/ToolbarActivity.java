@@ -71,12 +71,8 @@ public class ToolbarActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 switchFragments(-1);
-                /*
-                AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
-                        R.animator.card_flip_right_out);
-                set.setTarget(swap_icon);
-                set.start();
-                */
+
+                // Flip the swap_icon 360 degrees along the y-axis
                 Animator anim = AnimatorInflater
                         .loadAnimator(v.getContext(), R.animator.flip_on_vertical);
                 anim.setTarget(swap_icon);
