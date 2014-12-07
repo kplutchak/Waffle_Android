@@ -102,6 +102,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
             public float offsetX;
             public float offsetY;
             private ArrayList<Float> last_velocities = new ArrayList<Float>(3);
+            private boolean selected = false;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -184,13 +185,19 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         float xValue = v.getX();
                         // float yValue = v.getY();
 
+                        float dist;
+                        if(((xValue > ((float) width/2.0f)) && (max_vel > 12000)) ||
+                                (xValue > ((4.0f/7.0f)*(float) width)))  {
+                            Log.d("AnsweringFragment", "Selected! Released at " + Float.toString(xValue) + " pixels with a " +
+                                    "velocity of " + Float.toString(max_vel) + " pixels per second.");
+                            dist = 24 + width - xValue;
+                            selected = true;
+                        }
+                        else
+                        {
+                            dist = px - xValue;
+                        }
 
-                        if((xValue > ((float) width/3.0f)) && (max_vel > 12000))
-                            Log.d("AnsweringFragment", "Selected - beyond threshold 1 and achieved sufficient velocity!");
-                        if(xValue > ((4.0f/7.0f)*(float) width))
-                            Log.d("AnsweringFragment", "Selected - beyond threshold 2!");
-
-                        float dist = px - xValue;
                         TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
                         anim.setInterpolator(new DecelerateInterpolator(1.5f));
                         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -202,7 +209,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             @Override
                             public void onAnimationEnd(Animation animation) {
 
-                                mImageToAnimate.setX(px);
+                                if(selected)
+                                    mImageToAnimate.setX(width + px);
+                                else
+                                    mImageToAnimate.setX(px);
                                 //mSpring.setEndValue(100);
 
                             }
