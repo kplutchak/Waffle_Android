@@ -5,7 +5,7 @@ package com.pipit.waffle;
  */
 public class Constants {
 
-    public static int MODE_SELECTION_FRAGMENT_ID = 0;
+
     public static int ANSWERING_FRAGMENT_ID = 1;
     public static int QUESTION_CREATION_MODE_FRAGMENT_ID = 2;
 }

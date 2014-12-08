@@ -36,20 +36,17 @@ public class QuestionCreationModeFragment extends Fragment {
 
         fab.setClipToOutline(true);
 
-        // press behaivor
+        // Press behavior
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CameraActivity.class);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in, R.anim.stay);
 
             }
         });
-
-
-
-
 
         Button fab2 = (Button) v.findViewById(R.id.answer_camera);
 

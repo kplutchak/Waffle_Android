@@ -17,13 +17,21 @@ import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ToolbarActivity extends ActionBarActivity {
 
     private ActionBarDrawerToggle toggle;
     public int current_fragment_id;
+
+
+    private ListView drawerListView;
 
     /**
      * onCreate for ToolbarActivity
@@ -39,9 +47,23 @@ public class ToolbarActivity extends ActionBarActivity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.activity_toolbar);
 
+
         // Set the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Set the drawer's ListView
+        drawerListView = (ListView) findViewById(R.id.left_drawer_list);
+
+        List<String> items = new ArrayList<String>();
+
+        items.add(0, "Navigation Item One");
+        items.add(1, "Navigation Item Two");
+        items.add(2, "Navigation Item Three");
+        items.add(3, "Navigation Item Four");
+
+        drawerListView.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, items));
 
         // Set the drawer
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -50,7 +72,7 @@ public class ToolbarActivity extends ActionBarActivity {
         drawerLayout.setDrawerListener(toggle);
 
         // Create the buttons
-        Button picture = (Button) findViewById(R.id.fab);
+        final Button swap_icon = (Button) findViewById(R.id.fab);
 
         ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
             @Override
@@ -60,28 +82,99 @@ public class ToolbarActivity extends ActionBarActivity {
                 outline.setOval(0, 0, size, size);
             }
         };
-        picture.setOutlineProvider(viewOutlineProvider);
+        swap_icon.setOutlineProvider(viewOutlineProvider);
 
-        picture.setClipToOutline(true);
+        swap_icon.setClipToOutline(true);
+
+        final Button swap_icon_blue = (Button) findViewById(R.id.fab_blue);
+
+        swap_icon_blue.setOutlineProvider(viewOutlineProvider);
+
+        swap_icon_blue.setClipToOutline(true);
 
         // Set the swap icon
-        final ImageView swap_icon = (ImageView) findViewById(R.id.swap_icon);
 
         swap_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchFragments(-1);
 
-                // Flip the swap_icon 360 degrees along the y-axis
-                Animator anim = AnimatorInflater
-                        .loadAnimator(v.getContext(), R.animator.flip_on_vertical);
-                anim.setTarget(swap_icon);
-                anim.start();
+                if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID) {
+                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_right_in);
+                    set.setTarget(swap_icon_blue);
 
+                    AnimatorSet set2 = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_right_out);
+
+                    set2.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            toolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    set2.setTarget(swap_icon);
+
+                    set.start();
+                    set2.start();
+
+                }
+                if(current_fragment_id == Constants.QUESTION_CREATION_MODE_FRAGMENT_ID)
+                {
+                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_left_in);
+                    set.setTarget(swap_icon);
+
+                    AnimatorSet set2 = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_left_out);
+
+                    set2.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+
+                    set2.setTarget(swap_icon_blue);
+
+
+
+                    set.start();
+                    set2.start();
+
+                }
+                switchFragments();
             }
         });
-
-
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -95,10 +188,10 @@ public class ToolbarActivity extends ActionBarActivity {
             }
 
             // Create a new Fragment to be placed in the activity layout
-            ModeSelectionFragment firstFragment = new ModeSelectionFragment();
+            AnsweringFragment firstFragment = new AnsweringFragment();
 
             // Set the current fragment ID
-            this.current_fragment_id = Constants.MODE_SELECTION_FRAGMENT_ID;
+            this.current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
@@ -121,11 +214,8 @@ public class ToolbarActivity extends ActionBarActivity {
      * switchFragments is called when we hit the "toggle mode" button in the upper left and when
      * we select a mode in ModeSelectionFragment
      *
-     * @param key - Used to determine what fragment to switch to if we are in ModeSelectionFragment
-     *              A key value of 0 will send us to AnsweringFragment
-     *              A key value of 1 will send us to QuestionCreationModeFragment
      */
-    public void switchFragments(int key) {
+    public void switchFragments() {
 
         //  If currently answering questions or in the initial question creation screen, a call to
         // switchFragments will cause answering -> question creation and question creation -> answering
@@ -148,9 +238,10 @@ public class ToolbarActivity extends ActionBarActivity {
                             // rotations when switching to the back of the card, as well as animator
                             // resources representing rotations when flipping back to the front (e.g. when
                             // the system Back button is pressed).
-                    .setCustomAnimations(
-                            R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+                    .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
                             R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+
+
 
                             // Replace any fragments currently in the container view with a fragment
                             // representing the next page (indicated by the just-incremented currentPage
@@ -187,8 +278,8 @@ public class ToolbarActivity extends ActionBarActivity {
                             // resources representing rotations when flipping back to the front (e.g. when
                             // the system Back button is pressed).
                     .setCustomAnimations(
-                            R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-                            R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+                            R.animator.card_flip_left_in, R.animator.card_flip_left_out,
+                            R.animator.card_flip_right_in, R.animator.card_flip_right_out)
 
                             // Replace any fragments currently in the container view with a fragment
                             // representing the next page (indicated by the just-incremented currentPage
@@ -204,91 +295,6 @@ public class ToolbarActivity extends ActionBarActivity {
             this.current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
             return;
         }
-
-
-        // If the current fragment is ModeSelectionFragment, then use @key to determine what
-        // fragment to enter
-        if(current_fragment_id == 0)
-        {
-            // Create a new Fragment to be placed in the activity layout
-
-            if(key == 1) {
-                QuestionCreationModeFragment frag = new QuestionCreationModeFragment();
-
-                // In case this activity was started with special instructions from an
-                // Intent, pass the Intent's extras to the fragment as arguments
-                frag.setArguments(getIntent().getExtras());
-
-                current_fragment_id = Constants.QUESTION_CREATION_MODE_FRAGMENT_ID;
-                // Flip to the back.
-
-                // Create and commit a new fragment transaction that adds the fragment for the back of
-                // the card, uses custom animations, and is part of the fragment manager's back stack.
-
-                getFragmentManager()
-                        .beginTransaction()
-
-                                // Replace the default fragment animations with animator resources representing
-                                // rotations when switching to the back of the card, as well as animator
-                                // resources representing rotations when flipping back to the front (e.g. when
-                                // the system Back button is pressed).
-                        .setCustomAnimations(
-                                R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-                                R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-
-                                // Replace any fragments currently in the container view with a fragment
-                                // representing the next page (indicated by the just-incremented currentPage
-                                // variable).
-                        .replace(R.id.fragment_container, frag)
-
-                                // Add this transaction to the back stack, allowing users to press Back
-                                // to get to the front of the card.
-                        .addToBackStack(null)
-
-                                // Commit the transaction.
-                        .commit();
-            }
-            else if(key == 0) {
-                AnsweringFragment frag = new AnsweringFragment();
-
-                // In case this activity was started with special instructions from an
-                // Intent, pass the Intent's extras to the fragment as arguments
-                frag.setArguments(getIntent().getExtras());
-
-                current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
-                // Flip to the back.
-
-                // Create and commit a new fragment transaction that adds the fragment for the back of
-                // the card, uses custom animations, and is part of the fragment manager's back stack.
-
-                getFragmentManager()
-                        .beginTransaction()
-
-                                // Replace the default fragment animations with animator resources representing
-                                // rotations when switching to the back of the card, as well as animator
-                                // resources representing rotations when flipping back to the front (e.g. when
-                                // the system Back button is pressed).
-                        .setCustomAnimations(
-                                R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-                                R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-
-                                // Replace any fragments currently in the container view with a fragment
-                                // representing the next page (indicated by the just-incremented currentPage
-                                // variable).
-                        .replace(R.id.fragment_container, frag)
-
-                                // Add this transaction to the back stack, allowing users to press Back
-                                // to get to the front of the card.
-                        .addToBackStack(null)
-
-                                // Commit the transaction.
-                        .commit();
-            }
-
-        }
-
-
-
 
     }
 

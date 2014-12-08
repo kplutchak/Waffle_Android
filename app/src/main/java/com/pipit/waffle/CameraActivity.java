@@ -206,6 +206,12 @@ public class CameraActivity extends Activity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.stay, R.anim.slide_out);
+    }
 }
 
 

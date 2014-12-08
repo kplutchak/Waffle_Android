@@ -7,9 +7,10 @@
     <string name="close">Close</string>
     <string name="open">Open</string>
 
-    <color name="primary">#ff86674a</color>
+    <color name="primary">#ff0288d1</color>
+    <color name="primary_secondary">#ff42a5f5</color>
     <color name="dark_brown">#ff6B523B</color>
-    <color name="primary_dark">#ff262626</color>
+    <color name="primary_dark">#ff1e1e1e</color>
     <color name="off_white">#fff7f7f7</color>
     <color name="grey">#ffefefef</color>
     <color name="accent">#ffe91e63</color>

@@ -19,12 +19,7 @@
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 >
 
-                <ImageView
-                    android:id="@+id/swap_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/dick_icon"
-                    />
+
 
 
             </android.support.v7.widget.Toolbar>
@@ -53,6 +48,13 @@
                     android:layout_width="match_parent"
                     android:layout_gravity="start"
                     android:id="@+id/navigation_drawer">
+
+                    <ListView android:id="@+id/left_drawer_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:choiceMode="singleChoice"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="0dp"/>
                 </RelativeLayout>
 
             </android.support.v4.widget.DrawerLayout>
@@ -65,13 +67,31 @@
             android:background="@drawable/toolbar_dropshadow"
             android:layout_below="@id/toolbar"/>
 
+
         <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:stateListAnimator="@anim/anim"
-            android:text="Profile"
+            android:text="A"
             android:paddingBottom="5dp"
-            android:textSize="10sp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@drawable/ripple_blue"
+            android:id="@+id/fab_blue"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="26dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end|top" />
+
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:stateListAnimator="@anim/anim"
+            android:text="A"
+            android:paddingBottom="5dp"
+            android:textSize="20sp"
             android:gravity="center"
             android:background="@drawable/ripple"
             android:id="@+id/fab"

@@ -9,12 +9,5 @@
             android:valueTo="@dimen/button_press_elevation"
             android:valueType="floatType" />
     </item>
-    <item>
-        <objectAnimator
-            android:duration="@android:integer/config_shortAnimTime"
-            android:propertyName="translationZ"
-            android:valueFrom="@dimen/button_press_elevation"
-            android:valueTo="4dp"
-            android:valueType="floatType" />
-    </item>
+
 </selector>
