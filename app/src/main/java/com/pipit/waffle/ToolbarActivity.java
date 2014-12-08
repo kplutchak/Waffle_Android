@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.FragmentManager;
 import android.graphics.Outline;
+import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -114,7 +116,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            toolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+
                             swap_icon.setClickable(false);
                         }
 
@@ -130,8 +132,13 @@ public class ToolbarActivity extends ActionBarActivity {
                     });
                     set2.setTarget(swap_icon);
 
+
+
                     set.start();
                     set2.start();
+
+                    TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+                    transition.startTransition(400);
 
                 }
                 if(current_fragment_id == Constants.QUESTION_CREATION_MODE_FRAGMENT_ID)
@@ -151,7 +158,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
+
 
                         }
 
@@ -198,7 +205,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            toolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+
                         }
 
                         @Override
@@ -234,7 +241,6 @@ public class ToolbarActivity extends ActionBarActivity {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
                             swap_icon.setClickable(true);
                         }
 
@@ -250,7 +256,8 @@ public class ToolbarActivity extends ActionBarActivity {
                     });
 
                     set2.setTarget(swap_icon_blue);
-
+                    TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+                    transition.reverseTransition(400);
                     set.start();
                     set2.start();
 
