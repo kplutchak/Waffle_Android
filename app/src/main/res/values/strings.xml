@@ -8,6 +8,7 @@
     <string name="open">Open</string>
 
     <color name="primary">#ff0288d1</color>
+    <color name="primary_blue_dark">#0D47A1</color>
     <color name="primary_secondary">#ff42a5f5</color>
     <color name="dark_brown">#ff6B523B</color>
     <color name="primary_dark">#ff1e1e1e</color>

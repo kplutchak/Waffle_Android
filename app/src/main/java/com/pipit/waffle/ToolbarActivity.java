@@ -115,6 +115,7 @@ public class ToolbarActivity extends ActionBarActivity {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             toolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+                            swap_icon.setClickable(false);
                         }
 
                         @Override
@@ -151,6 +152,7 @@ public class ToolbarActivity extends ActionBarActivity {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
+
                         }
 
                         @Override
@@ -167,6 +169,87 @@ public class ToolbarActivity extends ActionBarActivity {
                     set2.setTarget(swap_icon_blue);
 
 
+
+                    set.start();
+                    set2.start();
+
+                }
+                switchFragments();
+            }
+        });
+
+        swap_icon_blue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID) {
+                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_right_in);
+                    set.setTarget(swap_icon_blue);
+
+                    AnimatorSet set2 = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_right_out);
+
+                    set2.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            toolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    set2.setTarget(swap_icon);
+
+                    set.start();
+                    set2.start();
+
+                }
+                if(current_fragment_id == Constants.QUESTION_CREATION_MODE_FRAGMENT_ID)
+                {
+                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_left_in);
+                    set.setTarget(swap_icon);
+
+                    AnimatorSet set2 = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
+                            R.animator.card_flip_left_out);
+
+                    set2.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
+                            swap_icon.setClickable(true);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+
+                    set2.setTarget(swap_icon_blue);
 
                     set.start();
                     set2.start();
@@ -301,7 +384,7 @@ public class ToolbarActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
+
         } else {
             getFragmentManager().popBackStack();
         }
