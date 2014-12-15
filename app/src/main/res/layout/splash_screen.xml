@@ -22,8 +22,12 @@
         android:paddingBottom="200dp"
         android:text="@string/true_name"
         android:textSize="60sp"
+
         android:textColor="@color/off_white"
        />
+
+
+
 
 
 
