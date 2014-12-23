@@ -9,63 +9,72 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginEnd="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
-            android:layout_marginStart="50dp"
 
 >
-            
+
+            <ImageView
+                android:layout_margin="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/rounded_rectangle"
+                android:visibility="invisible"
+                android:id="@+id/rectangle_expanding"/>
+
+
             <FrameLayout
-                android:layout_width="500dp"
-                android:layout_height="120dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="30dp"
+                android:id="@+id/text_frame"
 
-                android:id="@+id/inval">
+                >
 
 
                 <ImageView
                     android:id="@+id/text_shadow"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
+                    android:layout_width="122dp"
+                    android:layout_height="122dp"
                     android:layout_gravity="center"
 
                     android:src="@drawable/test_transition"/>
 
                 <ImageView
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
                     android:layout_gravity="center"
+
                     android:src="@drawable/camera_hex2"
                     android:id="@+id/answer_text"
 
                      />
 
-
             </FrameLayout>
 
-
-
-
-
             <FrameLayout
-                android:layout_width="500dp"
-                android:layout_height="120dp"
-                android:layout_centerInParent="true">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/camera_frame"
+
+
+                >
 
 
                 <ImageView
                     android:id="@+id/camera_shadow"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
+                    android:layout_width="122dp"
+                    android:layout_height="122dp"
                     android:layout_gravity="center"
+
+
+
                     android:src="@drawable/test_transition"/>
 
                 <ImageView
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
 
                     android:layout_gravity="center"
                     android:src="@drawable/camera_hex2"
@@ -74,26 +83,29 @@
                     />
 
 
-
-            </FrameLayout>
+        </FrameLayout>
 
             <FrameLayout
-                android:layout_width="500dp"
-                android:layout_height="120dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/voice_frame"
+
+                >
+
 
                 <ImageView
                     android:id="@+id/voice_shadow"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
+                    android:layout_width="122dp"
+                    android:layout_height="122dp"
                     android:layout_gravity="center"
                     android:src="@drawable/test_transition"/>
 
                 <ImageView
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
                     android:layout_gravity="center"
                     android:src="@drawable/camera_hex2"
                     android:id="@+id/answer_voice"
@@ -101,8 +113,8 @@
                     />
 
 
-
             </FrameLayout>
+
 
 
 

@@ -7,6 +7,7 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.TransitionDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,10 +15,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,11 +54,45 @@ public class QuestionCreationModeFragment extends Fragment {
 
 
         final ImageView text_shadow = (ImageView) v.findViewById(R.id.text_shadow);
+        final ImageView mic_shadow = (ImageView) v.findViewById(R.id.voice_shadow);
+        final ImageView camera_shadow = (ImageView) v.findViewById(R.id.camera_shadow);
+
+        final FrameLayout voice_frame = (FrameLayout) v.findViewById(R.id.voice_frame);
+        final FrameLayout camera_frame = (FrameLayout) v.findViewById(R.id.camera_frame);
+        final FrameLayout text_frame = (FrameLayout) v.findViewById(R.id.text_frame);
+
+
         text_shadow.setAlpha(0.2f);
         final Animation anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_up);
         final Animation anim_reverse = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_circle_reverse);
+        final Animation scale_frame = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_frame);
+
+        final Animation expand_box = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_from_corner);
+
+        expand_box.setFillAfter(true);
+
+        final ImageView box = (ImageView) v.findViewById(R.id.rectangle_expanding);
+
+        scale_frame.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                box.setVisibility(View.VISIBLE);
+                box.startAnimation(expand_box);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
 
+        scale_frame.setFillAfter(true);
         anim_reverse.setFillAfter(true);
         anim.setFillAfter(true); // Needed to keep the result of the animation
 
@@ -81,9 +120,10 @@ public class QuestionCreationModeFragment extends Fragment {
             }
         });
 
-        final ImageView camera_shadow = (ImageView) v.findViewById(R.id.camera_shadow);
+
         camera_shadow.setAlpha(0.2f);
 
+        final ImageView text_hex = (ImageView) v.findViewById(R.id.answer_camera);
 
         // anim_reverse.setInterpolator(new ReverseInterpolator());
 
@@ -103,13 +143,36 @@ public class QuestionCreationModeFragment extends Fragment {
                     camera_shadow.startAnimation(anim_reverse);
                     TransitionDrawable transition = (TransitionDrawable) camera_shadow.getDrawable();
                     transition.reverseTransition(500);
+                    TranslateAnimation ta = new TranslateAnimation(0, -25-camera_frame.getX(), 0, -25-camera_frame.getY());
+                    ta.setDuration(500);
+                    ta.setFillAfter(true);
+                    ta.setInterpolator(new DecelerateInterpolator());
+
+
+
+                    text_hex.startAnimation(scale_frame);
+
+                    AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+                    anim.setDuration(500);
+                    anim.setFillAfter(true);
+
+                    voice_frame.startAnimation(anim);
+                    text_frame.startAnimation(anim);
+
+
+
+
+                    //ScaleAnimation sa = new ScaleAnimation();
+
+                    camera_frame.startAnimation(ta);
+
                     return true;
                 }
                 return true;
             }
         });
 
-        final ImageView mic_shadow = (ImageView) v.findViewById(R.id.voice_shadow);
+
         mic_shadow.setAlpha(0.2f);
 
 
