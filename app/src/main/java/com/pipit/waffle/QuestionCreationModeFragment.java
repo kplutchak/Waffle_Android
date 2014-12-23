@@ -48,8 +48,8 @@ public class QuestionCreationModeFragment extends Fragment {
         //Outline(s)
 
 
-        final ImageView test_shadow = (ImageView) v.findViewById(R.id.test_button);
-        test_shadow.setAlpha(0.2f);
+        final ImageView text_shadow = (ImageView) v.findViewById(R.id.text_shadow);
+        text_shadow.setAlpha(0.2f);
         final Animation anim = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_up);
         final Animation anim_reverse = AnimationUtils.loadAnimation(v.getContext(), R.anim.scale_circle_reverse);
 
@@ -59,21 +59,77 @@ public class QuestionCreationModeFragment extends Fragment {
 
        // anim_reverse.setInterpolator(new ReverseInterpolator());
 
-        test_shadow.setOnTouchListener(new View.OnTouchListener() {
+        text_shadow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN)
                 {
-                    TransitionDrawable transition = (TransitionDrawable) test_shadow.getDrawable();
+                    TransitionDrawable transition = (TransitionDrawable) text_shadow.getDrawable();
                     transition.startTransition(500);
-                    test_shadow.startAnimation(anim);
+                    text_shadow.startAnimation(anim);
 
                     return true;
                 }
                 if(event.getAction() == MotionEvent.ACTION_UP)
                 {
-                    test_shadow.startAnimation(anim_reverse);
-                    TransitionDrawable transition = (TransitionDrawable) test_shadow.getDrawable();
+                    text_shadow.startAnimation(anim_reverse);
+                    TransitionDrawable transition = (TransitionDrawable) text_shadow.getDrawable();
+                    transition.reverseTransition(500);
+                    return true;
+                }
+                return true;
+            }
+        });
+
+        final ImageView camera_shadow = (ImageView) v.findViewById(R.id.camera_shadow);
+        camera_shadow.setAlpha(0.2f);
+
+
+        // anim_reverse.setInterpolator(new ReverseInterpolator());
+
+        camera_shadow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN)
+                {
+                    TransitionDrawable transition = (TransitionDrawable) camera_shadow.getDrawable();
+                    transition.startTransition(500);
+                    camera_shadow.startAnimation(anim);
+
+                    return true;
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP)
+                {
+                    camera_shadow.startAnimation(anim_reverse);
+                    TransitionDrawable transition = (TransitionDrawable) camera_shadow.getDrawable();
+                    transition.reverseTransition(500);
+                    return true;
+                }
+                return true;
+            }
+        });
+
+        final ImageView mic_shadow = (ImageView) v.findViewById(R.id.voice_shadow);
+        mic_shadow.setAlpha(0.2f);
+
+
+        // anim_reverse.setInterpolator(new ReverseInterpolator());
+
+        mic_shadow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN)
+                {
+                    TransitionDrawable transition = (TransitionDrawable) mic_shadow.getDrawable();
+                    transition.startTransition(500);
+                    mic_shadow.startAnimation(anim);
+
+                    return true;
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP)
+                {
+                    mic_shadow.startAnimation(anim_reverse);
+                    TransitionDrawable transition = (TransitionDrawable) mic_shadow.getDrawable();
                     transition.reverseTransition(500);
                     return true;
                 }
