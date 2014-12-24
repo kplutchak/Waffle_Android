@@ -138,6 +138,7 @@ public class ToolbarActivity extends ActionBarActivity {
                     set2.start();
 
                     TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+                    transition.reverseTransition(0);
                     transition.startTransition(400);
 
                 }
@@ -174,6 +175,11 @@ public class ToolbarActivity extends ActionBarActivity {
                     });
 
                     set2.setTarget(swap_icon_blue);
+                    TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+
+                    // ensure the transition occurred completely
+                    transition.startTransition(0);
+                    transition.reverseTransition(400);
 
 
 
@@ -219,6 +225,9 @@ public class ToolbarActivity extends ActionBarActivity {
                         }
                     });
                     set2.setTarget(swap_icon);
+                    TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+                    transition.reverseTransition(0);
+                    transition.startTransition(400);
 
                     set.start();
                     set2.start();
@@ -257,6 +266,9 @@ public class ToolbarActivity extends ActionBarActivity {
 
                     set2.setTarget(swap_icon_blue);
                     TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
+
+                    // ensure the transition occurred completely
+                    transition.startTransition(0);
                     transition.reverseTransition(400);
                     set.start();
                     set2.start();
@@ -265,6 +277,8 @@ public class ToolbarActivity extends ActionBarActivity {
                 switchFragments();
             }
         });
+
+
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
