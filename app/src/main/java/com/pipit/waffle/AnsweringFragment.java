@@ -337,9 +337,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                             }
                         });
-                        anim_other.setStartOffset(300);
-                        anim_in.setStartOffset(300);
-                        anim_in_right.setStartOffset(300);
+                        anim_other.setStartOffset(200);
+                        anim_in.setStartOffset(dur+200);
+                        anim_in_right.setStartOffset(dur+200);
                         cardViewTop1.startAnimation(anim);
                         if(selected) {
                             cardViewBot1.startAnimation(anim_other);
@@ -556,9 +556,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                             }
                         });
-                        anim_other.setStartOffset(300);
-                        anim_in.setStartOffset(300);
-                        anim_in_right.setStartOffset(300);
+                        anim_other.setStartOffset(200);
+                        anim_in.setStartOffset(dur+200);
+                        anim_in_right.setStartOffset(dur+200);
                         cardViewBot1.startAnimation(anim);
                         if(selected) {
                             cardViewTop1.startAnimation(anim_other);
