@@ -2,14 +2,12 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,57 +18,48 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 
-import com.facebook.rebound.Spring;
-import com.facebook.rebound.SpringConfig;
-import com.facebook.rebound.SpringListener;
-import com.facebook.rebound.SpringSystem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * Created by Kyle on 11/19/2014.
  */
-public class AnsweringFragment extends Fragment implements SpringListener {
+public class AnsweringFragment extends Fragment  {
 
     private static double TENSION = 800;
     private static double DAMPER = 20; //friction
 
+    // CardViews -  there are two CardViews for top, two for bottom. The two swap when a selection
+    // occurs
     private CardView cardViewTop1;
     private CardView cardViewBot1;
     private CardView cardViewTop2;
     private CardView cardViewBot2;
-    private SpringSystem mSpringSystem;
-    private Spring mSpring;
 
+    // ObjectAnimators that control the selection movement of each of the four cards. We use ObjectAnimator
+    // in this case instead of TranslateAnimation so we can control the objects themselves rather than the
+    // views
     private ObjectAnimator anim_bcard1;
     private ObjectAnimator anim_tcard1;
     private ObjectAnimator anim_bcard2;
     private ObjectAnimator anim_tcard2;
 
-    private boolean cardViewTop1_pressed = false;
-    private boolean cardViewBot1_pressed = false;
+    private float mOrigX;
+    private float mOrigY;
 
     private VelocityTracker velocity = null;
 
-    private boolean mMovedUp = false;
-    private float mOrigY;
-    private float mOrigX;
-
-    private float upper_card_x_pos;
-    private float lower_card_x_pos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // Outline
 
+        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.answering_fragment, container, false);
 
+        // Retrieve the CardViews
         cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
         cardViewBot1 = (CardView) v.findViewById(R.id.card_view2);
-
         cardViewTop2 = (CardView) v.findViewById(R.id.card_view_extra);
         cardViewBot2 = (CardView) v.findViewById(R.id.card_view2_extra);
 
@@ -79,14 +68,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
         Point size = new Point();
         display.getSize(size);
         final int width = size.x;
-        int height = size.y;
 
         int margin = (int) (8 * getActivity().getResources().getDisplayMetrics().density);
-
         int margin_left = (int) (1000 * getActivity().getResources().getDisplayMetrics().density);
-
         final int frame_width = (int) (2000 * getActivity().getResources().getDisplayMetrics().density);
-
 
         CardView.LayoutParams card_params = (CardView.LayoutParams) cardViewTop1.getLayoutParams();
         card_params.width = width - (2*margin);
@@ -94,7 +79,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
         final int starting_pos = margin_left - (card_params.width/2);
         final int ending_pos = margin_left + (card_params.width/2) + 24;
         final float ending_pos_left = margin_left - ((3.0f /2.0f) * (float) card_params.width) -24;
-
 
         card_params.setMargins(margin_left - (card_params.width/2), margin, margin, margin);
 
@@ -105,7 +89,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
         card_params2.setMargins(margin_left - (card_params.width / 2), 0, margin, margin);
 
         cardViewBot1.setLayoutParams(card_params2);
-
 
         CardView.LayoutParams card_params3 = (CardView.LayoutParams) cardViewTop2.getLayoutParams();
         card_params3.width = width - (2*margin);
@@ -119,24 +102,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
         cardViewBot2.setLayoutParams(card_params4);
 
-
-
-
-
-
-        mSpringSystem = SpringSystem.create();
-
-        mSpring = mSpringSystem.createSpring();
-        mSpring.addListener(this);
-
-        SpringConfig config = new SpringConfig(TENSION, DAMPER);
-        mSpring.setSpringConfig(config);
-
-        Resources r = getResources();
-        final float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, r.getDisplayMetrics());
-        //mSpring.setEndValue(cardViewTop1.getX());
-
-         //CardView movement
+         // CardView movement and touch behavior
         final View.OnTouchListener tl = new View.OnTouchListener() {
             public float offsetX;
             public float offsetY;
@@ -151,14 +117,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                 int action = event.getActionMasked();
                 int pointerId = event.getPointerId(index);
 
-
-
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
                         last_velocities.clear();
-
-                       // cardViewTop1_pressed = true;
 
                         selected = false;
 
@@ -180,8 +142,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         offsetX = v.getX() - event.getRawX();
                         offsetY = v.getY() - event.getRawY();
 
-
-
                         velocity.addMovement(event);
                         break;
                     case MotionEvent.ACTION_MOVE:
@@ -201,35 +161,25 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         //Log.d("AnsweringFragment", Float.toString(x_velocity));
                         float newX = event.getRawX() + offsetX;
                         float newY = event.getRawY() + offsetY;
-                        //WindowManager wm = (WindowManager) v.getSystemService(Context.WINDOW_SERVICE);
-                        // Display display = wm.getDefaultDisplay();
-                        //DisplayMetrics metrics = new DisplayMetrics();
-                        // display.getMetrics(metrics);
-                        //int width = metrics.widthPixels;
-                        //int height = metrics.heightPixels;
+
                         if (!(newX < starting_pos - 10))
                             v.setX(newX);
-
 
                         break;
                     case MotionEvent.ACTION_UP:
                         // Button up
 
                         // Currently, the options for a "choice selection" are:
-                        // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
+                        // 1) a velocity of 12,000 and at least 1/2 of the screen width in the positive
                         // x direction on ACTION_UP
-                        // 2) at least 4/7 of the screen width in the positive x direction on
+                        // 2) at least 51/100 of the screen width in the positive x direction on
                         // ACTION_UP
-                        // For case 2, we will (plan to - TODO) release the CardView at some set velocity
-                        // For case 1, we will (plan to - TODO) release the CardView at some velocity near
-                        // max_vel and slow it down as it approaches the right edge of the screen
 
                         Float max_vel = Collections.max(last_velocities);
 
                         Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                         float xValue = v.getX();
-                        // float yValue = v.getY();
 
                         float halfway = (float) frame_width / 2.0f;
 
@@ -249,19 +199,17 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                         }
 
-
-
-
                         TranslateAnimation anim_in = new TranslateAnimation(0, starting_pos - ending_pos_left, 0, 0);
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop2.setX(starting_pos);
+                                cardViewTop2.setEnabled(true);
                             }
 
                             @Override
@@ -277,12 +225,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in_right.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot2.setX(starting_pos);
+                                cardViewBot2.setEnabled(true);
                             }
 
                             @Override
@@ -307,22 +256,15 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_tcard1.addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-
+                                cardViewTop1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 if (selected) {
                                     cardViewTop1.setX(ending_pos);
-
-                                } else {
-                                    // cardViewTop1.setX(starting_pos);
-                                    //cardViewTop1_pressed = false;
                                 }
-
-                                //float frac = anim_tcard1.getAnimatedFraction();
-
-                                // cardViewTop1.setTranslationX(frac);
+                                cardViewTop1.setEnabled(true);
 
                             }
 
@@ -340,36 +282,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             }
                         });
 
-                        /*{
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-
-                                if (selected) {
-                                    cardViewTop1.setX(ending_pos);
-
-                                } else {
-                                    cardViewTop1.setX(starting_pos);
-                                    //cardViewTop1_pressed = false;
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        */
-                        //anim.setFillAfter(true);
-                        //anim_tcard1.
-                        //anim_tcard1.setFillEnabled(true);
                         anim_in.setFillEnabled(true);
                         anim_in_right.setFillEnabled(true);
                         anim_other.setFillEnabled(true);
@@ -381,8 +293,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         if(dur < 300)
                             dur = 300;
 
-
-
                         anim_tcard1.setDuration(dur);
                         anim_other.setDuration(dur);
                         anim_in.setDuration(dur);
@@ -391,13 +301,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot1.setX(ending_pos_left);
-                                //cardViewTop1_pressed = false;
+                                cardViewBot1.setEnabled(true);
                             }
 
 
@@ -439,42 +349,12 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                 int action = event.getActionMasked();
                 int pointerId = event.getPointerId(index);
 
-
-
-
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
                         last_velocities.clear();
 
                         selected = false;
-
-                       /* float store1 = cardViewTop1.getX();
-                        float store = cardViewTop1.getTranslationX();
-
-                        Transformation transformation = new Transformation();
-                        float[] matrix = new float[9];
-
-
-                        anim_tcard1.getTransformation(AnimationUtils.currentAnimationTimeMillis(), transformation);
-
-                        transformation.getMatrix().getValues(matrix);
-
-                        float ww = matrix[Matrix.MTRANS_X];
-
-                        long xx = AnimationUtils.currentAnimationTimeMillis();
-                        float toX = anim_tcard1.
-                        */
-
-
-
-
-
-
-
-                        //anim_tcard1 = ObjectAnimator.ofFloat(cardViewTop1, "translationX", 0, -200);
-
-                        //anim_tcard1.start();
 
                         last_velocities.add(0, 0.0f);
                         last_velocities.add(1, 0.0f);
@@ -509,19 +389,11 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         last_velocities.set(1, last_velocities.get(0));
                         last_velocities.set(0, current_vel);
 
-
                         //Log.d("AnsweringFragment", Float.toString(x_velocity));
                         float newX = event.getRawX() + offsetX;
                         float newY = event.getRawY() + offsetY;
-                        //WindowManager wm = (WindowManager) v.getSystemService(Context.WINDOW_SERVICE);
-                        // Display display = wm.getDefaultDisplay();
-                        //DisplayMetrics metrics = new DisplayMetrics();
-                        // display.getMetrics(metrics);
-                        //int width = metrics.widthPixels;
-                        //int height = metrics.heightPixels;
                         if (!(newX < starting_pos - 10))
                             v.setX(newX);
-                        //v.setY(newY);
                         break;
                     case MotionEvent.ACTION_UP:
                         // Button up
@@ -529,18 +401,14 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // Currently, the options for a "choice selection" are:
                         // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
                         // x direction on ACTION_UP
-                        // 2) at least 4/7 of the screen width in the positive x direction on
+                        // 2) at least 50/51 of the screen width in the positive x direction on
                         // ACTION_UP
-                        // For case 2, we will (plan to - TODO) release the CardView at some set velocity
-                        // For case 1, we will (plan to - TODO) release the CardView at some velocity near
-                        // max_vel and slow it down as it approaches the right edge of the screen
 
                         Float max_vel = Collections.max(last_velocities);
 
                         Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                         float xValue = v.getX();
-                        // float yValue = v.getY();
 
                         float halfway = (float) frame_width / 2.0f;
 
@@ -563,12 +431,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot2.setX(starting_pos);
+                                cardViewBot2.setEnabled(true);
                             }
 
                             @Override
@@ -584,12 +453,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in_right.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop2.setX(starting_pos);
+                                cardViewTop2.setEnabled(true);
                             }
 
                             @Override
@@ -614,7 +484,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_bcard1.addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-
+                                cardViewBot1.setEnabled(false);
                             }
 
                             @Override
@@ -622,14 +492,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                                 if (selected) {
                                     cardViewBot1.setX(ending_pos);
 
-                                } else {
-                                    // cardViewTop1.setX(starting_pos);
-                                    //cardViewTop1_pressed = false;
                                 }
 
-                                //float frac = anim_tcard1.getAnimatedFraction();
-
-                                // cardViewTop1.setTranslationX(frac);
+                                cardViewBot1.setEnabled(true);
 
                             }
 
@@ -665,12 +530,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop1.setX(ending_pos_left);
+                                cardViewTop1.setEnabled(true);
                             }
 
 
@@ -714,8 +580,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                 int action = event.getActionMasked();
                 int pointerId = event.getPointerId(index);
 
-
-
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
@@ -762,15 +626,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         //Log.d("AnsweringFragment", Float.toString(x_velocity));
                         float newX = event.getRawX() + offsetX;
                         float newY = event.getRawY() + offsetY;
-                        //WindowManager wm = (WindowManager) v.getSystemService(Context.WINDOW_SERVICE);
-                        // Display display = wm.getDefaultDisplay();
-                        //DisplayMetrics metrics = new DisplayMetrics();
-                        // display.getMetrics(metrics);
-                        //int width = metrics.widthPixels;
-                        //int height = metrics.heightPixels;
+
                         if (!(newX < starting_pos - 10))
                             v.setX(newX);
-
 
                         break;
                     case MotionEvent.ACTION_UP:
@@ -779,18 +637,14 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // Currently, the options for a "choice selection" are:
                         // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
                         // x direction on ACTION_UP
-                        // 2) at least 4/7 of the screen width in the positive x direction on
+                        // 2) at least 50/51 of the screen width in the positive x direction on
                         // ACTION_UP
-                        // For case 2, we will (plan to - TODO) release the CardView at some set velocity
-                        // For case 1, we will (plan to - TODO) release the CardView at some velocity near
-                        // max_vel and slow it down as it approaches the right edge of the screen
 
                         Float max_vel = Collections.max(last_velocities);
 
                         Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                         float xValue = v.getX();
-                        // float yValue = v.getY();
 
                         float halfway = (float) frame_width / 2.0f;
 
@@ -810,19 +664,17 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                         }
 
-
-
-
                         TranslateAnimation anim_in = new TranslateAnimation(0, starting_pos - ending_pos_left, 0, 0);
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop1.setX(starting_pos);
+                                cardViewTop1.setEnabled(true);
                             }
 
                             @Override
@@ -838,12 +690,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in_right.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot1.setX(starting_pos);
+                                cardViewBot1.setEnabled(true);
                             }
 
                             @Override
@@ -868,7 +721,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_tcard2.addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-
+                                cardViewTop2.setEnabled(false);
                             }
 
                             @Override
@@ -876,15 +729,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                                 if (selected) {
                                     cardViewTop2.setX(ending_pos);
 
-                                } else {
-                                    // cardViewTop1.setX(starting_pos);
-                                    //cardViewTop1_pressed = false;
                                 }
 
-                                //float frac = anim_tcard1.getAnimatedFraction();
-
-                                // cardViewTop1.setTranslationX(frac);
-
+                                cardViewTop2.setEnabled(true);
                             }
 
                             @Override
@@ -892,7 +739,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                                 float frac = anim_tcard2.getAnimatedFraction();
 
                                 cardViewTop2.setTranslationX(((1 - frac) * deltaX) + starting_pos);
-
                             }
 
                             @Override
@@ -919,12 +765,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot2.setX(ending_pos_left);
+                                cardViewBot2.setEnabled(true);
                             }
 
 
@@ -966,16 +813,12 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                 int action = event.getActionMasked();
                 int pointerId = event.getPointerId(index);
 
-
-
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
                         last_velocities.clear();
 
                         selected = false;
-
-
 
                         last_velocities.add(0, 0.0f);
                         last_velocities.add(1, 0.0f);
@@ -1014,15 +857,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         //Log.d("AnsweringFragment", Float.toString(x_velocity));
                         float newX = event.getRawX() + offsetX;
                         float newY = event.getRawY() + offsetY;
-                        //WindowManager wm = (WindowManager) v.getSystemService(Context.WINDOW_SERVICE);
-                        // Display display = wm.getDefaultDisplay();
-                        //DisplayMetrics metrics = new DisplayMetrics();
-                        // display.getMetrics(metrics);
-                        //int width = metrics.widthPixels;
-                        //int height = metrics.heightPixels;
+
                         if (!(newX < starting_pos - 10))
                             v.setX(newX);
-                        //v.setY(newY);
                         break;
                     case MotionEvent.ACTION_UP:
                         // Button up
@@ -1030,18 +867,14 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         // Currently, the options for a "choice selection" are:
                         // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
                         // x direction on ACTION_UP
-                        // 2) at least 4/7 of the screen width in the positive x direction on
+                        // 2) at least 50/51 of the screen width in the positive x direction on
                         // ACTION_UP
-                        // For case 2, we will (plan to - TODO) release the CardView at some set velocity
-                        // For case 1, we will (plan to - TODO) release the CardView at some velocity near
-                        // max_vel and slow it down as it approaches the right edge of the screen
 
                         Float max_vel = Collections.max(last_velocities);
 
                         Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                         float xValue = v.getX();
-                        // float yValue = v.getY();
 
                         float halfway = (float) frame_width / 2.0f;
 
@@ -1064,12 +897,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewBot1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot1.setX(starting_pos);
+                                cardViewBot1.setEnabled(true);
                             }
 
                             @Override
@@ -1085,12 +919,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_in_right.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop1.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop1.setX(starting_pos);
+                                cardViewTop1.setEnabled(true);
                             }
 
                             @Override
@@ -1115,7 +950,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_bcard2.addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-
+                                cardViewBot2.setEnabled(false);
                             }
 
                             @Override
@@ -1123,14 +958,9 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                                 if (selected) {
                                     cardViewBot2.setX(ending_pos);
 
-                                } else {
-                                    // cardViewTop1.setX(starting_pos);
-                                    //cardViewTop1_pressed = false;
                                 }
 
-                                //float frac = anim_tcard1.getAnimatedFraction();
-
-                                // cardViewTop1.setTranslationX(frac);
+                                cardViewBot2.setEnabled(true);
 
                             }
 
@@ -1139,7 +969,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                                 float frac = anim_bcard2.getAnimatedFraction();
 
                                 cardViewBot2.setTranslationX(((1 - frac) * deltaX) + starting_pos);
-
                             }
 
                             @Override
@@ -1166,12 +995,13 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
-
+                                cardViewTop2.setEnabled(false);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewTop2.setX(ending_pos_left);
+                                cardViewTop2.setEnabled(true);
                             }
 
 
@@ -1207,29 +1037,6 @@ public class AnsweringFragment extends Fragment implements SpringListener {
         cardViewBot2.setOnTouchListener(tl4);
 
         return v;
-    }
-
-
-    @Override
-    public void onSpringUpdate(Spring spring) {
-        float value = (float) spring.getCurrentValue();
-
-       cardViewTop1.setX(value);
-    }
-
-    @Override
-    public void onSpringAtRest(Spring spring) {
-
-    }
-
-    @Override
-    public void onSpringActivate(Spring spring) {
-
-    }
-
-    @Override
-    public void onSpringEndStateChange(Spring spring) {
-
     }
 
 }
