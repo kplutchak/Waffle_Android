@@ -1,12 +1,13 @@
 package com.pipit.waffle;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -41,6 +42,14 @@ public class AnsweringFragment extends Fragment implements SpringListener {
     private CardView cardViewBot2;
     private SpringSystem mSpringSystem;
     private Spring mSpring;
+
+    private ObjectAnimator anim_bcard1;
+    private ObjectAnimator anim_tcard1;
+    private ObjectAnimator anim_bcard2;
+    private ObjectAnimator anim_tcard2;
+
+    private boolean cardViewTop1_pressed = false;
+    private boolean cardViewBot1_pressed = false;
 
     private VelocityTracker velocity = null;
 
@@ -148,6 +157,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
                         last_velocities.clear();
+
+                       // cardViewTop1_pressed = true;
 
                         selected = false;
 
@@ -280,12 +291,56 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             }
                         });
 
+                        anim_in_right.setInterpolator(new DecelerateInterpolator(1.5f));
+
                         TranslateAnimation anim_other = new TranslateAnimation(0, ending_pos_left - cardViewBot1.getX() , 0, 0);
                         anim_other.setInterpolator(new DecelerateInterpolator(1.5f));
 
-                        TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
-                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
-                        anim.setAnimationListener(new Animation.AnimationListener() {
+                        if(selected)
+                            anim_tcard1 = ObjectAnimator.ofFloat(cardViewTop1, "translationX", xValue - starting_pos, ending_pos - starting_pos);
+                        else
+                            anim_tcard1 = ObjectAnimator.ofFloat(cardViewTop1, "translationX", xValue - starting_pos, 0);
+
+                        final float deltaX = xValue - starting_pos;
+
+                        anim_tcard1.setInterpolator(new DecelerateInterpolator(1.5f));
+                        anim_tcard1.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                if (selected) {
+                                    cardViewTop1.setX(ending_pos);
+
+                                } else {
+                                    // cardViewTop1.setX(starting_pos);
+                                    //cardViewTop1_pressed = false;
+                                }
+
+                                //float frac = anim_tcard1.getAnimatedFraction();
+
+                                // cardViewTop1.setTranslationX(frac);
+
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                float frac = anim_tcard1.getAnimatedFraction();
+
+                                cardViewTop1.setTranslationX((1 - frac) * deltaX);
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+
+                        /*{
                             @Override
                             public void onAnimationStart(Animation animation) {
 
@@ -294,10 +349,15 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             @Override
                             public void onAnimationEnd(Animation animation) {
 
-                                if(selected)
+                                if (selected) {
                                     cardViewTop1.setX(ending_pos);
-                                else
+
+                                } else {
                                     cardViewTop1.setX(starting_pos);
+                                    //cardViewTop1_pressed = false;
+                                }
+
+
                             }
 
                             @Override
@@ -305,8 +365,11 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
                             }
                         });
+
+                        */
                         //anim.setFillAfter(true);
-                        anim.setFillEnabled(true);
+                        //anim_tcard1.
+                        //anim_tcard1.setFillEnabled(true);
                         anim_in.setFillEnabled(true);
                         anim_in_right.setFillEnabled(true);
                         anim_other.setFillEnabled(true);
@@ -315,13 +378,16 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 200)
-                            dur = 200;
+                        if(dur < 300)
+                            dur = 300;
 
-                        anim.setDuration(dur);
+
+
+                        anim_tcard1.setDuration(dur);
                         anim_other.setDuration(dur);
                         anim_in.setDuration(dur);
                         anim_in_right.setDuration(dur);
+
                         anim_other.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -331,6 +397,7 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 cardViewBot1.setX(ending_pos_left);
+                                //cardViewTop1_pressed = false;
                             }
 
 
@@ -342,8 +409,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setStartOffset(200);
                         anim_in.setStartOffset(dur+200);
                         anim_in_right.setStartOffset(dur+200);
-                        cardViewTop1.startAnimation(anim);
+                        anim_tcard1.start();
                         if(selected) {
+                            if(anim_bcard1 !=  null)
+                                anim_bcard1.cancel();
                             cardViewBot1.startAnimation(anim_other);
                             cardViewTop2.startAnimation(anim_in);
                             cardViewBot2.startAnimation(anim_in_right);
@@ -372,12 +441,40 @@ public class AnsweringFragment extends Fragment implements SpringListener {
 
 
 
+
                 switch (theAction) {
                     case MotionEvent.ACTION_DOWN:
                         // Button down
                         last_velocities.clear();
 
                         selected = false;
+
+                       /* float store1 = cardViewTop1.getX();
+                        float store = cardViewTop1.getTranslationX();
+
+                        Transformation transformation = new Transformation();
+                        float[] matrix = new float[9];
+
+
+                        anim_tcard1.getTransformation(AnimationUtils.currentAnimationTimeMillis(), transformation);
+
+                        transformation.getMatrix().getValues(matrix);
+
+                        float ww = matrix[Matrix.MTRANS_X];
+
+                        long xx = AnimationUtils.currentAnimationTimeMillis();
+                        float toX = anim_tcard1.
+                        */
+
+
+
+
+
+
+
+                        //anim_tcard1 = ObjectAnimator.ofFloat(cardViewTop1, "translationX", 0, -200);
+
+                        //anim_tcard1.start();
 
                         last_velocities.add(0, 0.0f);
                         last_velocities.add(1, 0.0f);
@@ -501,33 +598,55 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             }
                         });
 
+                        anim_in_right.setInterpolator(new DecelerateInterpolator(1.5f));
+
                         TranslateAnimation anim_other = new TranslateAnimation(0, ending_pos_left - cardViewTop1.getX() , 0, 0);
                         anim_other.setInterpolator(new DecelerateInterpolator(1.5f));
 
-                        TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
-                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
-                        anim.setAnimationListener(new Animation.AnimationListener() {
+                        if(selected)
+                            anim_bcard1 = ObjectAnimator.ofFloat(cardViewBot1, "translationX", xValue - starting_pos, ending_pos - starting_pos);
+                        else
+                            anim_bcard1 = ObjectAnimator.ofFloat(cardViewBot1, "translationX", xValue - starting_pos, 0);
+
+                        final float deltaX = xValue - starting_pos;
+
+                        anim_bcard1.setInterpolator(new DecelerateInterpolator(1.5f));
+                        anim_bcard1.addListener(new Animator.AnimatorListener() {
                             @Override
-                            public void onAnimationStart(Animation animation) {
+                            public void onAnimationStart(Animator animation) {
 
                             }
 
                             @Override
-                            public void onAnimationEnd(Animation animation) {
-
-                                if(selected)
+                            public void onAnimationEnd(Animator animation) {
+                                if (selected) {
                                     cardViewBot1.setX(ending_pos);
-                                else
-                                    cardViewBot1.setX(starting_pos);
+
+                                } else {
+                                    // cardViewTop1.setX(starting_pos);
+                                    //cardViewTop1_pressed = false;
+                                }
+
+                                //float frac = anim_tcard1.getAnimatedFraction();
+
+                                // cardViewTop1.setTranslationX(frac);
+
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation) {
+                            public void onAnimationCancel(Animator animation) {
+                                float frac = anim_bcard1.getAnimatedFraction();
+
+                                cardViewBot1.setTranslationX((1 - frac) * deltaX);
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
 
                             }
                         });
-                        //anim.setFillAfter(true);
-                        anim.setFillEnabled(true);
+
                         anim_in.setFillEnabled(true);
                         anim_in_right.setFillEnabled(true);
                         anim_other.setFillEnabled(true);
@@ -536,10 +655,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 200)
-                            dur = 200;
+                        if(dur < 300)
+                            dur = 300;
 
-                        anim.setDuration(dur);
+                        anim_bcard1.setDuration(dur);
                         anim_other.setDuration(dur);
                         anim_in.setDuration(dur);
                         anim_in_right.setDuration(dur);
@@ -563,8 +682,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setStartOffset(200);
                         anim_in.setStartOffset(dur+200);
                         anim_in_right.setStartOffset(dur+200);
-                        cardViewBot1.startAnimation(anim);
+                        anim_bcard1.start();
                         if(selected) {
+                            if(anim_tcard1 != null)
+                                anim_tcard1.cancel();
                             cardViewTop1.startAnimation(anim_other);
                             cardViewBot2.startAnimation(anim_in);
                             cardViewTop2.startAnimation(anim_in_right);
@@ -731,33 +852,55 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             }
                         });
 
+                        anim_in_right.setInterpolator(new DecelerateInterpolator(1.5f));
+
                         TranslateAnimation anim_other = new TranslateAnimation(0, ending_pos_left - cardViewBot2.getX() , 0, 0);
                         anim_other.setInterpolator(new DecelerateInterpolator(1.5f));
 
-                        TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
-                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
-                        anim.setAnimationListener(new Animation.AnimationListener() {
+                        if(selected)
+                            anim_tcard2 = ObjectAnimator.ofFloat(cardViewTop2, "translationX", xValue, ending_pos);
+                        else
+                            anim_tcard2 = ObjectAnimator.ofFloat(cardViewTop2, "translationX", xValue, starting_pos);
+
+                        final float deltaX = xValue - starting_pos;
+
+                        anim_tcard2.setInterpolator(new DecelerateInterpolator(1.5f));
+                        anim_tcard2.addListener(new Animator.AnimatorListener() {
                             @Override
-                            public void onAnimationStart(Animation animation) {
+                            public void onAnimationStart(Animator animation) {
 
                             }
 
                             @Override
-                            public void onAnimationEnd(Animation animation) {
-
-                                if(selected)
+                            public void onAnimationEnd(Animator animation) {
+                                if (selected) {
                                     cardViewTop2.setX(ending_pos);
-                                else
-                                    cardViewTop2.setX(starting_pos);
+
+                                } else {
+                                    // cardViewTop1.setX(starting_pos);
+                                    //cardViewTop1_pressed = false;
+                                }
+
+                                //float frac = anim_tcard1.getAnimatedFraction();
+
+                                // cardViewTop1.setTranslationX(frac);
+
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation) {
+                            public void onAnimationCancel(Animator animation) {
+                                float frac = anim_tcard2.getAnimatedFraction();
+
+                                cardViewTop2.setTranslationX(((1 - frac) * deltaX) + starting_pos);
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
 
                             }
                         });
-                        //anim.setFillAfter(true);
-                        anim.setFillEnabled(true);
+
                         anim_in.setFillEnabled(true);
                         anim_in_right.setFillEnabled(true);
                         anim_other.setFillEnabled(true);
@@ -766,10 +909,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 200)
-                            dur = 200;
+                        if(dur < 300)
+                            dur = 300;
 
-                        anim.setDuration(dur);
+                        anim_tcard2.setDuration(dur);
                         anim_other.setDuration(dur);
                         anim_in.setDuration(dur);
                         anim_in_right.setDuration(dur);
@@ -793,8 +936,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setStartOffset(200);
                         anim_in.setStartOffset(dur+200);
                         anim_in_right.setStartOffset(dur+200);
-                        cardViewTop2.startAnimation(anim);
+                        anim_tcard2.start();
                         if(selected) {
+                            if(anim_bcard2 != null)
+                                anim_bcard2.cancel();
                             cardViewBot2.startAnimation(anim_other);
                             cardViewTop1.startAnimation(anim_in);
                             cardViewBot1.startAnimation(anim_in_right);
@@ -829,6 +974,8 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         last_velocities.clear();
 
                         selected = false;
+
+
 
                         last_velocities.add(0, 0.0f);
                         last_velocities.add(1, 0.0f);
@@ -952,33 +1099,55 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                             }
                         });
 
+                        anim_in_right.setInterpolator(new DecelerateInterpolator(1.5f));
+
                         TranslateAnimation anim_other = new TranslateAnimation(0, ending_pos_left - cardViewTop2.getX() , 0, 0);
                         anim_other.setInterpolator(new DecelerateInterpolator(1.5f));
 
-                        TranslateAnimation anim = new TranslateAnimation(0, dist, 0, 0);
-                        anim.setInterpolator(new DecelerateInterpolator(1.5f));
-                        anim.setAnimationListener(new Animation.AnimationListener() {
+                        if(selected)
+                            anim_bcard2 = ObjectAnimator.ofFloat(cardViewBot2, "translationX", xValue, ending_pos);
+                        else
+                            anim_bcard2 = ObjectAnimator.ofFloat(cardViewBot2, "translationX", xValue, starting_pos);
+
+                        final float deltaX = xValue - starting_pos;
+
+                        anim_bcard2.setInterpolator(new DecelerateInterpolator(1.5f));
+                        anim_bcard2.addListener(new Animator.AnimatorListener() {
                             @Override
-                            public void onAnimationStart(Animation animation) {
+                            public void onAnimationStart(Animator animation) {
 
                             }
 
                             @Override
-                            public void onAnimationEnd(Animation animation) {
-
-                                if(selected)
+                            public void onAnimationEnd(Animator animation) {
+                                if (selected) {
                                     cardViewBot2.setX(ending_pos);
-                                else
-                                    cardViewBot2.setX(starting_pos);
+
+                                } else {
+                                    // cardViewTop1.setX(starting_pos);
+                                    //cardViewTop1_pressed = false;
+                                }
+
+                                //float frac = anim_tcard1.getAnimatedFraction();
+
+                                // cardViewTop1.setTranslationX(frac);
+
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation) {
+                            public void onAnimationCancel(Animator animation) {
+                                float frac = anim_bcard2.getAnimatedFraction();
+
+                                cardViewBot2.setTranslationX(((1 - frac) * deltaX) + starting_pos);
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
 
                             }
                         });
-                        //anim.setFillAfter(true);
-                        anim.setFillEnabled(true);
+
                         anim_in.setFillEnabled(true);
                         anim_in_right.setFillEnabled(true);
                         anim_other.setFillEnabled(true);
@@ -987,10 +1156,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         long dur = (long) ((dist/10) * (dist/10))/2;
                         if(dur > 500)
                             dur = 500;
-                        if(dur < 200)
-                            dur = 200;
+                        if(dur < 300)
+                            dur = 300;
 
-                        anim.setDuration(dur);
+                        anim_bcard2.setDuration(dur);
                         anim_other.setDuration(dur);
                         anim_in.setDuration(dur);
                         anim_in_right.setDuration(dur);
@@ -1014,8 +1183,10 @@ public class AnsweringFragment extends Fragment implements SpringListener {
                         anim_other.setStartOffset(200);
                         anim_in.setStartOffset(dur+200);
                         anim_in_right.setStartOffset(dur+200);
-                        cardViewBot2.startAnimation(anim);
+                        anim_bcard2.start();
                         if(selected) {
+                            if(anim_tcard2 != null)
+                                anim_tcard2.cancel();
                             cardViewTop2.startAnimation(anim_other);
                             cardViewBot1.startAnimation(anim_in);
                             cardViewTop1.startAnimation(anim_in_right);
