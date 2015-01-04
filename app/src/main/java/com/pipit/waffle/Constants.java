@@ -8,4 +8,5 @@ public class Constants {
 
     public static int ANSWERING_FRAGMENT_ID = 1;
     public static int QUESTION_CREATION_MODE_FRAGMENT_ID = 2;
+    public static int USER_QUESTIONS_FRAGMENT_ID = 3;
 }

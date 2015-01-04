@@ -1,28 +1,20 @@
 package com.pipit.waffle;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Outline;
-import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
-import android.view.animation.AnimationSet;
-import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -69,10 +61,58 @@ public class ToolbarActivity extends ActionBarActivity {
                 R.layout.drawer_list_item, items));
 
         // Set the drawer
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(toggle);
+
+        // Set drawer item click behavior
+        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0)
+                {
+                    UserQuestionsFragment frag = new UserQuestionsFragment();
+
+                    // In case this activity was started with special instructions from an
+                    // Intent, pass the Intent's extras to the fragment as arguments
+                    frag.setArguments(getIntent().getExtras());
+
+                    // Flip to the back.
+
+                    // Create and commit a new fragment transaction that adds the fragment for the back of
+                    // the card, uses custom animations, and is part of the fragment manager's back stack.
+
+                    getFragmentManager()
+                            .beginTransaction()
+
+                                    // Replace the default fragment animations with animator resources representing
+                                    // rotations when switching to the back of the card, as well as animator
+                                    // resources representing rotations when flipping back to the front (e.g. when
+                                    // the system Back button is pressed).
+                            /*
+                            .setCustomAnimations(R.animator., R.animator.card_flip_right_out,
+                                    R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+                            */
+
+
+                                    // Replace any fragments currently in the container view with a fragment
+                                    // representing the next page (indicated by the just-incremented currentPage
+                                    // variable).
+                            .replace(R.id.fragment_container, frag)
+
+                                    // Add this transaction to the back stack, allowing users to press Back
+                                    // to get to the front of the card.
+                            .addToBackStack(null)
+
+                                    // Commit the transaction.
+                            .commit();
+                    current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
+                    // Close the drawer after the item has been clicked and we open the correct fragment
+                    drawerLayout.closeDrawer(Gravity.LEFT);
+                }
+            }
+        });
 
         // Create the buttons
         final Button swap_icon = (Button) findViewById(R.id.fab);
@@ -96,7 +136,7 @@ public class ToolbarActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                if (current_fragment_id == Constants.ANSWERING_FRAGMENT_ID) {
+                if (current_fragment_id == Constants.ANSWERING_FRAGMENT_ID || current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID) {
 
                     Intent intent = new Intent(v.getContext(), CameraActivity.class);
                     startActivity(intent);
