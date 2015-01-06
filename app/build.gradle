@@ -19,8 +19,9 @@ android {
     }
 }
 
-
-
+repositories {
+    mavenCentral()
+}
 
 
 dependencies {
@@ -32,7 +33,8 @@ dependencies {
     compile 'com.facebook.rebound:rebound:0.3.3'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    compile 'com.makeramen:roundedimageview:1.5.0'
+    compile group:'com.squareup.picasso', name:'picasso', version:'2.4.0'
 
 
 }

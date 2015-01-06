@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.github.siyamed.shapeimageview.path.parser.SvgToPath;
 
 /**
  * Created by Kyle on 11/19/2014.

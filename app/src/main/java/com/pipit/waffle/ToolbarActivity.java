@@ -2,6 +2,7 @@ package com.pipit.waffle;
 
 import android.content.Intent;
 import android.graphics.Outline;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -70,46 +71,51 @@ public class ToolbarActivity extends ActionBarActivity {
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0)
-                {
-                    UserQuestionsFragment frag = new UserQuestionsFragment();
+                if(position==0) {
+                    int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-                    // In case this activity was started with special instructions from an
-                    // Intent, pass the Intent's extras to the fragment as arguments
-                    frag.setArguments(getIntent().getExtras());
+                    // RecyclerView is only available in Android L and up
+                    if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
 
-                    // Flip to the back.
+                        UserQuestionsFragment frag = new UserQuestionsFragment();
 
-                    // Create and commit a new fragment transaction that adds the fragment for the back of
-                    // the card, uses custom animations, and is part of the fragment manager's back stack.
+                        // In case this activity was started with special instructions from an
+                        // Intent, pass the Intent's extras to the fragment as arguments
+                        frag.setArguments(getIntent().getExtras());
 
-                    getFragmentManager()
-                            .beginTransaction()
+                        // Flip to the back.
 
-                                    // Replace the default fragment animations with animator resources representing
-                                    // rotations when switching to the back of the card, as well as animator
-                                    // resources representing rotations when flipping back to the front (e.g. when
-                                    // the system Back button is pressed).
+                        // Create and commit a new fragment transaction that adds the fragment for the back of
+                        // the card, uses custom animations, and is part of the fragment manager's back stack.
+
+                        getFragmentManager()
+                                .beginTransaction()
+
+                                        // Replace the default fragment animations with animator resources representing
+                                        // rotations when switching to the back of the card, as well as animator
+                                        // resources representing rotations when flipping back to the front (e.g. when
+                                        // the system Back button is pressed).
                             /*
                             .setCustomAnimations(R.animator., R.animator.card_flip_right_out,
                                     R.animator.card_flip_left_in, R.animator.card_flip_left_out)
                             */
 
 
-                                    // Replace any fragments currently in the container view with a fragment
-                                    // representing the next page (indicated by the just-incremented currentPage
-                                    // variable).
-                            .replace(R.id.fragment_container, frag)
+                                        // Replace any fragments currently in the container view with a fragment
+                                        // representing the next page (indicated by the just-incremented currentPage
+                                        // variable).
+                                .replace(R.id.fragment_container, frag)
 
-                                    // Add this transaction to the back stack, allowing users to press Back
-                                    // to get to the front of the card.
-                            .addToBackStack(null)
+                                        // Add this transaction to the back stack, allowing users to press Back
+                                        // to get to the front of the card.
+                                .addToBackStack(null)
 
-                                    // Commit the transaction.
-                            .commit();
-                    current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
-                    // Close the drawer after the item has been clicked and we open the correct fragment
-                    drawerLayout.closeDrawer(Gravity.LEFT);
+                                        // Commit the transaction.
+                                .commit();
+                        current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
+                        // Close the drawer after the item has been clicked and we open the correct fragment
+                        drawerLayout.closeDrawer(Gravity.LEFT);
+                    }
                 }
             }
         });

@@ -34,7 +34,7 @@ public class UserQuestionsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(v.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        String[] data = {"Adam", "Becky", "Carol", "David", "Edward", "Francis", "George", "Harry", "Issac"};
+        String[] data = {"Adam", "Becky", "Carol", "David", "Edward", "Francis", "George", "Harry", "Issac", "Jack", "Kendra", "Laura", "Mike", "Nancy", "Oliver", "Paul", "Queen", "Robert", "Sandy", "Tom"};
 
         mAdapter = new UserQuestionsFragmentListAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
