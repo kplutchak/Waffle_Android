@@ -1,6 +1,7 @@
 package com.pipit.waffle;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Outline;
 import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,14 @@ public class ToolbarActivity extends ActionBarActivity {
 
     private ListView drawerListView;
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt("current_frag", current_fragment_id);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     /**
      * onCreate for ToolbarActivity
      * @param savedInstanceState
@@ -37,6 +47,11 @@ public class ToolbarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            current_fragment_id = savedInstanceState.getInt("current_frag");
+        }
 
         // Set enter/transitions for the activity
         getWindow().setExitTransition(new Fade());
@@ -301,7 +316,7 @@ public class ToolbarActivity extends ActionBarActivity {
             // then we don't need to do anything and should return or else
             // we could end up with overlapping fragments.
             if (savedInstanceState != null) {
-                return;
+               return;
             }
 
             // Create a new Fragment to be placed in the activity layout
@@ -320,6 +335,7 @@ public class ToolbarActivity extends ActionBarActivity {
         }
 
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

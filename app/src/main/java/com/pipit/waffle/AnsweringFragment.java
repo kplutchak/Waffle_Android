@@ -2,7 +2,6 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -54,15 +53,40 @@ public class AnsweringFragment extends Fragment  {
     private float mOrigX;
     private float mOrigY;
 
+    private ImageView imageView_cvtop1;
+    private ImageView imageView_cvbot1;
+    private int image_height_stored;
+    private int image_height_stored_landscape;
+
     private VelocityTracker velocity = null;
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+            outState.putInt("height_portrait", imageView_cvtop1.getHeight());
+            outState.putInt("height_landscape", image_height_stored_landscape);
+        }
+        else {
+            outState.putInt("height_portrait", image_height_stored);
+            outState.putInt("height_landscape", imageView_cvtop1.getHeight());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.answering_fragment, container, false);
+        if(savedInstanceState != null) {
+            image_height_stored = savedInstanceState.getInt("height_portrait");
+            image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
+        }
+            // Inflate the layout for this fragment
+            View v = inflater.inflate(R.layout.answering_fragment, container, false);
+
 
         // Retrieve the CardViews
         cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
@@ -77,6 +101,7 @@ public class AnsweringFragment extends Fragment  {
         final int width = size.x;
 
         int margin = (int) (8 * getActivity().getResources().getDisplayMetrics().density);
+        int margin_images = (int) (5 * getActivity().getResources().getDisplayMetrics().density);
         int margin_left = (int) (1000 * getActivity().getResources().getDisplayMetrics().density);
         final int frame_width = (int) (2000 * getActivity().getResources().getDisplayMetrics().density);
 
@@ -87,13 +112,14 @@ public class AnsweringFragment extends Fragment  {
         final int ending_pos = margin_left + (card_params.width/2) + 24;
         final float ending_pos_left = margin_left - ((3.0f /2.0f) * (float) card_params.width) -24;
 
-        card_params.setMargins(margin_left - (card_params.width/2), margin, margin, margin);
+        // TODO: Correct all margins with 1/2 value for top/bottom (ie center divide)
+        card_params.setMargins(margin_left - (card_params.width/2), margin, margin, margin/2);
 
         cardViewTop1.setLayoutParams(card_params);
 
         CardView.LayoutParams card_params2 = (CardView.LayoutParams) cardViewBot1.getLayoutParams();
         card_params2.width = width - (2*margin);
-        card_params2.setMargins(margin_left - (card_params.width / 2), 0, margin, margin);
+        card_params2.setMargins(margin_left - (card_params.width / 2), margin/2, margin, margin);
 
         cardViewBot1.setLayoutParams(card_params2);
 
@@ -116,27 +142,64 @@ public class AnsweringFragment extends Fragment  {
                 .oval(false)
                 .build();
 
+       // Transformation trans = new RoundedTransformation(20, 0);
+
         final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
-        ImageView cardViewTop1Image = (ImageView) cardViewTop1.findViewById(R.id.cv_top1_image);
+        //ImageView cardViewTop1Image = (ImageView) cardViewTop1.findViewById(R.id.cv_top1_image);
+         imageView_cvtop1 = new ImageView(cardViewTop1.getContext());
+         imageView_cvbot1 = new ImageView(cardViewBot1.getContext());
+
+
+        CardView.LayoutParams cvtop1_image_params = new CardView.LayoutParams(cardViewTop1.getLayoutParams());
+        cvtop1_image_params.width = card_params.width - (2*margin_images);
+        if(savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_PORTRAIT)
+            cvtop1_image_params.height = image_height_stored;
+
+        if(savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE
+                && image_height_stored_landscape != 0)
+            cvtop1_image_params.height = image_height_stored_landscape;
+
+        cvtop1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
+        imageView_cvtop1.setLayoutParams(cvtop1_image_params);
+
+        CardView.LayoutParams cvbot1_image_params = new CardView.LayoutParams(cardViewBot1.getLayoutParams());
+        cvbot1_image_params.width = card_params.width - (2*margin_images);
+        if(savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_PORTRAIT)
+            cvbot1_image_params.height = image_height_stored;
+
+        if(savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE
+                && image_height_stored_landscape != 0)
+            cvbot1_image_params.height = image_height_stored_landscape;
+
+        cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
+        imageView_cvbot1.setLayoutParams(cvbot1_image_params);
+
+
+        //Picasso p = new Picasso.Builder(getActivity()).build();
+        //p.setIndicatorsEnabled(true);
         Picasso.with(cardViewTop1.getContext()).load("http://41.media.tumblr.com/fb3102f6fbcd273b60b7ee427e5b0f1f/tumblr_n1r4w2oFaN1r6e19zo1_1280.jpg")
                 .fit().centerCrop()
-                .transform(transformation_rounded_image).into(cardViewTop1Image, new com.squareup.picasso.Callback() {
+                .transform(transformation_rounded_image).into(imageView_cvtop1, new com.squareup.picasso.Callback() {
 
-                    @Override
-                    public void onSuccess() {
-                        pb_cvtop1.setVisibility(View.INVISIBLE);
-                    }
+            @Override
+            public void onSuccess() {
+                pb_cvtop1.setVisibility(View.INVISIBLE);
+            }
 
-                    @Override
-                    public void onError() {
-                        pb_cvtop1.setVisibility(View.VISIBLE);
-                    }
-                });
+            @Override
+            public void onError() {
+                pb_cvtop1.setVisibility(View.VISIBLE);
+            }
+        });
+        cardViewTop1.addView(imageView_cvtop1);
+
+        //cardViewTop1Image.invalidate();
+        //cardViewTop1Image.postInvalidate();
 
         final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
-        ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
+       // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
         Picasso.with(cardViewTop1.getContext()).load("http://i.imgur.com/Z5341o4.jpg").fit().centerCrop()
-                .transform(transformation_rounded_image).into(cardViewBot1Image, new com.squareup.picasso.Callback() {
+                .transform(transformation_rounded_image).into(imageView_cvbot1, new com.squareup.picasso.Callback() {
 
             @Override
             public void onSuccess() {
@@ -148,6 +211,8 @@ public class AnsweringFragment extends Fragment  {
                 pb_cvbot1.setVisibility(View.VISIBLE);
             }
         });
+
+        cardViewBot1.addView(imageView_cvbot1);
 
          // CardView movement and touch behavior
         final View.OnTouchListener tl = new View.OnTouchListener() {
