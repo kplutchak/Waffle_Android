@@ -2,9 +2,11 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.graphics.Point;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -177,13 +179,24 @@ public class AnsweringFragment extends Fragment  {
 
         //Picasso p = new Picasso.Builder(getActivity()).build();
         //p.setIndicatorsEnabled(true);
+
+        /*Retrieve bitmap from picasso and edit it*/
+        final ImageView tempImageview = new ImageView(cardViewTop1.getContext());
+
         Picasso.with(cardViewTop1.getContext()).load("http://41.media.tumblr.com/fb3102f6fbcd273b60b7ee427e5b0f1f/tumblr_n1r4w2oFaN1r6e19zo1_1280.jpg")
                 .fit().centerCrop()
-                .transform(transformation_rounded_image).into(imageView_cvtop1, new com.squareup.picasso.Callback() {
+                .transform(transformation_rounded_image).into(tempImageview, new com.squareup.picasso.Callback() {
 
             @Override
             public void onSuccess() {
                 pb_cvtop1.setVisibility(View.INVISIBLE);
+                Bitmap bm = ((BitmapDrawable)tempImageview.getDrawable()).getBitmap();
+                BitmapDrawable bmd = ImageManipulation.writeTextOnDrawable(bm,cardViewTop1.getContext(), "some text!");
+                if (imageView_cvtop1==null){
+                    imageView_cvtop1 = new ImageView(cardViewTop1.getContext());
+                }
+                imageView_cvtop1.setImageBitmap(bmd.getBitmap());
+                cardViewTop1.addView(imageView_cvtop1);
             }
 
             @Override
@@ -191,7 +204,7 @@ public class AnsweringFragment extends Fragment  {
                 pb_cvtop1.setVisibility(View.VISIBLE);
             }
         });
-        cardViewTop1.addView(imageView_cvtop1);
+
 
         //cardViewTop1Image.invalidate();
         //cardViewTop1Image.postInvalidate();
