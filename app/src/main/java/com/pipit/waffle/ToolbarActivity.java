@@ -1,12 +1,12 @@
 package com.pipit.waffle;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Outline;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
@@ -19,6 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.pipit.waffle.Objects.Choice;
+import com.pipit.waffle.Objects.ClientData;
+import com.pipit.waffle.Objects.Question;
+import com.pipit.waffle.Objects.Self;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +52,7 @@ public class ToolbarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
-
+        final Context mcontext = this;
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             current_fragment_id = savedInstanceState.getInt("current_frag");
@@ -131,6 +136,31 @@ public class ToolbarActivity extends ActionBarActivity {
                         // Close the drawer after the item has been clicked and we open the correct fragment
                         drawerLayout.closeDrawer(Gravity.LEFT);
                     }
+                }
+                else if (position==1){
+                    /*Post test question*/
+                    Question testQuestion = new Question("Generic test question from Android", Self.getUser());
+                    Choice testAnswerOne = new Choice();
+                    Choice testAnswerTwo = new Choice();
+                    testQuestion.addChoice(testAnswerOne);
+                    testQuestion.addChoice(testAnswerOne);
+                    Network.postQuestion(getApplicationContext(), testQuestion);
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Attempted Network.postQuestion";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+                    toast.show();
+                }
+                else if (position==2){
+                    /*Attempt to retrieve next question*/
+                    Question testQuestion = new Question("No Question Retrieved", Self.getUser());
+                    testQuestion = ClientData.getNextUnansweredQuestion(mcontext);
+                    String text = testQuestion.getQuestionBody() + " " + testQuestion.getChoices().get(0).getUrl();
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(mcontext, text, duration);
+                    toast.show();
                 }
             }
         });

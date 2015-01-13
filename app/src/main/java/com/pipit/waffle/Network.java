@@ -27,7 +27,7 @@ public class Network {
     public static void getAllQuestions(final Context mcontext){
 
         Log.d("ConnectToBackend", "starting getAllQuestions");
-        final String url = "http://bhive.herokuapp.com/api/questions";
+        final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
         ToolbarActivity ma = (ToolbarActivity) mcontext;
 
         ProgressBar mProgress = (ProgressBar) ma.findViewById(R.id.progress_bar);
@@ -76,7 +76,6 @@ public class Network {
                 String questionbody = jsonlist.get(k).get("text").getAsString();
                 String userID = jsonlist.get(k).get("user_id").getAsString();
                 User tempuser = new User(userID);
-
                 Question nq = new Question(questionbody, tempuser);
 
                 JsonArray answerJson = jsonlist.get(k).get("answers").getAsJsonArray();
@@ -90,14 +89,18 @@ public class Network {
                     int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
                     String questionID = Integer.toString(questionIDinteger);
                     int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                    String picurl = answerJsonList.get(j).get("picture").getAsString();
 
                     Choice newans = new Choice();
                     newans.setAnswerBody(answerBody);
                     newans.setVotes(answerVotes);
                     newans.setQuestionID(questionID);
+                    newans.setUrl(picurl);
                     nq.addChoice(newans);
                 }
-                ClientData.addQuestion(nq);
+                if (nq.getChoices().size()==2) {
+                    ClientData.addQuestion(nq);
+                }
             }
             return;
         }
@@ -108,7 +111,7 @@ public class Network {
         json.addProperty("foo", "bar");
 
         Ion.with(mcontext)
-                .load("bhive.herokuapp.com/api/questions")
+                .load("http://obscure-fjord-2523.herokuapp.com/api/questions/")
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
@@ -122,7 +125,7 @@ public class Network {
     public static void answerQuestion(final Context mcontext, Choice providedAnswer){
         JsonObject json = new JsonObject();
         json.addProperty("vote", "true");
-        final String url = "http://bhive.herokuapp.com/api/answers/"+providedAnswer.getQuestionID()+"/";
+        final String url = "http://obscure-fjord-2523.herokuapp.com/api/answers/"+providedAnswer.getQuestionID()+"/";
         Ion.with(mcontext)
                 .load("PUT", url)
                 .setJsonObjectBody(json)
@@ -157,7 +160,7 @@ public class Network {
         json.addProperty("text", mquestion.getQuestionBody());
         json.add("answers", answerarray);
         json.addProperty("user_id", "temp user id");
-        final String url = "http://bhive.herokuapp.com/api/questions/";
+        final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
         Ion.with(mcontext)
                 .load(url)
                 .setJsonObjectBody(json)
@@ -177,12 +180,12 @@ public class Network {
                             Log.d("ConnectToBackend", "postQuestion asked with url " + url + " : and result " + result.toString());
 
                             //Switch to questions fragment
-                            ToolbarActivity ma = (ToolbarActivity) mcontext;
+                         //   ToolbarActivity ma = (ToolbarActivity) mcontext;
                             /*
                             if(ma.getShowingFragmentID().equals(Constants.CREATE_QUESTION_FRAGMENT_ID))
                                 ma.switchToFragment(Constants.QUESTION_ANSWER_FRAGMENT_ID);
                                 */
-                            ma.switchFragments();
+                         //   ma.switchFragments();
                         }
 
                     }

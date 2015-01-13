@@ -9,6 +9,7 @@ public class Choice {
     private String answerBody;
     private String answerID;
     private String questionID;
+    private String url;
     private int votes;
 
     public Choice(){
@@ -46,4 +47,13 @@ public class Choice {
     public void setVotes(int votes) {
         this.votes = votes;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }
