@@ -138,7 +138,7 @@ public class AnsweringFragment extends Fragment  {
         // TODO: make sure the two images appear at the same time. If they don't , don't reveal the one that has already loaded until the second image has finished loading
 
         Transformation transformation_rounded_image = new RoundedTransformationBuilder()
-                .cornerRadiusDp(4)
+                .cornerRadiusDp(4).borderColor(getResources().getColor(R.color.black_tint_light)).borderWidthDp(1)
                 .oval(false)
                 .build();
 
