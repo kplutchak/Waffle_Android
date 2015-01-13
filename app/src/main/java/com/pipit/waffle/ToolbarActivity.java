@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pipit.waffle.Objects.Choice;
+import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
 import com.pipit.waffle.Objects.Self;
 
@@ -51,7 +52,7 @@ public class ToolbarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
-
+        final Context mcontext = this;
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             current_fragment_id = savedInstanceState.getInt("current_frag");
@@ -149,7 +150,16 @@ public class ToolbarActivity extends ActionBarActivity {
                     CharSequence text = "Attempted Network.postQuestion";
                     int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, text, duration);
+                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+                    toast.show();
+                }
+                else if (position==2){
+                    /*Attempt to retrieve next question*/
+                    Question testQuestion = new Question("No Question Retrieved", Self.getUser());
+                    testQuestion = ClientData.getNextUnansweredQuestion(mcontext);
+                    String text = testQuestion.getQuestionBody() + " " + testQuestion.getChoices().get(0).getUrl();
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(mcontext, text, duration);
                     toast.show();
                 }
             }

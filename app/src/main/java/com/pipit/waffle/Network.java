@@ -76,7 +76,6 @@ public class Network {
                 String questionbody = jsonlist.get(k).get("text").getAsString();
                 String userID = jsonlist.get(k).get("user_id").getAsString();
                 User tempuser = new User(userID);
-
                 Question nq = new Question(questionbody, tempuser);
 
                 JsonArray answerJson = jsonlist.get(k).get("answers").getAsJsonArray();
@@ -90,14 +89,18 @@ public class Network {
                     int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
                     String questionID = Integer.toString(questionIDinteger);
                     int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                    String picurl = answerJsonList.get(j).get("picture").getAsString();
 
                     Choice newans = new Choice();
                     newans.setAnswerBody(answerBody);
                     newans.setVotes(answerVotes);
                     newans.setQuestionID(questionID);
+                    newans.setUrl(picurl);
                     nq.addChoice(newans);
                 }
-                ClientData.addQuestion(nq);
+                if (nq.getChoices().size()==2) {
+                    ClientData.addQuestion(nq);
+                }
             }
             return;
         }
