@@ -6,22 +6,26 @@ import android.util.Log;
 import com.pipit.waffle.Network;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.Queue;
 
 /**
  * Created by Eric on 12/14/2014.
  */
 public class ClientData {
     //Singleton class to hold all data
+
+    public static final int MAXIMUM_QUEUED_QUESTIONS = 5;
+
     private static ClientData clientdata = new ClientData();
-    private static List<Question> questions;
-    private static List<Question> answeredQuestions;
+    private static Queue<Question> questions;
+    private static List<String> idsOfAnsweredQuestions;
 
     private ClientData(){
         //Initialize
-        questions = new ArrayList<Question>();
-        answeredQuestions = new ArrayList<Question>();
+        questions = new LinkedList<Question>();
+        idsOfAnsweredQuestions = new ArrayList<String>();
         Log.d("ClientData", "ClientData() - initializing questions arrays");
     }
 
@@ -52,21 +56,38 @@ public class ClientData {
         q.addChoice(a);
 
         if (questions.size()<1){
-            Network.getAllQuestions(mcontext);
+            Network.getAllQuestions(mcontext, numberQuestionsToPull());
         }
 
         Log.d("ClientData", "getNextUnAnsweredQuestion: questions.size() = " +Integer.toString(questions.size()));
 
-        Random rand = new Random();
+//        Random rand = new Random();
         if (questions.size() > 0){
-            int randomNum = rand.nextInt(questions.size());
+            //TODO: WHAT WILL WE DO WHEN WE STILL HAVE NO QUESTIONS READY!? WE ARE FUCKED? or will getAllQuestions block via Ion? We'll see
+            //TODO: Implement some way of randomizing questions
+//            int randomNum = rand.nextInt(questions.size());
+//            q = questions.get(randomNum);
+//            questions.remove(randomNum);
 
-            q = questions.get(randomNum);
-            questions.remove(randomNum);
-            answeredQuestions.add(q);
+            q = questions.remove();
+            idsOfAnsweredQuestions.add(q.getId());
             Log.d("ClientData", "Retrieved a question with body" + q.getQuestionBody());
         }
+
+
         return q;
+    }
+
+    public static int numberQuestionsToPull(){
+        int spaceInQueue = MAXIMUM_QUEUED_QUESTIONS - questions.size();
+        if (spaceInQueue<0){
+            return 0;
+        }
+        else return spaceInQueue;
+    }
+
+    public static List<String> getIdsOfAnsweredQuestions() {
+        return idsOfAnsweredQuestions;
     }
 
 }
