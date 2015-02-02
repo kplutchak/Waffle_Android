@@ -2,6 +2,7 @@ package com.pipit.waffle.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Eric on 12/7/2014.
@@ -9,6 +10,7 @@ import java.util.List;
 public class Question {
 
     private String questionBody;
+    private String id;
     private List<Choice> choices;
     private User asker;
 
@@ -69,6 +71,18 @@ public class Question {
 
     public enum QuestionType {
         TEXT, PICTURE
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void generateAndSetID(){
+        this.id = UUID.randomUUID().toString();
     }
 
 }

@@ -24,8 +24,9 @@ import java.util.List;
  */
 public class Network {
 
-    public static void getAllQuestions(final Context mcontext){
-
+    public static void getAllQuestions(final Context mcontext, final int numberOfQuestionsNeeded){
+        /*This function currently populates clientData directly (bad practice)*/
+        //TODO: make this block with a progress dialog and return questions directly, and let the caller populate the fields
         Log.d("ConnectToBackend", "starting getAllQuestions");
         final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
         ToolbarActivity ma = (ToolbarActivity) mcontext;
@@ -70,39 +71,44 @@ public class Network {
                     jsonlist.add(result.get(i).getAsJsonObject());
                 }
             }
-
-            for (int k = 0; k < jsonlist.size(); k++){
+            int k = 0;
+            int jsonlistindex = 0;
+            while(k < numberOfQuestionsNeeded && k < jsonlist.size()) {
                 //Get text body, user of question
-                String questionbody = jsonlist.get(k).get("text").getAsString();
-                String userID = jsonlist.get(k).get("user_id").getAsString();
-                User tempuser = new User(userID);
-                Question nq = new Question(questionbody, tempuser);
+                jsonlistindex++;
+                if (ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(k).get("id").getAsString())) {
+                    String questionbody = jsonlist.get(k).get("text").getAsString();
+                    String userID = jsonlist.get(k).get("user_id").getAsString();
+                    User tempuser = new User(userID);
+                    Question nq = new Question(questionbody, tempuser);
 
-                JsonArray answerJson = jsonlist.get(k).get("answers").getAsJsonArray();
-                List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
-                for (int i = 0; i < answerJson.size(); i++) {
-                    answerJsonList.add(answerJson.get(i).getAsJsonObject());
-                }
+                    JsonArray answerJson = jsonlist.get(k).get("answers").getAsJsonArray();
+                    List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
+                    for (int i = 0; i < answerJson.size(); i++) {
+                        answerJsonList.add(answerJson.get(i).getAsJsonObject());
+                    }
 
-                for (int j = 0; j < answerJsonList.size(); j++){
-                    String answerBody = answerJsonList.get(j).get("text").getAsString();
-                    int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
-                    String questionID = Integer.toString(questionIDinteger);
-                    int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
-                    String picurl = answerJsonList.get(j).get("picture").getAsString();
+                    for (int j = 0; j < answerJsonList.size(); j++) {
+                        String answerBody = answerJsonList.get(j).get("text").getAsString();
+                        int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
+                        String questionID = Integer.toString(questionIDinteger);
+                        int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                        String picurl = answerJsonList.get(j).get("picture").getAsString();
 
-                    Choice newans = new Choice();
-                    newans.setAnswerBody(answerBody);
-                    newans.setVotes(answerVotes);
-                    newans.setQuestionID(questionID);
-                    newans.setUrl(picurl);
-                    nq.addChoice(newans);
+                        Choice newans = new Choice();
+                        newans.setAnswerBody(answerBody);
+                        newans.setVotes(answerVotes);
+                        newans.setQuestionID(questionID);
+                        newans.setUrl(picurl);
+                        nq.addChoice(newans);
+                    }
+                    if (nq.getChoices().size() == 2) {
+                        ClientData.addQuestion(nq);
+                        k++;
+                    }
                 }
-                if (nq.getChoices().size()==2) {
-                    ClientData.addQuestion(nq);
-                }
+                return;
             }
-            return;
         }
     }
 
