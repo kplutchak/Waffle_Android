@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.makeramen.RoundedTransformationBuilder;
+import com.pipit.waffle.Objects.ClientData;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -42,6 +43,8 @@ public class AnsweringFragment extends Fragment  {
     private CardView cardViewTop2;
     private CardView cardViewBot2;
 
+    private Transformation transformation_rounded_image;
+
     // ObjectAnimators that control the selection movement of each of the four cards. We use ObjectAnimator
     // in this case instead of TranslateAnimation so we can control the objects themselves rather than the
     // views
@@ -55,6 +58,7 @@ public class AnsweringFragment extends Fragment  {
 
     private ImageView imageView_cvtop1;
     private ImageView imageView_cvbot1;
+    private ImageView imageView_cv_top2;
     private int image_height_stored;
     private int image_height_stored_landscape;
 
@@ -137,7 +141,7 @@ public class AnsweringFragment extends Fragment  {
 
         // TODO: make sure the two images appear at the same time. If they don't , don't reveal the one that has already loaded until the second image has finished loading
 
-        Transformation transformation_rounded_image = new RoundedTransformationBuilder()
+        transformation_rounded_image = new RoundedTransformationBuilder()
                 .cornerRadiusDp(4).borderColor(getResources().getColor(R.color.black_tint_light)).borderWidthDp(1)
                 .oval(false)
                 .build();
@@ -148,6 +152,7 @@ public class AnsweringFragment extends Fragment  {
         //ImageView cardViewTop1Image = (ImageView) cardViewTop1.findViewById(R.id.cv_top1_image);
          imageView_cvtop1 = new ImageView(cardViewTop1.getContext());
          imageView_cvbot1 = new ImageView(cardViewBot1.getContext());
+         imageView_cv_top2 = new ImageView(cardViewTop2.getContext());
 
 
         CardView.LayoutParams cvtop1_image_params = new CardView.LayoutParams(cardViewTop1.getLayoutParams());
@@ -159,8 +164,11 @@ public class AnsweringFragment extends Fragment  {
                 && image_height_stored_landscape != 0)
             cvtop1_image_params.height = image_height_stored_landscape;
 
+
+
         cvtop1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
         imageView_cvtop1.setLayoutParams(cvtop1_image_params);
+        imageView_cv_top2.setLayoutParams(cvtop1_image_params);
 
         CardView.LayoutParams cvbot1_image_params = new CardView.LayoutParams(cardViewBot1.getLayoutParams());
         cvbot1_image_params.width = card_params.width - (2*margin_images);
@@ -179,7 +187,7 @@ public class AnsweringFragment extends Fragment  {
         //p.setIndicatorsEnabled(true);
 
         /*Retrieve bitmap from picasso and edit it*/
-        Picasso.with(cardViewTop1.getContext()).load("http://41.media.tumblr.com/fb3102f6fbcd273b60b7ee427e5b0f1f/tumblr_n1r4w2oFaN1r6e19zo1_1280.jpg")
+        Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
                 .fit().centerCrop()
                 .transform(transformation_rounded_image).into(imageView_cvtop1, new com.squareup.picasso.Callback() {
 
@@ -201,7 +209,7 @@ public class AnsweringFragment extends Fragment  {
 
         final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
        // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
-        Picasso.with(cardViewTop1.getContext()).load("http://i.imgur.com/Z5341o4.jpg").fit().centerCrop()
+        Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(1).getUrl()).fit().centerCrop()
                 .transform(transformation_rounded_image).into(imageView_cvbot1, new com.squareup.picasso.Callback() {
 
             @Override
@@ -216,6 +224,8 @@ public class AnsweringFragment extends Fragment  {
         });
 
         cardViewBot1.addView(imageView_cvbot1);
+
+        cardViewTop2.addView(imageView_cv_top2);
 
          // CardView movement and touch behavior
         final View.OnTouchListener tl = new View.OnTouchListener() {
@@ -435,6 +445,20 @@ public class AnsweringFragment extends Fragment  {
                         anim_in_right.setStartOffset(dur+200);
                         anim_tcard1.start();
                         if(selected) {
+                            Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
+                                    .fit().centerCrop()
+                                    .transform(transformation_rounded_image).into(imageView_cv_top2, new com.squareup.picasso.Callback() {
+
+                                @Override
+                                public void onSuccess() {
+                                    pb_cvtop1.setVisibility(View.INVISIBLE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    pb_cvtop1.setVisibility(View.VISIBLE);
+                                }
+                            });
                             if(anim_bcard1 !=  null)
                                 anim_bcard1.cancel();
                             cardViewBot1.startAnimation(anim_other);
