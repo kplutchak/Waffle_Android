@@ -47,6 +47,8 @@ public class Network {
                             Log.d("ConnectToBackend", "" + downloaded + " / " + total);
                         }
                     })
+
+
                     .asJsonArray()/*
 		.setCallback(new FutureCallback<JsonArray>() {
 		   @Override
