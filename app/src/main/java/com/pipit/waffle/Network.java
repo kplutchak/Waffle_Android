@@ -62,54 +62,57 @@ public class Network {
                 return;
             }
         }
-        if(false){}
-        else{
-            List<JsonObject> jsonlist = new ArrayList<JsonObject>();
 
-            if (result != null) {
-                for (int i = 0; i < result.size(); i++) {
-                    jsonlist.add(result.get(i).getAsJsonObject());
-                }
-            }
-            int k = 0;
-            int jsonlistindex = 0;
-            while(k < numberOfQuestionsNeeded && k < jsonlist.size()) {
-                //Get text body, user of question
-                jsonlistindex++;
-                if (ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(k).get("id").getAsString())) {
-                    String questionbody = jsonlist.get(k).get("text").getAsString();
-                    String userID = jsonlist.get(k).get("user_id").getAsString();
-                    User tempuser = new User(userID);
-                    Question nq = new Question(questionbody, tempuser);
 
-                    JsonArray answerJson = jsonlist.get(k).get("answers").getAsJsonArray();
-                    List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
-                    for (int i = 0; i < answerJson.size(); i++) {
-                        answerJsonList.add(answerJson.get(i).getAsJsonObject());
-                    }
-
-                    for (int j = 0; j < answerJsonList.size(); j++) {
-                        String answerBody = answerJsonList.get(j).get("text").getAsString();
-                        int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
-                        String questionID = Integer.toString(questionIDinteger);
-                        int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
-                        String picurl = answerJsonList.get(j).get("picture").getAsString();
-
-                        Choice newans = new Choice();
-                        newans.setAnswerBody(answerBody);
-                        newans.setVotes(answerVotes);
-                        newans.setQuestionID(questionID);
-                        newans.setUrl(picurl);
-                        nq.addChoice(newans);
-                    }
-                    if (nq.getChoices().size() == 2) {
-                        ClientData.addQuestion(nq);
-                        k++;
-                    }
-                }
-                return;
+        List<JsonObject> jsonlist = new ArrayList<JsonObject>();
+        Log.d("ConnectToBackend", "result received" + result.size() + " and numberOfQuestionsNeeded " + numberOfQuestionsNeeded);
+        if (result != null) {
+            for (int i = 0; i < result.size(); i++) {
+                jsonlist.add(result.get(i).getAsJsonObject());
             }
         }
+        int k = 0;
+        int jsonlistindex = 0;
+
+        while(k < numberOfQuestionsNeeded && k < jsonlist.size() && jsonlistindex<jsonlist.size()) {
+            Log.d("ConnectToBackend", "jsonList" + jsonlist.get(k).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
+
+            //Get text body, user of question
+            if (!ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(jsonlistindex).get("id").getAsString())) {
+                String questionbody = jsonlist.get(jsonlistindex).get("text").getAsString();
+                String userID = jsonlist.get(jsonlistindex).get("user_id").getAsString();
+                User tempuser = new User(userID);
+                Question nq = new Question(questionbody, tempuser);
+
+                JsonArray answerJson = jsonlist.get(jsonlistindex).get("answers").getAsJsonArray();
+                List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
+                for (int i = 0; i < answerJson.size(); i++) {
+                    answerJsonList.add(answerJson.get(i).getAsJsonObject());
+                }
+
+                for (int j = 0; j < answerJsonList.size(); j++) {
+                    String answerBody = answerJsonList.get(j).get("text").getAsString();
+                    int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
+                    String questionID = Integer.toString(questionIDinteger);
+                    int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                    String picurl = answerJsonList.get(j).get("picture").getAsString();
+
+                    Choice newans = new Choice();
+                    newans.setAnswerBody(answerBody);
+                    newans.setVotes(answerVotes);
+                    newans.setQuestionID(questionID);
+                    newans.setUrl(picurl);
+                    nq.addChoice(newans);
+                }
+                if (nq.getChoices().size() == 2) {
+                    ClientData.addQuestion(nq);
+                    k++;
+                }
+            }
+            jsonlistindex++;
+        }
+
+            return;
     }
 
     public static void newQuestion(final Context mcontext, Question mquestion){
@@ -197,7 +200,5 @@ public class Network {
                     }
                 });
     }
-
-
 
 }
