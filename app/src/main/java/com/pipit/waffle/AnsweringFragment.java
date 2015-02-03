@@ -2190,7 +2190,7 @@ public class AnsweringFragment extends Fragment  {
                                 public void onAnimationCancel(Animator animation) {
                                     float frac = anim_bcard2.getAnimatedFraction();
 
-                                    cardViewBot2.setTranslationX(((1 - frac) * deltaX) + starting_pos_right);
+                                    cardViewBot2.setTranslationX(((1 - frac) * deltaX) + starting_pos_right -1500);
                                 }
 
                                 @Override
