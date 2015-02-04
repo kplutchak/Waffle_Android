@@ -2,6 +2,7 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -10,16 +11,23 @@ import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.RoundedTransformationBuilder;
@@ -28,6 +36,7 @@ import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by Kyle on 11/19/2014.
@@ -43,6 +52,8 @@ public class AnsweringFragment extends Fragment  {
     private CardView cardViewBot1;
     private CardView cardViewTop2;
     private CardView cardViewBot2;
+
+    private TextView plus_one;
 
     private Transformation transformation_rounded_image;
 
@@ -1174,6 +1185,96 @@ public class AnsweringFragment extends Fragment  {
             // Inflate the layout for this fragment
             v = inflater.inflate(R.layout.answering_fragment_land, container, false);
 
+            final DecelerateInterpolator sDecelerateInterpolator =
+                    new DecelerateInterpolator();
+            boolean mTopLeft = true;
+
+               /* plus_one = (TextView) v.findViewById(R.id.button);
+                plus_one.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // Capture current location of button
+                        final int oldLeft = plus_one.getLeft();
+                        final int oldTop = plus_one.getTop();
+
+                        int random_num = randInt(0, 3);
+                        // Set up path to new location using a B�zier spline curve
+                        AnimatorPath path = new AnimatorPath();
+                        path.moveTo(0, 0);
+                        if(random_num==0)
+                            path.curveTo(40, -200, 80, -280, 120, -100);
+                        else if(random_num==1)
+                            path.curveTo(-40, -220, -80, -230, -120, -120);
+                        else
+                            path.curveTo(-60, -180, -90, -230, -140, -80);
+
+
+                        // Set up the animation
+                        final ObjectAnimator anim = ObjectAnimator.ofObject(
+                                AnsweringFragment.this, "buttonLoc",
+                                new PathEvaluator(), path.getPoints().toArray());
+                        anim.setDuration(1000);
+                        anim.setInterpolator(sDecelerateInterpolator);
+                        anim.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        });
+
+                        Animation alpha = new AlphaAnimation(1.0f, 0.0f);
+                        alpha.setInterpolator(new LinearInterpolator());
+                        alpha.setDuration(1000);
+                        alpha.setFillAfter(true);
+
+                        v.startAnimation(alpha);
+                        anim.start();
+
+                        // Change layout parameters of button to move it
+
+
+                        // Add OnPreDrawListener to catch button after layout but before drawing
+                        plus_one.getViewTreeObserver().addOnPreDrawListener(
+                                new ViewTreeObserver.OnPreDrawListener() {
+                                    public boolean onPreDraw() {
+                                        plus_one.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                                        // Capture new location
+                                        int left = plus_one.getLeft();
+                                        int top = plus_one.getTop();
+                                        int deltaX = left - oldLeft;
+                                        int deltaY = top - oldTop;
+
+
+                                        return true;
+                                    }
+                                });
+                    }
+                });
+
+
+
+    */
+
+            plus_one = (TextView) v.findViewById(R.id.plus_one);
+
+            final RelativeLayout frame_left = (RelativeLayout) v.findViewById(R.id.main_frame);
 
             // Retrieve the CardViews
             cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
@@ -1189,7 +1290,7 @@ public class AnsweringFragment extends Fragment  {
 
             int margin = (int) (8 * getActivity().getResources().getDisplayMetrics().density);
             int margin_images = (int) (5 * getActivity().getResources().getDisplayMetrics().density);
-            int margin_left = (int) (2000 * getActivity().getResources().getDisplayMetrics().density);
+            final int margin_left = (int) (2000 * getActivity().getResources().getDisplayMetrics().density);
             final int frame_width = (int) (2000 * getActivity().getResources().getDisplayMetrics().density);
 
             int width_modifier = (int) ((3.0/2.0) * margin);
@@ -1549,6 +1650,86 @@ public class AnsweringFragment extends Fragment  {
                                 });
 
                                 */
+
+
+
+
+                                plus_one.setText("+1");
+                                plus_one.setTextSize(30);
+                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
+                                // TODO: actually center the "+1", getWidth() probably returns 0
+                                //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
+                               params.setMargins(-(card_params.width/2) + margin_left -50, 250, 0, 0);
+                                plus_one.setLayoutParams(params);
+                                //plus_one.setX(-(card_params.width));
+                               // frame_left.removeView(plus_one);
+                                //frame_left.addView(plus_one);
+                                //frame_left.bringChildToFront(plus_one);
+
+                               // plus_one.bringToFront();
+                                plus_one.requestFocus();
+                               // plus_one.requestLayout();
+                                final DecelerateInterpolator sDecelerateInterpolator =
+                                        new DecelerateInterpolator();
+                                boolean mTopLeft = true;
+
+
+                        // Capture current location of button
+                        final int oldLeft = AnsweringFragment.this.plus_one.getLeft();
+                        final int oldTop = AnsweringFragment.this.plus_one.getTop();
+
+                        int random_num = randInt(0, 3);
+                        // Set up path to new location using a B�zier spline curve
+                        AnimatorPath path = new AnimatorPath();
+                        path.moveTo(0, 0);
+                        if(random_num==0)
+                            path.curveTo(40, -200, 80, -280, 120, -100);
+                        else if(random_num==1)
+                            path.curveTo(-40, -220, -80, -230, -120, -120);
+                        else
+                            path.curveTo(-60, -180, -90, -230, -140, -80);
+
+
+                        // Set up the animation
+                        final ObjectAnimator anim = ObjectAnimator.ofObject(
+                                AnsweringFragment.this, "buttonLoc",
+                                new PathEvaluator(), path.getPoints().toArray());
+                        anim.setDuration(1000);
+                        anim.setInterpolator(sDecelerateInterpolator);
+                        anim.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+                                //plus_one.bringToFront();
+                               // plus_one.requestFocus();
+                                //plus_one.requestLayout();
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        });
+
+                        Animation alpha = new AlphaAnimation(1.0f, 0.0f);
+                        alpha.setInterpolator(new LinearInterpolator());
+                        alpha.setDuration(1000);
+                        alpha.setFillAfter(true);
+
+                        plus_one.startAnimation(alpha);
+                        anim.start();
+
+
+
                                 if (anim_bcard1 != null)
                                     anim_bcard1.cancel();
                                cardViewBot1.startAnimation(anim_other);
@@ -1776,6 +1957,80 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard1.start();
                             if (selected) {
+                                plus_one.setText("+1");
+                                plus_one.setTextSize(30);
+                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
+                                // TODO: actually center the "+1", getWidth() probably returns 0
+                                //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
+                                params.setMargins((card_params.width/2) + margin_left +50, 250, 0, 0);
+                                plus_one.setLayoutParams(params);
+                                //plus_one.setX(-(card_params.width));
+                                // frame_left.removeView(plus_one);
+                                //frame_left.addView(plus_one);
+                                //frame_left.bringChildToFront(plus_one);
+
+                                // plus_one.bringToFront();
+                                plus_one.requestFocus();
+                                // plus_one.requestLayout();
+                                final DecelerateInterpolator sDecelerateInterpolator =
+                                        new DecelerateInterpolator();
+                                boolean mTopLeft = true;
+
+
+                                // Capture current location of button
+                                final int oldLeft = AnsweringFragment.this.plus_one.getLeft();
+                                final int oldTop = AnsweringFragment.this.plus_one.getTop();
+
+                                int random_num = randInt(0, 3);
+                                // Set up path to new location using a B�zier spline curve
+                                AnimatorPath path = new AnimatorPath();
+                                path.moveTo(0, 0);
+                                if(random_num==0)
+                                    path.curveTo(40, -200, 80, -280, 120, -100);
+                                else if(random_num==1)
+                                    path.curveTo(-40, -220, -80, -230, -120, -120);
+                                else
+                                    path.curveTo(-60, -180, -90, -230, -140, -80);
+
+
+                                // Set up the animation
+                                final ObjectAnimator anim = ObjectAnimator.ofObject(
+                                        AnsweringFragment.this, "buttonLoc",
+                                        new PathEvaluator(), path.getPoints().toArray());
+                                anim.setDuration(1000);
+                                anim.setInterpolator(sDecelerateInterpolator);
+                                anim.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
+                                        //plus_one.bringToFront();
+                                        // plus_one.requestFocus();
+                                        //plus_one.requestLayout();
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                });
+
+                                Animation alpha = new AlphaAnimation(1.0f, 0.0f);
+                                alpha.setInterpolator(new LinearInterpolator());
+                                alpha.setDuration(1000);
+                                alpha.setFillAfter(true);
+
+                                plus_one.startAnimation(alpha);
+                                anim.start();
+
                                 if (anim_tcard1 != null)
                                     anim_tcard1.cancel();
                                 cardViewTop1.startAnimation(anim_other);
@@ -2009,6 +2264,80 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard2.start();
                             if (selected) {
+                                plus_one.setText("+1");
+                                plus_one.setTextSize(30);
+                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
+                                // TODO: actually center the "+1", getWidth() probably returns 0
+                                //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
+                                params.setMargins(-(card_params.width/2) + margin_left -50, 250, 0, 0);
+                                plus_one.setLayoutParams(params);
+                                //plus_one.setX(-(card_params.width));
+                                // frame_left.removeView(plus_one);
+                                //frame_left.addView(plus_one);
+                                //frame_left.bringChildToFront(plus_one);
+
+                                // plus_one.bringToFront();
+                                plus_one.requestFocus();
+                                // plus_one.requestLayout();
+                                final DecelerateInterpolator sDecelerateInterpolator =
+                                        new DecelerateInterpolator();
+                                boolean mTopLeft = true;
+
+
+                                // Capture current location of button
+                                final int oldLeft = AnsweringFragment.this.plus_one.getLeft();
+                                final int oldTop = AnsweringFragment.this.plus_one.getTop();
+
+                                int random_num = randInt(0, 3);
+                                // Set up path to new location using a B�zier spline curve
+                                AnimatorPath path = new AnimatorPath();
+                                path.moveTo(0, 0);
+                                if(random_num==0)
+                                    path.curveTo(40, -200, 80, -280, 120, -100);
+                                else if(random_num==1)
+                                    path.curveTo(-40, -220, -80, -230, -120, -120);
+                                else
+                                    path.curveTo(-60, -180, -90, -230, -140, -80);
+
+
+                                // Set up the animation
+                                final ObjectAnimator anim = ObjectAnimator.ofObject(
+                                        AnsweringFragment.this, "buttonLoc",
+                                        new PathEvaluator(), path.getPoints().toArray());
+                                anim.setDuration(1000);
+                                anim.setInterpolator(sDecelerateInterpolator);
+                                anim.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
+                                        //plus_one.bringToFront();
+                                        // plus_one.requestFocus();
+                                        //plus_one.requestLayout();
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                });
+
+                                Animation alpha = new AlphaAnimation(1.0f, 0.0f);
+                                alpha.setInterpolator(new LinearInterpolator());
+                                alpha.setDuration(1000);
+                                alpha.setFillAfter(true);
+
+                                plus_one.startAnimation(alpha);
+                                anim.start();
+
                                 if (anim_bcard2 != null)
                                     anim_bcard2.cancel();
                                 cardViewBot2.startAnimation(anim_other);
@@ -2237,6 +2566,80 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard2.start();
                             if (selected) {
+                                plus_one.setText("+1");
+                                plus_one.setTextSize(30);
+                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
+                                // TODO: actually center the "+1", getWidth() probably returns 0
+                                //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
+                                params.setMargins((card_params.width/2) + margin_left + 50, 250, 0, 0);
+                                plus_one.setLayoutParams(params);
+                                //plus_one.setX(-(card_params.width));
+                                // frame_left.removeView(plus_one);
+                                //frame_left.addView(plus_one);
+                                //frame_left.bringChildToFront(plus_one);
+
+                                // plus_one.bringToFront();
+                                plus_one.requestFocus();
+                                // plus_one.requestLayout();
+                                final DecelerateInterpolator sDecelerateInterpolator =
+                                        new DecelerateInterpolator();
+                                boolean mTopLeft = true;
+
+
+                                // Capture current location of button
+                                final int oldLeft = AnsweringFragment.this.plus_one.getLeft();
+                                final int oldTop = AnsweringFragment.this.plus_one.getTop();
+
+                                int random_num = randInt(0, 3);
+                                // Set up path to new location using a B�zier spline curve
+                                AnimatorPath path = new AnimatorPath();
+                                path.moveTo(0, 0);
+                                if(random_num==0)
+                                    path.curveTo(40, -200, 80, -280, 120, -100);
+                                else if(random_num==1)
+                                    path.curveTo(-40, -220, -80, -230, -120, -120);
+                                else
+                                    path.curveTo(-60, -180, -90, -230, -140, -80);
+
+
+                                // Set up the animation
+                                final ObjectAnimator anim = ObjectAnimator.ofObject(
+                                        AnsweringFragment.this, "buttonLoc",
+                                        new PathEvaluator(), path.getPoints().toArray());
+                                anim.setDuration(1000);
+                                anim.setInterpolator(sDecelerateInterpolator);
+                                anim.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
+                                        //plus_one.bringToFront();
+                                        // plus_one.requestFocus();
+                                        //plus_one.requestLayout();
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                });
+
+                                Animation alpha = new AlphaAnimation(1.0f, 0.0f);
+                                alpha.setInterpolator(new LinearInterpolator());
+                                alpha.setDuration(1000);
+                                alpha.setFillAfter(true);
+
+                                plus_one.startAnimation(alpha);
+                                anim.start();
+
                                 if (anim_tcard2 != null)
                                     anim_tcard2.cancel();
                                 cardViewTop2.startAnimation(anim_other);
@@ -2260,6 +2663,32 @@ public class AnsweringFragment extends Fragment  {
         }
 
         return v;
+    }
+
+public static int randInt(int min, int max) {
+
+        // NOTE: Usually this should be a field rather than a method
+        // variable so that it is not re-seeded every call.
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
+        }
+
+
+    /**
+     * We need this setter to translate between the information the animator
+     * produces (a new "PathPoint" describing the current animated location)
+     * and the information that the button requires (an xy location). The
+     * setter will be called by the ObjectAnimator given the 'buttonLoc'
+     * property string.
+     */
+    public void setButtonLoc(PathPoint newLoc) {
+        plus_one.setTranslationX(newLoc.mX);
+        plus_one.setTranslationY(newLoc.mY);
     }
 
 }

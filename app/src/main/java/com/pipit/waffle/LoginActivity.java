@@ -1,5 +1,6 @@
 package com.pipit.waffle;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -14,10 +15,16 @@ import android.transition.Explode;
 import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Created by Kyle on 11/18/2014.
@@ -42,5 +49,7 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
+
     }
+
 }

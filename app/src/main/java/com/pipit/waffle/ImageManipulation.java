@@ -39,6 +39,7 @@ public class ImageManipulation implements Transformation {
         if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
             paint.setTextSize(convertToPixels(mContext, 7));        //Scaling needs to be used for different dpi's
 
+
         //Calculate the positions
         int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
 

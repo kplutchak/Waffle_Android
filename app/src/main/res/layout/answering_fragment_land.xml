@@ -3,18 +3,25 @@
 android:layout_width="4000dp"
     android:layout_gravity="center"
 
-android:layout_height="wrap_content" >
+android:layout_height="wrap_content"
+    android:id="@+id/main_frame">
     <LinearLayout
         android:layout_width="4000dp" android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="@color/grey"
         android:layout_centerInParent="true"
         >
+
+
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/moving_card_top">
+
+
+
+
 
 
             <!-- A CardView that contains a TextView -->
@@ -29,6 +36,8 @@ android:layout_height="wrap_content" >
                 card_view:cardCornerRadius="4dp"
                 card_view:cardBackgroundColor="@color/off_white"
                 >
+
+
 
                 <ProgressBar
                     android:id="@+id/progress_bar_cvtop1"
@@ -45,6 +54,8 @@ android:layout_height="wrap_content" >
 
 
             </android.support.v7.widget.CardView>
+
+
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -76,13 +87,22 @@ android:layout_height="wrap_content" >
                     />
 
             </android.support.v7.widget.CardView>
+
+
+
+
+
         </FrameLayout>
+
+
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/moving_card_bottom">
+
+
 
 
 
@@ -142,5 +162,11 @@ android:layout_height="wrap_content" >
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/plus_one"
+        android:textColor="@color/accent"
+        android:text="Pie"/>
 
 </RelativeLayout>
