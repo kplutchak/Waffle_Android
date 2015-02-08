@@ -23,7 +23,7 @@ public class Question {
 
     public void addChoice(Choice ans){
         //ans.setQuestionID(questionID);
-        if (ans.getUrl().length() < 1 || ans.getUrl().equals("")){
+        if (ans.getUrl() == null || ans.getUrl().equals("")){
             //No image
             ans.imageState = Choice.LoadState.NO_IMAGE;
         }

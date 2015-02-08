@@ -1,6 +1,7 @@
 package com.pipit.waffle.Objects;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -17,15 +18,6 @@ public class Choice {
     private String answerID;
     private String questionID;
     private String url;
-
-    public Bitmap get_image() {
-        return _image;
-    }
-
-    public void set_image(Bitmap _image) {
-        this._image = _image;
-    }
-
     private Bitmap _image;
     private int votes;
     public LoadState imageState;
@@ -47,6 +39,7 @@ public class Choice {
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 _image = loadedImage;
                 imageState = LoadState.IMAGE_READY;
+                Log.d("Choice", "Image Loading Completed");
             }
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
@@ -94,6 +87,14 @@ public class Choice {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Bitmap get_image() {
+        return _image;
+    }
+
+    public void set_image(Bitmap _image) {
+        this._image = _image;
     }
 
     public enum LoadState{
