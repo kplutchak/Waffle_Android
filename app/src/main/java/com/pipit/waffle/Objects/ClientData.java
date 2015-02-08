@@ -37,6 +37,12 @@ public class ClientData {
     }
 
     public static void addQuestion(Question q){
+        /*
+            When a question gets added, it contains a url to the associated image, but not the image itself. We have to
+            start the synchronous download of that image here.
+         */
+        //Todo: Check that question contains at least one option.
+
         questions.add(q);
         Log.d("ClientData", "addQuestion(q) added a question with text: '" + q.getQuestionBody() + "' and " + q.getChoices().get(0).getQuestionID() + " userID  - question array size is now" + Integer.toString(questions.size()));
         return;

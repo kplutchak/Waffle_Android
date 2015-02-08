@@ -93,18 +93,26 @@ public class Network {
                 }
 
                 for (int j = 0; j < answerJsonList.size(); j++) {
-                    String answerBody = answerJsonList.get(j).get("text").getAsString();
-                    int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
-                    String questionID = Integer.toString(questionIDinteger);
-                    int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
-                    String picurl = answerJsonList.get(j).get("picture").getAsString();
+                    try {
+                        String answerBody = answerJsonList.get(j).get("text").getAsString();
+                        int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
+                        String questionID = Integer.toString(questionIDinteger);
+                        int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                        String picurl = "";
+                        if( answerJsonList.get(j).has("picture")){
+                            picurl = answerJsonList.get(j).get("picture").getAsString();
+                        }
 
-                    Choice newans = new Choice();
-                    newans.setAnswerBody(answerBody);
-                    newans.setVotes(answerVotes);
-                    newans.setQuestionID(questionID);
-                    newans.setUrl(picurl);
-                    nq.addChoice(newans);
+                        Choice newans = new Choice();
+                        newans.setAnswerBody(answerBody);
+                        newans.setVotes(answerVotes);
+                        newans.setQuestionID(questionID);
+                        newans.setUrl(picurl);
+                        nq.addChoice(newans);
+                    } catch (Exception e){
+                        //Poorly formatted question
+                        //Todo: Announce or log poorly formatted question.
+                    }
                 }
                 if (nq.getChoices().size() == 2) {
                     ClientData.addQuestion(nq);

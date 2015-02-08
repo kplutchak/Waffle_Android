@@ -13,6 +13,7 @@ public class Question {
     private String id;
     private List<Choice> choices;
     private User asker;
+    public int imagesLoaded = 0;
 
     public Question(String qbody, User asker){
         setQuestionBody(qbody);
@@ -22,7 +23,15 @@ public class Question {
 
     public void addChoice(Choice ans){
         //ans.setQuestionID(questionID);
+        if (ans.getUrl().length() < 1 || ans.getUrl().equals("")){
+            //No image
+            ans.imageState = Choice.LoadState.NO_IMAGE;
+        }
         this.choices.add(ans);
+
+        if (ans.imageState == Choice.LoadState.NO_IMAGE){
+            ans.loadURLintoBitmap(ans.getUrl());
+        }
     }
 
     public void deleteAnswer(Choice ans){
