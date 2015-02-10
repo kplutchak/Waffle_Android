@@ -17,7 +17,10 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pipit.waffle.Objects.Choice;
@@ -71,14 +74,19 @@ public class ToolbarActivity extends ActionBarActivity {
         // Set the drawer's ListView
         drawerListView = (ListView) findViewById(R.id.left_drawer_list);
 
-        List<String> items = new ArrayList<String>();
 
-        items.add(0, "Navigation Item One");
-        items.add(1, "Navigation Item Two");
-        items.add(2, "Navigation Item Three");
-        items.add(3, "Navigation Item Four");
+        List<DrawerItem> items = new ArrayList<DrawerItem>();
 
-        drawerListView.setAdapter(new ArrayAdapter<String>(this,
+        DrawerItem me_item = new DrawerItem("Me", 0);
+        DrawerItem ask_item = new DrawerItem("Ask", 1);
+        DrawerItem answer_item = new DrawerItem("Answer", 2);
+        DrawerItem settings_item = new DrawerItem("Settings", 3);
+        items.add(0, me_item);
+        items.add(1, ask_item);
+        items.add(2, answer_item);
+        items.add(3, settings_item);
+
+        drawerListView.setAdapter(new DrawerListAdapter(this,
                 R.layout.drawer_list_item, items));
 
         // Set the drawer
@@ -179,7 +187,6 @@ public class ToolbarActivity extends ActionBarActivity {
         swap_icon.setOutlineProvider(viewOutlineProvider);
 
         swap_icon.setClipToOutline(true);
-
 
         // Set the swap icon
 

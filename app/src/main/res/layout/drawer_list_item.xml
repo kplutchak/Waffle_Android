@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp"
-    android:textSize="15sp"
-    android:textColor="@color/off_white">
-</TextView>
+<RelativeLayout
+    android:layout_height="54dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:id="@+id/drawer_icon"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="88dp"
+        android:textSize="20sp"
+        android:textColor="@color/off_white"
+        android:id="@+id/drawer_text">
+    </TextView>
+
+</RelativeLayout>
