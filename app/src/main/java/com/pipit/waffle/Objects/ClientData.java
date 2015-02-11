@@ -6,6 +6,7 @@ import android.util.Log;
 import com.pipit.waffle.Network;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -22,10 +23,15 @@ public class ClientData {
     private static Queue<Question> questions;
     private static List<String> idsOfAnsweredQuestions;
 
+    // maps Choice answerID to an integer that specifies the ImageView that the _image
+    // from Choice should be loaded into
+    public HashMap<String, Integer> card_image_map;
+
     private ClientData(){
         //Initialize
         questions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
+        card_image_map = new HashMap<>(4);
         Log.d("ClientData", "ClientData() - initializing questions arrays");
     }
 

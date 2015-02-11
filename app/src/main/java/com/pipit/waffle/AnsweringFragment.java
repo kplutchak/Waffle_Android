@@ -2,16 +2,15 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -22,20 +21,19 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.pipit.waffle.Objects.ClientData;
+import com.pipit.waffle.Objects.Question;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -68,29 +66,34 @@ public class AnsweringFragment extends Fragment  {
     private float mOrigX;
     private float mOrigY;
 
-    private ImageView imageView_cvtop1;
-    private ImageView imageView_cvbot1;
+    private ImageView imageView_cv_top1;
+    private ImageView imageView_cv_bot1;
     private ImageView imageView_cv_top2;
+    private ImageView imageView_cv_bot2;
     private int image_height_stored;
     private int image_height_stored_landscape;
 
     private VelocityTracker velocity = null;
 
 
+
+    // TODO: when a Choice is selected, remove it from the mapping
+    // TODO: when a Choice is being brought in via getNext...(), add it to the mapping using it's
+    // answerID
+    // TODO: pass the mappings between orientation changes (make sure they are not lost)
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if(getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
-            outState.putInt("height_portrait", imageView_cvtop1.getHeight());
+            outState.putInt("height_portrait", imageView_cv_top1.getHeight());
             outState.putInt("height_landscape", image_height_stored_landscape);
         }
         else {
             outState.putInt("height_portrait", image_height_stored);
-            outState.putInt("height_landscape", imageView_cvtop1.getHeight());
+            outState.putInt("height_landscape", imageView_cv_top1.getHeight());
         }
         super.onSaveInstanceState(outState);
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +103,18 @@ public class AnsweringFragment extends Fragment  {
             image_height_stored = savedInstanceState.getInt("height_portrait");
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
         }
+
+        // get the next four unanswered questions and set their mappings
+
+        // TODO: implement this
+        /*Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
+        card_image_map.put(q1.getChoices().get(0).getAnswerID(), 0);
+        card_image_map.put(q1.getChoices().get(1).getAnswerID(), 1);
+
+        Question q2 = ClientData.getNextUnansweredQuestion(getActivity());
+        card_image_map.put(q2.getChoices().get(0).getAnswerID(), 2);
+        card_image_map.put(q2.getChoices().get(1).getAnswerID(), 3);
+        */
 
         View v = null;
 
@@ -165,10 +180,11 @@ public class AnsweringFragment extends Fragment  {
             // Transformation trans = new RoundedTransformation(20, 0);
 
             final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
-            //ImageView cardViewTop1Image = (ImageView) cardViewTop1.findViewById(R.id.cv_top1_image);
-            imageView_cvtop1 = new ImageView(cardViewTop1.getContext());
-            imageView_cvbot1 = new ImageView(cardViewBot1.getContext());
+
+            imageView_cv_top1 = new ImageView(cardViewTop1.getContext());
+            imageView_cv_bot1 = new ImageView(cardViewBot1.getContext());
             imageView_cv_top2 = new ImageView(cardViewTop2.getContext());
+            imageView_cv_bot2 = new ImageView(cardViewBot2.getContext());
 
 
             CardView.LayoutParams cvtop1_image_params = new CardView.LayoutParams(cardViewTop1.getLayoutParams());
@@ -182,7 +198,7 @@ public class AnsweringFragment extends Fragment  {
 
 
             cvtop1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-            imageView_cvtop1.setLayoutParams(cvtop1_image_params);
+            imageView_cv_top1.setLayoutParams(cvtop1_image_params);
             imageView_cv_top2.setLayoutParams(cvtop1_image_params);
 
             CardView.LayoutParams cvbot1_image_params = new CardView.LayoutParams(cardViewBot1.getLayoutParams());
@@ -195,20 +211,25 @@ public class AnsweringFragment extends Fragment  {
                 cvbot1_image_params.height = image_height_stored_landscape;
 
             cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-            imageView_cvbot1.setLayoutParams(cvbot1_image_params);
+            imageView_cv_bot1.setLayoutParams(cvbot1_image_params);
+            imageView_cv_bot2.setLayoutParams(cvbot1_image_params);
+
+
+
+
 
 
             //Picasso p = new Picasso.Builder(getActivity()).build();
             //p.setIndicatorsEnabled(true);
 
-            Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
 
-            String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
+           // String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
 
         /*Retrieve bitmap from picasso and edit it*/
             /*Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
                     .fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cvtop1, new com.squareup.picasso.Callback() {
+                    .transform(transformation_rounded_image).into(imageView_cv_top1, new com.squareup.picasso.Callback() {
 
                 @Override
                 public void onSuccess() {
@@ -222,7 +243,23 @@ public class AnsweringFragment extends Fragment  {
             });
             */
 
-            cardViewTop1.addView(imageView_cvtop1);
+
+          /*  final Choice top1 = ClientData.getNextUnansweredQuestion(v.getContext()).getChoices().get(0);
+
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if(top1.imageState == Choice.LoadState.IMAGE_READY)
+                imageView_cv_top1.setImageBitmap(top1.get_image());
+
+
+            */
+
+
+
 
             //cardViewTop1Image.invalidate();
             //cardViewTop1Image.postInvalidate();
@@ -230,7 +267,7 @@ public class AnsweringFragment extends Fragment  {
             final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
             // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
            /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(1).getUrl()).fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cvbot1, new com.squareup.picasso.Callback() {
+                    .transform(transformation_rounded_image).into(imageView_cv_bot1, new com.squareup.picasso.Callback() {
 
                 @Override
                 public void onSuccess() {
@@ -243,9 +280,9 @@ public class AnsweringFragment extends Fragment  {
                 }
             });
     */
-            cardViewBot1.addView(imageView_cvbot1);
+           // cardViewBot1.addView(imageView_cv_bot1);
 
-            cardViewTop2.addView(imageView_cv_top2);
+            //cardViewTop2.addView(imageView_cv_top2);
 
             // CardView movement and touch behavior
             final View.OnTouchListener tl = new View.OnTouchListener() {
@@ -1337,10 +1374,11 @@ public class AnsweringFragment extends Fragment  {
             // Transformation trans = new RoundedTransformation(20, 0);
 
             final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
-            //ImageView cardViewTop1Image = (ImageView) cardViewTop1.findViewById(R.id.cv_top1_image);
-            imageView_cvtop1 = new ImageView(cardViewTop1.getContext());
-            imageView_cvbot1 = new ImageView(cardViewBot1.getContext());
+
+            imageView_cv_top1 = new ImageView(cardViewTop1.getContext());
+            imageView_cv_bot1 = new ImageView(cardViewBot1.getContext());
             imageView_cv_top2 = new ImageView(cardViewTop2.getContext());
+            imageView_cv_bot2 = new ImageView(cardViewBot2.getContext());
 
 
             CardView.LayoutParams cvtop1_image_params = new CardView.LayoutParams(cardViewTop1.getLayoutParams());
@@ -1354,7 +1392,7 @@ public class AnsweringFragment extends Fragment  {
 
 
             cvtop1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-            imageView_cvtop1.setLayoutParams(cvtop1_image_params);
+            imageView_cv_top1.setLayoutParams(cvtop1_image_params);
             imageView_cv_top2.setLayoutParams(cvtop1_image_params);
 
             CardView.LayoutParams cvbot1_image_params = new CardView.LayoutParams(cardViewBot1.getLayoutParams());
@@ -1367,20 +1405,20 @@ public class AnsweringFragment extends Fragment  {
                 cvbot1_image_params.height = image_height_stored_landscape;
 
             cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-            imageView_cvbot1.setLayoutParams(cvbot1_image_params);
-
+            imageView_cv_bot1.setLayoutParams(cvbot1_image_params);
+            imageView_cv_bot2.setLayoutParams(cvbot1_image_params);
 
             //Picasso p = new Picasso.Builder(getActivity()).build();
             //p.setIndicatorsEnabled(true);
 
-            Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
 
-            String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
+            //String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
 
         /*Retrieve bitmap from picasso and edit it*/
            /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
                     .fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cvtop1, new com.squareup.picasso.Callback() {
+                    .transform(transformation_rounded_image).into(imageView_cv_top1, new com.squareup.picasso.Callback() {
 
                 @Override
                 public void onSuccess() {
@@ -1393,7 +1431,7 @@ public class AnsweringFragment extends Fragment  {
                 }
             });
         */
-            cardViewTop1.addView(imageView_cvtop1);
+            cardViewTop1.addView(imageView_cv_top1);
 
             //cardViewTop1Image.invalidate();
             //cardViewTop1Image.postInvalidate();
@@ -1401,7 +1439,7 @@ public class AnsweringFragment extends Fragment  {
             final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
             // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
            /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(1).getUrl()).fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cvbot1, new com.squareup.picasso.Callback() {
+                    .transform(transformation_rounded_image).into(imageView_cv_bot1, new com.squareup.picasso.Callback() {
 
                 @Override
                 public void onSuccess() {
@@ -1414,7 +1452,7 @@ public class AnsweringFragment extends Fragment  {
                 }
             });
     */
-            cardViewBot1.addView(imageView_cvbot1);
+            cardViewBot1.addView(imageView_cv_bot1);
 
             cardViewTop2.addView(imageView_cv_top2);
 
@@ -2665,17 +2703,37 @@ public class AnsweringFragment extends Fragment  {
         return v;
     }
 
-public static int randInt(int min, int max) {
 
-        // NOTE: Usually this should be a field rather than a method
-        // variable so that it is not re-seeded every call.
-        Random rand = new Random();
+    public void setImageViewBitmap(Bitmap b, String answerID_key) {
+        Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
+        if(card_num != null)
+        {
+            switch(card_num) {
+                case 0: imageView_cv_top1.setImageBitmap(b);
+                        break;
+                case 1: imageView_cv_bot1.setImageBitmap(b);
+                        break;
+                case 2: imageView_cv_top2.setImageBitmap(b);
+                        break;
+                case 3: imageView_cv_bot2.setImageBitmap(b);
+                        break;
+                default:
+                        break;
+            }
+        }
+    }
 
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        int randomNum = rand.nextInt((max - min) + 1) + min;
+    public static int randInt(int min, int max) {
 
-        return randomNum;
+            // NOTE: Usually this should be a field rather than a method
+            // variable so that it is not re-seeded every call.
+            Random rand = new Random();
+
+            // nextInt is normally exclusive of the top value,
+            // so add 1 to make it inclusive
+            int randomNum = rand.nextInt((max - min) + 1) + min;
+
+            return randomNum;
         }
 
 

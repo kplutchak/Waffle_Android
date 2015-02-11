@@ -74,6 +74,7 @@ public class ToolbarActivity extends ActionBarActivity {
         // Set the drawer's ListView
         drawerListView = (ListView) findViewById(R.id.left_drawer_list);
 
+        ClientData.getNextUnansweredQuestion(this);
 
         List<DrawerItem> items = new ArrayList<DrawerItem>();
 

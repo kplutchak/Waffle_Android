@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.pipit.waffle.Objects.ClientData;
 
 /**
  * Created by Kyle on 11/18/2014.
@@ -26,11 +27,14 @@ public class LoginActivity extends Activity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.splash_screen);
 
+
         /*Universal Image Loader*/
         Context context = this;
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .build();
         ImageLoader.getInstance().init(config);
+
+
 
         ImageView login = (ImageView) findViewById(R.id.fb_test_login);
         login.setOnClickListener(new View.OnClickListener() {
