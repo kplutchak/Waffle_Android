@@ -31,7 +31,8 @@
             <android.support.v4.widget.DrawerLayout
                 android:id="@+id/drawer_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
 
                 <!-- The main content view -->
                 <FrameLayout
@@ -43,7 +44,7 @@
 
                 <!-- The navigation drawer -->
                 <RelativeLayout
-                    android:background="@color/primary_500"
+                    android:background="@color/off_white"
                     android:layout_height="match_parent"
                     android:layout_width="256dp"
                     android:layout_gravity="start"

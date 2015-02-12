@@ -19,9 +19,13 @@
     <color name="accent_dark">#ffBA184F</color>
     <color name="brown_faded">#8086674a</color>
     <color name="transparent">#00ffffff</color>
+    <color name="text_black">#616161</color>
 
     <color name="black_tint">#80000000</color>
     <color name="black_tint_light">#40000000</color>
+    <color name="black_tint_vlight">#20000000</color>
+    <color name="black_tint_medium">#60000000</color>
+
 
 
 </resources>

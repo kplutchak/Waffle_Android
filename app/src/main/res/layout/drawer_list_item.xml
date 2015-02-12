@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:layout_height="54dp"
+    android:layout_height="70dp"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
@@ -8,15 +8,17 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="19dp"
         android:id="@+id/drawer_icon"/>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="72dp"
-        android:textSize="16sp"
-        android:textColor="@color/off_white"
+        android:layout_marginLeft="63dp"
+        android:paddingTop="2dp"
+        android:textSize="18sp"
+        android:textColor="@color/text_black"
+        android:fontFamily="sans-serif"
         android:id="@+id/drawer_text">
     </TextView>
 

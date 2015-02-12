@@ -3,8 +3,10 @@ package com.pipit.waffle;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Outline;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -92,6 +94,9 @@ public class ToolbarActivity extends ActionBarActivity {
 
         // Set the drawer
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawerLayout.setScrimColor(getResources().getColor(R.color.black_tint_medium));
+
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(toggle);

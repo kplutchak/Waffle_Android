@@ -85,12 +85,14 @@ public class AnsweringFragment extends Fragment  {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if(getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
-            outState.putInt("height_portrait", imageView_cv_top1.getHeight());
+            if(imageView_cv_top1 != null)
+                outState.putInt("height_portrait", imageView_cv_top1.getHeight());
             outState.putInt("height_landscape", image_height_stored_landscape);
         }
         else {
             outState.putInt("height_portrait", image_height_stored);
-            outState.putInt("height_landscape", imageView_cv_top1.getHeight());
+            if(imageView_cv_top1 != null)
+                outState.putInt("height_landscape", imageView_cv_top1.getHeight());
         }
         super.onSaveInstanceState(outState);
     }
@@ -107,21 +109,20 @@ public class AnsweringFragment extends Fragment  {
         // get the next four unanswered questions and set their mappings
 
         // TODO: implement this
-        /*Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
-        card_image_map.put(q1.getChoices().get(0).getAnswerID(), 0);
-        card_image_map.put(q1.getChoices().get(1).getAnswerID(), 1);
+        Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
+        ClientData.getInstance().card_image_map.put(q1.getChoices().get(0).getAnswerID(), 0);
+        ClientData.getInstance().card_image_map.put(q1.getChoices().get(1).getAnswerID(), 1);
 
         Question q2 = ClientData.getNextUnansweredQuestion(getActivity());
-        card_image_map.put(q2.getChoices().get(0).getAnswerID(), 2);
-        card_image_map.put(q2.getChoices().get(1).getAnswerID(), 3);
-        */
+        ClientData.getInstance().card_image_map.put(q2.getChoices().get(0).getAnswerID(), 2);
+        ClientData.getInstance().card_image_map.put(q2.getChoices().get(1).getAnswerID(), 3);
+
 
         View v = null;
 
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Inflate the layout for this fragment
             v = inflater.inflate(R.layout.answering_fragment, container, false);
-
 
             // Retrieve the CardViews
             cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
