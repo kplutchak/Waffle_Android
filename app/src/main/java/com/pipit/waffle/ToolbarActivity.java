@@ -175,69 +175,15 @@ public class ToolbarActivity extends ActionBarActivity {
 
         swap_icon.setClipToOutline(true);
 
-        // Set the swap icon
-
+        // Set the camera icon
         swap_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (current_fragment_id == Constants.ANSWERING_FRAGMENT_ID || current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID) {
-
                     Intent intent = new Intent(v.getContext(), CameraActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in, R.anim.stay);
-                    /*
-
-                }
-                if(current_fragment_id == Constants.QUESTION_CREATION_MODE_FRAGMENT_ID)
-                {
-                    AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
-                            R.animator.card_flip_left_in);
-                    set.setTarget(swap_icon);
-
-                    AnimatorSet set2 = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),
-                            R.animator.card_flip_left_out);
-
-                    set2.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-
-                    set2.setTarget(swap_icon_blue);
-                    TransitionDrawable transition = (TransitionDrawable) toolbar.getBackground();
-
-                    // ensure the transition occurred completely
-                    transition.startTransition(0);
-                    transition.reverseTransition(400);
-
-
-
-                    set.start();
-                    set2.start();
-
-                }
-                switchFragments();
-            }
-
-            */
                 }
             }
         });

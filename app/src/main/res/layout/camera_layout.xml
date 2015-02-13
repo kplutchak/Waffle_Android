@@ -6,7 +6,7 @@
 
     >
 
-    <TextureView
+    <com.pipit.waffle.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Picture"
-
+            android:id="@+id/capture_button"
             android:layout_centerHorizontal="true"
 
             />
