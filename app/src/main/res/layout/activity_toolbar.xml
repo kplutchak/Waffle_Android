@@ -19,6 +19,17 @@
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 >
 
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Waffle"
+                    android:textStyle="bold"
+                    android:layout_marginStart="15dp"
+                    android:textSize="20sp"
+                    android:textColor="@color/off_white"
+                    android:fontFamily="sans-serif-light"/>
 
 
 

@@ -51,7 +51,7 @@ public class AnsweringFragment extends Fragment  {
     private CardView cardViewTop2;
     private CardView cardViewBot2;
 
-    private TextView plus_one;
+    private ImageView plus_one;
 
     private Transformation transformation_rounded_image;
 
@@ -1310,7 +1310,7 @@ public class AnsweringFragment extends Fragment  {
 
     */
 
-            plus_one = (TextView) v.findViewById(R.id.plus_one);
+            plus_one = (ImageView) v.findViewById(R.id.plus_one);
 
             final RelativeLayout frame_left = (RelativeLayout) v.findViewById(R.id.main_frame);
 
@@ -1693,8 +1693,8 @@ public class AnsweringFragment extends Fragment  {
 
 
 
-                                plus_one.setText("+1");
-                                plus_one.setTextSize(30);
+                                //plus_one.setText("+1");
+
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
                                 // TODO: actually center the "+1", getWidth() probably returns 0
                                 //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
@@ -1996,8 +1996,7 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard1.start();
                             if (selected) {
-                                plus_one.setText("+1");
-                                plus_one.setTextSize(30);
+                                //plus_one.setText("+1");
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
                                 // TODO: actually center the "+1", getWidth() probably returns 0
                                 //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
@@ -2303,8 +2302,7 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard2.start();
                             if (selected) {
-                                plus_one.setText("+1");
-                                plus_one.setTextSize(30);
+                                //plus_one.setText("+1");
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
                                 // TODO: actually center the "+1", getWidth() probably returns 0
                                 //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
@@ -2605,8 +2603,8 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard2.start();
                             if (selected) {
-                                plus_one.setText("+1");
-                                plus_one.setTextSize(30);
+                                //plus_one.setText("+1");
+
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
                                 // TODO: actually center the "+1", getWidth() probably returns 0
                                 //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());

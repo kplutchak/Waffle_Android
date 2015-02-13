@@ -162,11 +162,10 @@ android:layout_height="wrap_content"
 
     </LinearLayout>
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/plus_one"
-        android:textColor="@color/accent"
-        android:text="Pie"/>
+        android:src="@drawable/plus_one_filled_inner"/>
 
 </RelativeLayout>
