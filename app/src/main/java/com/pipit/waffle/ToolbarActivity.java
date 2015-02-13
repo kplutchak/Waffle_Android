@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.pipit.waffle.Objects.Choice;
@@ -73,24 +74,7 @@ public class ToolbarActivity extends ActionBarActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Set the drawer's ListView
-        drawerListView = (ListView) findViewById(R.id.left_drawer_list);
-
         ClientData.getNextUnansweredQuestion(this);
-
-        List<DrawerItem> items = new ArrayList<DrawerItem>();
-
-        DrawerItem me_item = new DrawerItem("Me", 0);
-        DrawerItem ask_item = new DrawerItem("Ask", 1);
-        DrawerItem answer_item = new DrawerItem("Answer", 2);
-        DrawerItem settings_item = new DrawerItem("Settings", 3);
-        items.add(0, me_item);
-        items.add(1, ask_item);
-        items.add(2, answer_item);
-        items.add(3, settings_item);
-
-        drawerListView.setAdapter(new DrawerListAdapter(this,
-                R.layout.drawer_list_item, items));
 
         // Set the drawer
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -101,6 +85,9 @@ public class ToolbarActivity extends ActionBarActivity {
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(toggle);
 
+        // TODO: add click behavior for nav. drawer
+
+        /*
         // Set drawer item click behavior
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,11 +116,6 @@ public class ToolbarActivity extends ActionBarActivity {
                                         // rotations when switching to the back of the card, as well as animator
                                         // resources representing rotations when flipping back to the front (e.g. when
                                         // the system Back button is pressed).
-                            /*
-                            .setCustomAnimations(R.animator., R.animator.card_flip_right_out,
-                                    R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-                            */
-
 
                                         // Replace any fragments currently in the container view with a fragment
                                         // representing the next page (indicated by the just-incremented currentPage
@@ -152,7 +134,6 @@ public class ToolbarActivity extends ActionBarActivity {
                     }
                 }
                 else if (position==1){
-                    /*Post test question*/
                     Question testQuestion = new Question("Generic test question from Android", Self.getUser());
                     Choice testAnswerOne = new Choice();
                     Choice testAnswerTwo = new Choice();
@@ -168,7 +149,6 @@ public class ToolbarActivity extends ActionBarActivity {
                     toast.show();
                 }
                 else if (position==2){
-                    /*Attempt to retrieve next question*/
                     Question testQuestion = new Question("No Question Retrieved", Self.getUser());
                     testQuestion = ClientData.getNextUnansweredQuestion(mcontext);
                     String text = testQuestion.getQuestionBody() + " " + testQuestion.getChoices().get(0).getUrl();
@@ -179,6 +159,7 @@ public class ToolbarActivity extends ActionBarActivity {
             }
         });
 
+        */
         // Create the buttons
         final Button swap_icon = (Button) findViewById(R.id.fab);
 

@@ -42,21 +42,181 @@
                     android:layout_width="match_parent">
                 </FrameLayout>
 
+                <ScrollView
+                    android:layout_width="256dp"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:layout_gravity="start"
+                    android:id="@+id/nav_scrollview">
                 <!-- The navigation drawer -->
                 <RelativeLayout
                     android:background="@color/off_white"
-                    android:layout_height="match_parent"
-                    android:layout_width="256dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_gravity="start"
                     android:id="@+id/navigation_drawer">
 
-                    <ListView android:id="@+id/left_drawer_list"
+                    <RelativeLayout
+                        android:layout_height="70dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:divider="@android:color/transparent"
-                        android:dividerHeight="0dp"/>
-                </RelativeLayout>
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:id="@+id/nav_item1">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/icon_me_black_xhdpi"
+                            android:layout_marginLeft="19dp"/>
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="60dp"
+                            android:paddingTop="2dp"
+                            android:textSize="19sp"
+                            android:text="Me"
+                            android:textColor="@color/text_black"
+                            android:fontFamily="sans-serif-light">
+                        </TextView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_height="70dp"
+                        android:layout_width="match_parent"
+                        android:id="@+id/nav_item2"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:layout_below="@id/nav_item1">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="19dp"
+                            android:src="@drawable/icon_ask_black_xhdpi"/>
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="60dp"
+                            android:paddingTop="2dp"
+                            android:textSize="19sp"
+                            android:text="Ask"
+                            android:textColor="@color/text_black"
+                            android:fontFamily="sans-serif-light">
+                        </TextView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_height="70dp"
+                        android:layout_width="match_parent"
+                        android:id="@+id/nav_item3"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:layout_below="@id/nav_item2">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="19dp"
+                            android:src="@drawable/icon_answer_black_xhdpi"/>
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="60dp"
+                            android:paddingTop="2dp"
+                            android:textSize="19sp"
+                            android:text="Answer"
+                            android:textColor="@color/text_black"
+                            android:fontFamily="sans-serif-light">
+                        </TextView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_height="70dp"
+                        android:layout_width="match_parent"
+                        android:id="@+id/nav_item4"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:layout_below="@id/nav_item3">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="19dp"
+                            android:src="@drawable/icon_settings_black_xhdpi"/>
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="60dp"
+                            android:paddingTop="2dp"
+                            android:textSize="19sp"
+                            android:text="Settings"
+                            android:textColor="@color/text_black"
+                            android:fontFamily="sans-serif-light">
+                        </TextView>
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_below="@id/nav_item4">
+                    
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/mila_icon"
+                        android:id="@+id/profile_nav"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/profile_nav"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="12dp"
+                        android:paddingBottom="24dp"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/text_black"
+                        android:text="Mila Kunis"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/profile_nav"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="11dp"
+                        android:paddingBottom="4dp"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/text_light"
+                        android:text="Logged with Facebook"/>
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+            </ScrollView>
             </android.support.v4.widget.DrawerLayout>
 
         </LinearLayout>
@@ -107,7 +267,7 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/icon_camera"
+                android:src="@drawable/icon_camera_white_xhdpi"
                 android:layout_centerInParent="true"/>
         </RelativeLayout>
 
