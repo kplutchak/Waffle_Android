@@ -13,6 +13,7 @@ public class Question {
     private String id;
     private List<Choice> choices;
     private User asker;
+    public QuestionState state=null;
     public int imagesLoaded = 0;
 
     public Question(String qbody, User asker){
@@ -29,7 +30,7 @@ public class Question {
         }
         this.choices.add(ans);
 
-        if (ans.imageState == Choice.LoadState.NO_IMAGE){
+        if (ans.imageState != Choice.LoadState.NO_IMAGE){
             ans.loadURLintoBitmap(ans.getUrl());
         }
     }
@@ -92,6 +93,10 @@ public class Question {
 
     public void generateAndSetID(){
         this.id = UUID.randomUUID().toString();
+    }
+
+    public enum QuestionState{
+        LOADED, NOT_LOADED;
     }
 
 }

@@ -10,7 +10,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.ProgressCallback;
 import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
@@ -35,27 +34,77 @@ public class Network {
         ProgressBar progressBar = new ProgressBar(mcontext);
         progressBar.setIndeterminate(true);
         ProgressDialog progressDialog = new ProgressDialog(mcontext);
-
-        JsonArray result = new JsonArray();
         try{
-            result = Ion.with(mcontext)
+            Ion.with(mcontext)
                     .load(url)
-                    .progressBar(mProgress)
-                    .progressHandler(new ProgressCallback() {
+                    .asJsonArray()
+                    .setCallback(new FutureCallback<JsonArray>() {
                         @Override
-                        public void onProgress(long downloaded, long total) {
-                            Log.d("ConnectToBackend", "" + downloaded + " / " + total);
+                        public void onCompleted(Exception e, JsonArray result) {
+                            List<JsonObject> jsonlist = new ArrayList<JsonObject>();
+                            Log.d("ConnectToBackend", "result received" + result.size() + " and numberOfQuestionsNeeded " + numberOfQuestionsNeeded);
+                            if (result != null) {
+                                for (int i = 0; i < result.size(); i++) {
+                                    jsonlist.add(result.get(i).getAsJsonObject());
+                                }
+                            }
+                            int k = 0;
+                            int jsonlistindex = 0;
+
+                            while(k < numberOfQuestionsNeeded && k < jsonlist.size() && jsonlistindex<jsonlist.size()) {
+                                Log.d("ConnectToBackend", "jsonList" + jsonlist.get(k).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
+
+                                //Get text body, user of question
+                                if (!ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(jsonlistindex).get("id").getAsString())) {
+                                    String questionbody = jsonlist.get(jsonlistindex).get("text").getAsString();
+                                    String userID = jsonlist.get(jsonlistindex).get("user_id").getAsString();
+                                    User tempuser = new User(userID);
+                                    Question nq = new Question(questionbody, tempuser);
+
+                                    JsonArray answerJson = jsonlist.get(jsonlistindex).get("answers").getAsJsonArray();
+                                    List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
+                                    for (int i = 0; i < answerJson.size(); i++) {
+                                        answerJsonList.add(answerJson.get(i).getAsJsonObject());
+                                    }
+
+                                    for (int j = 0; j < answerJsonList.size(); j++) {
+                                        try {
+                                            String answerBody = answerJsonList.get(j).get("text").getAsString();
+                                            int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
+                                            String questionID = Integer.toString(questionIDinteger);
+                                            int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                                            String picurl = "";
+                                            if( answerJsonList.get(j).has("picture")){
+                                                picurl = answerJsonList.get(j).get("picture").getAsString();
+                                            }
+
+                                            Choice newans = new Choice();
+                                            newans.setAnswerBody(answerBody);
+                                            newans.setVotes(answerVotes);
+                                            newans.setQuestionID(questionID);
+                                            newans.setUrl(picurl);
+                                            if (picurl=="" || !picurl.contains("http")){
+                                                newans.imageState = Choice.LoadState.NO_IMAGE;
+                                            }else{
+                                                newans.imageState = Choice.LoadState.NOT_LOADED;
+                                            }
+                                            nq.addChoice(newans);
+                                        } catch (Exception e1){
+                                            //Poorly formatted question
+                                            //Todo: Announce or log poorly formatted question.
+                                        }
+                                    }
+                                    if (nq.getChoices().size() == 2) {
+                                        ClientData.addQuestion(nq);
+                                        k++;
+                                    }
+                                }
+                                jsonlistindex++;
+                            }
+
+                            return;
                         }
-                    })
-
-
-                    .asJsonArray()/*
-		.setCallback(new FutureCallback<JsonArray>() {
-		   @Override
-		    public void onCompleted(Exception e, JsonArray result) {
-			   // this is called back onto the ui thread, no Activity.runOnUiThread or Handler.post necessary.
-			   */
-                    .get();
+                    });
         }catch(Exception e){
             Log.d("ConnectToBackend", "getAllQuestions called with url " + url);
             if (e != null) {
@@ -66,65 +115,104 @@ public class Network {
         }
 
 
-        List<JsonObject> jsonlist = new ArrayList<JsonObject>();
-        Log.d("ConnectToBackend", "result received" + result.size() + " and numberOfQuestionsNeeded " + numberOfQuestionsNeeded);
-        if (result != null) {
-            for (int i = 0; i < result.size(); i++) {
-                jsonlist.add(result.get(i).getAsJsonObject());
-            }
-        }
-        int k = 0;
-        int jsonlistindex = 0;
 
-        while(k < numberOfQuestionsNeeded && k < jsonlist.size() && jsonlistindex<jsonlist.size()) {
-            Log.d("ConnectToBackend", "jsonList" + jsonlist.get(k).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
-
-            //Get text body, user of question
-            if (!ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(jsonlistindex).get("id").getAsString())) {
-                String questionbody = jsonlist.get(jsonlistindex).get("text").getAsString();
-                String userID = jsonlist.get(jsonlistindex).get("user_id").getAsString();
-                User tempuser = new User(userID);
-                Question nq = new Question(questionbody, tempuser);
-
-                JsonArray answerJson = jsonlist.get(jsonlistindex).get("answers").getAsJsonArray();
-                List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
-                for (int i = 0; i < answerJson.size(); i++) {
-                    answerJsonList.add(answerJson.get(i).getAsJsonObject());
-                }
-
-                for (int j = 0; j < answerJsonList.size(); j++) {
-                    try {
-                        String answerBody = answerJsonList.get(j).get("text").getAsString();
-                        int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
-                        String questionID = Integer.toString(questionIDinteger);
-                        int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
-                        String picurl = "";
-                        if( answerJsonList.get(j).has("picture")){
-                            picurl = answerJsonList.get(j).get("picture").getAsString();
-                        }
-
-                        Choice newans = new Choice();
-                        newans.setAnswerBody(answerBody);
-                        newans.setVotes(answerVotes);
-                        newans.setQuestionID(questionID);
-                        newans.setUrl(picurl);
-                        nq.addChoice(newans);
-                    } catch (Exception e){
-                        //Poorly formatted question
-                        //Todo: Announce or log poorly formatted question.
-                    }
-                }
-                if (nq.getChoices().size() == 2) {
-                    ClientData.addQuestion(nq);
-                    k++;
-                }
-            }
-            jsonlistindex++;
-        }
-
-            return;
     }
 
+    /*
+        getOneQuestionWithCallback is used when the queue is empty. It will start the loading of the question
+        and use a callback to fill it out when the data arrives, allowing the question to be displayed immediately
+        with a spinner and get updated when ready.
+     */
+    public static void getOneQuestionWithCallback(final Context mcontext, final Question nq){
+    /*This function currently populates clientData directly (bad practice)*/
+        //TODO: make this block with a progress dialog and return questions directly, and let the caller populate the fields
+        Log.d("ConnectToBackend", "starting getQuestions");
+        final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
+        ToolbarActivity ma = (ToolbarActivity) mcontext;
+
+
+        JsonArray result = new JsonArray();
+        try{
+            Ion.with(mcontext)
+                    .load(url)
+                    .asJsonArray()
+                    .setCallback(new FutureCallback<JsonArray>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonArray result) {
+                            List<JsonObject> jsonlist = new ArrayList<JsonObject>();
+                            if (result != null) {
+                                for (int i = 0; i < result.size(); i++) {
+                                    jsonlist.add(result.get(i).getAsJsonObject());
+                                }
+                            }
+                            int k = 0;
+                            int jsonlistindex = 0;
+
+                            while(k < 1 && k < jsonlist.size() && jsonlistindex<jsonlist.size()) {
+                                Log.d("ConnectToBackend", "jsonList" + jsonlist.get(k).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
+
+                                //Get text body, user of question
+                                if (!ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(jsonlistindex).get("id").getAsString())) {
+                                    try {
+                                        nq.setQuestionBody(jsonlist.get(jsonlistindex).get("text").getAsString());
+                                    }catch (Exception e1){}
+                                    String userID = jsonlist.get(jsonlistindex).get("user_id").getAsString();
+                                    User tempuser = new User(userID);
+
+                                    JsonArray answerJson = jsonlist.get(jsonlistindex).get("answers").getAsJsonArray();
+                                    List<JsonObject> answerJsonList = new ArrayList<JsonObject>();
+                                    for (int i = 0; i < answerJson.size(); i++) {
+                                        answerJsonList.add(answerJson.get(i).getAsJsonObject());
+                                    }
+
+                                    for (int j = 0; j < answerJsonList.size(); j++) {
+                                        try {
+                                            String answerBody = answerJsonList.get(j).get("text").getAsString();
+                                            int questionIDinteger = answerJsonList.get(j).get("id").getAsInt();
+                                            String questionID = Integer.toString(questionIDinteger);
+                                            int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
+                                            String picurl = "";
+                                            if( answerJsonList.get(j).has("picture")){
+                                                picurl = answerJsonList.get(j).get("picture").getAsString();
+                                            }
+
+                                            Choice newans = new Choice();
+                                            newans.setAnswerBody(answerBody);
+                                            newans.setVotes(answerVotes);
+                                            newans.setQuestionID(questionID);
+                                            if (picurl=="" || !picurl.contains("http")){
+                                                newans.imageState = Choice.LoadState.NO_IMAGE;
+                                            }else{
+                                                newans.imageState = Choice.LoadState.NOT_LOADED;
+                                            }
+                                            newans.setUrl(picurl);
+                                            nq.addChoice(newans);
+                                        } catch (Exception except){
+                                            //Poorly formatted question
+                                            //Todo: Announce or log poorly formatted question.
+                                        }
+                                    }
+                                    if (nq.getChoices().size() == 2) {
+                                        ClientData.addQuestion(nq);
+                                        k++;
+                                    }
+                                }
+                                jsonlistindex++;
+                            }
+                            return;
+                        }
+                    });
+
+        }catch(Exception e){
+            Log.d("ConnectToBackend", "getAllQuestions called with url " + url);
+            if (e != null) {
+                Toast.makeText(mcontext, "Error loading questions " + e.toString(), Toast.LENGTH_LONG).show();
+                Log.d("ConnectToBackend", e.toString());
+                return;
+            }
+        }
+
+    }
     public static void newQuestion(final Context mcontext, Question mquestion){
         JsonObject json = new JsonObject();
         json.addProperty("foo", "bar");

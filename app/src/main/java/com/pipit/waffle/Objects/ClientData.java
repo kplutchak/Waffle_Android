@@ -3,6 +3,7 @@ package com.pipit.waffle.Objects;
 import android.content.Context;
 import android.util.Log;
 
+import com.pipit.waffle.AnsweringFragment;
 import com.pipit.waffle.Network;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class ClientData {
     private static ClientData clientdata = new ClientData();
     private static Queue<Question> questions;
     private static List<String> idsOfAnsweredQuestions;
-
+    private static AnsweringFragment answeringFragment;
     // maps Choice answerID to an integer that specifies the ImageView that the _image
     // from Choice should be loaded into
     public HashMap<String, Integer> card_image_map;
@@ -68,7 +69,10 @@ public class ClientData {
         q.addChoice(a);
 
         if (questions.size()<1){
+            Network.getOneQuestionWithCallback(mcontext, q);
             Network.getAllQuestions(mcontext, numberQuestionsToPull());
+            q.state = Question.QuestionState.NOT_LOADED;
+            return q;
         }
 
         Log.d("ClientData", "getNextUnAnsweredQuestion: questions.size() = " +Integer.toString(questions.size()));
@@ -100,6 +104,14 @@ public class ClientData {
 
     public static List<String> getIdsOfAnsweredQuestions() {
         return idsOfAnsweredQuestions;
+    }
+
+    public static AnsweringFragment getAnsweringFragment() {
+        return answeringFragment;
+    }
+
+    public static void setAnsweringFragment(AnsweringFragment answeringFragment) {
+        ClientData.answeringFragment = answeringFragment;
     }
 
 }

@@ -8,6 +8,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.UUID;
+
 /**
  * Created by Eric on 12/13/2014.
  */
@@ -27,6 +29,7 @@ public class Choice {
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
         setVotes(0);
         imageState = LoadState.NOT_LOADED;
+        answerID = UUID.randomUUID().toString();
     }
 
     public boolean loadURLintoBitmap(String imageUri){
@@ -40,6 +43,7 @@ public class Choice {
                 _image = loadedImage;
                 imageState = LoadState.IMAGE_READY;
                 Log.d("Choice", "Image Loading Completed");
+                ClientData.getAnsweringFragment().setImageViewBitmap(_image, answerID);
             }
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {

@@ -24,7 +24,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.pipit.waffle.Objects.ClientData;
@@ -33,7 +32,6 @@ import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -101,6 +99,7 @@ public class AnsweringFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        ClientData.setAnsweringFragment(this);
         if(savedInstanceState != null) {
             image_height_stored = savedInstanceState.getInt("height_portrait");
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
