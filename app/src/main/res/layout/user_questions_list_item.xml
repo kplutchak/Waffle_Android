@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
     >
 
-    <TextView
+    <ImageView
+        android:id="@+id/image1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textSize="15sp"
-        android:textColor="@color/black_tint"
+        android:src="@drawable/mila_icon"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="2dp"
+        android:layout_toRightOf="@id/image1"
+        android:src="@drawable/mila_icon"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:padding="10dp"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/text_black"
         android:id="@+id/image_prev1"
-        android:text="A"
         android:layout_margin="10dp"
     />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="15sp"
-        android:textColor="@color/black_tint"
-        android:id="@+id/image_prev2"
-        android:text="B"
-        android:layout_toRightOf="@id/image_prev1"
-        android:layout_margin="10dp"/>
 
 </RelativeLayout>

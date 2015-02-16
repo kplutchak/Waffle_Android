@@ -12,7 +12,7 @@
          which is used to tint widgets -->
     <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/off_white</item>
-        <item name="android:navigationBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/nav_color</item>
 
         <!-- enable window content transitions -->
 
