@@ -72,6 +72,11 @@ public class ClientData {
             Network.getOneQuestionWithCallback(mcontext, q);
             Network.getAllQuestions(mcontext, numberQuestionsToPull());
             q.state = Question.QuestionState.NOT_LOADED;
+            q.generateAndSetID();
+            Choice _a = new Choice();
+            Choice _b = new Choice();
+            q.addChoice(_a);
+            q.addChoice(_b);
             return q;
         }
 

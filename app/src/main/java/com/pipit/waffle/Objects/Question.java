@@ -33,6 +33,9 @@ public class Question {
         if (ans.imageState != Choice.LoadState.NO_IMAGE){
             ans.loadURLintoBitmap(ans.getUrl());
         }
+        else{
+            //ClientData.getAnsweringFragment().setNoImageBitmap(ans.getAnswerID());
+        }
     }
 
     public void deleteAnswer(Choice ans){

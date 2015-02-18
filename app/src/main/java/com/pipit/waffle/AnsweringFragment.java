@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.view.VelocityTrackerCompat;
@@ -2704,6 +2705,9 @@ public class AnsweringFragment extends Fragment  {
 
     public void setImageViewBitmap(Bitmap b, String answerID_key) {
         Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
+        if (b==null){
+            b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);
+        }
         if(card_num != null)
         {
             switch(card_num) {
@@ -2717,6 +2721,27 @@ public class AnsweringFragment extends Fragment  {
                         break;
                 default:
                         break;
+            }
+        }
+    }
+
+    public void setNoImageBitmap(String answerID_key) {
+        Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
+        Bitmap b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);
+
+        if(card_num != null)
+        {
+            switch(card_num) {
+                case 0: imageView_cv_top1.setImageBitmap(b);
+                    break;
+                case 1: imageView_cv_bot1.setImageBitmap(b);
+                    break;
+                case 2: imageView_cv_top2.setImageBitmap(b);
+                    break;
+                case 3: imageView_cv_bot2.setImageBitmap(b);
+                    break;
+                default:
+                    break;
             }
         }
     }
