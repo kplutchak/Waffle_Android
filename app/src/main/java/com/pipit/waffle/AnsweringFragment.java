@@ -45,6 +45,7 @@ public class AnsweringFragment extends Fragment  {
 
     // CardViews -  there are two CardViews for top, two for bottom. The two swap when a selection
     // occurs
+
     private CardView cardViewTop1;
     private CardView cardViewBot1;
     private CardView cardViewTop2;
