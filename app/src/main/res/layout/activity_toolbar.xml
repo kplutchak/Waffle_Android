@@ -28,7 +28,7 @@
                     android:layout_marginStart="15dp"
                     android:textSize="20sp"
                     android:textColor="@color/off_white"
-                    android:fontFamily="sans-serif-light"/>
+                    android:fontFamily="sans-serif"/>
 
 
 
@@ -89,7 +89,7 @@
                             android:textSize="19sp"
                             android:text="Me"
                             android:textColor="@color/text_black"
-                            android:fontFamily="sans-serif-light">
+                            android:fontFamily="sans-serif">
                         </TextView>
 
                     </RelativeLayout>
@@ -118,7 +118,7 @@
                             android:textSize="19sp"
                             android:text="Ask"
                             android:textColor="@color/text_black"
-                            android:fontFamily="sans-serif-light">
+                            android:fontFamily="sans-serif">
                         </TextView>
 
                     </RelativeLayout>
@@ -147,7 +147,7 @@
                             android:textSize="19sp"
                             android:text="Answer"
                             android:textColor="@color/text_black"
-                            android:fontFamily="sans-serif-light">
+                            android:fontFamily="sans-serif">
                         </TextView>
 
                     </RelativeLayout>
@@ -176,7 +176,7 @@
                             android:textSize="19sp"
                             android:text="Settings"
                             android:textColor="@color/text_black"
-                            android:fontFamily="sans-serif-light">
+                            android:fontFamily="sans-serif">
                         </TextView>
 
                     </RelativeLayout>
@@ -207,7 +207,7 @@
                         android:layout_marginLeft="12dp"
                         android:paddingBottom="24dp"
                         android:textSize="20sp"
-                        android:fontFamily="sans-serif-light"
+                        android:fontFamily="sans-serif"
                         android:textColor="@color/text_black"
                         android:text="Mila Kunis"/>
 

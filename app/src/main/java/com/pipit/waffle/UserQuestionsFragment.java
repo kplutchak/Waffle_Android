@@ -27,9 +27,12 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class UserQuestionsFragment extends Fragment {
 
-    private ExpandableStickyListHeadersListView mListView;
+    private RecyclerView mRecyclerView;
+    private StickyHeadersItemDecoration top;
+    private StickyHeadersItemDecoration overlay;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private UserQuestionsFragmentListAdapter mAdapter;
-    WeakHashMap<View,Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,25 +41,14 @@ public class UserQuestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.user_questions_fragment, container, false);
 
-        mListView = (ExpandableStickyListHeadersListView) v.findViewById(R.id.list);
-        mListView.setAnimExecutor(new ExpandableStickyListHeadersListView.IAnimationExecutor() {
-            @Override
-            public void executeAnim(View view, int i) {
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.list);
 
-            }
-        });
+        String[] data = {"Adam", "Becky", "Carol", "David", "Edward"};
+        mRecyclerView.setHasFixedSize(true);
 
-        mListView.setDrawingListUnderStickyHeader(true);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        //mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-       // mLayoutManager = new LinearLayoutManager(v.getContext());
-       // mRecyclerView.setLayoutManager(mLayoutManager);
-
-        String[] data = {"Adam", "Alex", "Becky", "Carol", "David", "Edward", "Francis", "George", "Harry", "Issac", "Jack", "Kendra", "Laura", "Mike", "Nancy", "Oliver", "Paul", "Queen", "Robert", "Sandy", "Tom"};
-
+                // use a linear layout manager
+                mLayoutManager = new LinearLayoutManager(v.getContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
 
         List<String> items = new ArrayList<String>();
         for(String s : data)
@@ -64,82 +56,20 @@ public class UserQuestionsFragment extends Fragment {
             items.add(s);
         }
 
+        mAdapter = new UserQuestionsFragmentListAdapter(v.getContext(), items);
+        mRecyclerView.setAdapter(mAdapter);
 
-        mListView.setAnimExecutor(new AnimationExecutor());
-        mAdapter = new UserQuestionsFragmentListAdapter(getActivity(), items);
-        mListView.setAdapter(mAdapter);
+        top = new StickyHeadersBuilder()
+                .setAdapter(mAdapter)
+                .setRecyclerView(mRecyclerView)
+                .setStickyHeadersAdapter(new HeaderAdapter(items))
+                .build();
 
-        mListView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-            @Override
-            public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
-                if(mListView.isHeaderCollapsed(headerId)){
-                    mListView.expand(headerId);
-                }else {
-                    mListView.collapse(headerId);
-                }
-            }
-        });
+        mRecyclerView.addItemDecoration(top);
 
         return v;
     }
 
-    //animation executor
-    class AnimationExecutor implements ExpandableStickyListHeadersListView.IAnimationExecutor {
 
-        @Override
-        public void executeAnim(final View target, final int animType) {
-            if(ExpandableStickyListHeadersListView.ANIMATION_EXPAND==animType&&target.getVisibility()==View.VISIBLE){
-                return;
-            }
-            if(ExpandableStickyListHeadersListView.ANIMATION_COLLAPSE==animType&&target.getVisibility()!=View.VISIBLE){
-                return;
-            }
-            if(mOriginalViewHeightPool.get(target)==null){
-                mOriginalViewHeightPool.put(target,target.getHeight());
-            }
-            final int viewHeight = mOriginalViewHeightPool.get(target);
-            float animStartY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? 0f : viewHeight;
-            float animEndY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? viewHeight : 0f;
-            final ViewGroup.LayoutParams lp = target.getLayoutParams();
-            ValueAnimator animator = ValueAnimator.ofFloat(animStartY, animEndY);
-            animator.setDuration(200);
-            target.setVisibility(View.VISIBLE);
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    if (animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND) {
-                        target.setVisibility(View.VISIBLE);
-                    } else {
-                        target.setVisibility(View.GONE);
-                    }
-                    target.getLayoutParams().height = viewHeight;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    lp.height = ((Float) valueAnimator.getAnimatedValue()).intValue();
-                    target.setLayoutParams(lp);
-                    target.requestLayout();
-                }
-            });
-            animator.start();
-
-        }
-    }
 
 }

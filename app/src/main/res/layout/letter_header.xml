@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/off_white"
-    android:layout_height="wrap_content">
+    android:layout_height="48dp"
+    android:background="@color/off_white">
 
 
-    <com.pipit.waffle.UnderlineTextView
+    <TextView
         android:id="@+id/letter"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="48dp"
         android:textSize="14sp"
-        android:paddingStart="10dp"
+        android:paddingStart="16dp"
         android:textColor="@color/text_light"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="sans-serif-medium"
         android:layout_alignParentStart="true"
         android:gravity="start|center_vertical" />
 </RelativeLayout>
