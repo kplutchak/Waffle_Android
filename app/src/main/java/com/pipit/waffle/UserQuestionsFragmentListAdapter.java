@@ -154,6 +154,8 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             }
 
 
+            // technically, only checking if we have 1 or more sizes for the particular URLs (not necessarily the size we actually
+            // need), so might want to change this later to a ClientData HashMap or something (or switch to just portrait)
             List<Bitmap> l_bitmap = MemoryCacheUtils.findCachedBitmapsForImageUri(url_left, ImageLoader.getInstance().getMemoryCache());
             if(l_bitmap.isEmpty())
                 Log.d("UserQuestionsFragmentListAdapter", "Left image not mem-cached!");
@@ -167,7 +169,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 Log.d("UserQuestionsFragmentListAdapter", "Left image not disk-cached!");
 
             File file_right = ImageLoader.getInstance().getDiskCache().get(url_right);
-            if (!file_left.exists())
+            if (!file_right.exists())
                 Log.d("UserQuestionsFragmentListAdapter", "Right image not disk-cached!");
 
 
@@ -198,7 +200,6 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                         .build();
             }
 
-
             ImageLoader.getInstance().displayImage(url_left, left, options_left, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -215,7 +216,6 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             });
         }
 
-
         @Override
         public void onClick(View v) {
             //removeListener.onRemove(getPosition());
@@ -227,6 +227,5 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             return true;
         }
     }
-
 
 }

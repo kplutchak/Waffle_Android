@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.eowise.recyclerview.stickyheaders.DrawOrder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,11 @@ public class UserQuestionsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.user_questions_fragment, container, false);
+
+        // TODO: remove
+       /* ImageLoader.getInstance().clearDiskCache();
+        ImageLoader.getInstance().clearMemoryCache();
+        */
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list);
 
