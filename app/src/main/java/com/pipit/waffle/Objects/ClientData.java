@@ -33,7 +33,7 @@ public class ClientData {
         //Initialize
         questions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
-        card_image_map = new HashMap<>(4);
+        card_image_map = new HashMap<String, Integer>();
         Log.d("ClientData", "ClientData() - initializing questions arrays");
     }
 
