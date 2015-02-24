@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.pipit.waffle.Objects.ClientData;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by Kyle on 11/18/2014.
@@ -28,6 +32,10 @@ public class LoginActivity extends Activity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.splash_screen);
 
+        Typewriter writer = (Typewriter) findViewById(R.id.typewriter_test);
+        //Add a character every 150ms
+        writer.setCharacterDelay(5);
+        writer.animateText("Typewriters are cool!");
 
         /*Universal Image Loader*/
         Context context = this;
