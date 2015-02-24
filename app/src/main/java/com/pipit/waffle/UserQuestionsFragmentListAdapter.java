@@ -3,43 +3,36 @@ package com.pipit.waffle;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.SectionIndexer;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 import com.pipit.waffle.Objects.ClientData;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Kyle on 1/4/2015.
  */
 public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQuestionsFragmentListAdapter.ViewHolder>  {
 
+    // TODO: comment this class (CONFUSING)
+
     private List<String> items;
     private Context mContext;
-
 
     public UserQuestionsFragmentListAdapter(Context context, List<String> items) {
         this.mContext = context;
@@ -100,11 +93,94 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
         private ImageView right;
         private ProgressBar spinner_left;
         private ProgressBar spinner_right;
+
+        private Animation fade_in_left;
+        private Animation fade_in_right;
+
+        private boolean should_fade_left = false;
+        private boolean should_fade_right = false;
+
+        private Bitmap left_bitmap;
+        private Bitmap right_bitmap;
+
+        private CountDownLatch latch = new CountDownLatch(2);
        // private OnRemoveListener removeListener;
        // private OnEditListener editListener;
 
+        public class ImageSetterTask extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                try {
+                    latch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                if(should_fade_right|| should_fade_left) {
+                    left.setVisibility(View.INVISIBLE);
+                    right.setVisibility(View.INVISIBLE);
+                    left.setImageBitmap(left_bitmap);
+                    right.setImageBitmap(right_bitmap);
+                    left.startAnimation(fade_in_left);
+                    right.startAnimation(fade_in_right);
+                }
+                else {
+                    left.setImageBitmap(left_bitmap);
+                    right.setImageBitmap(right_bitmap);
+                }
+            }
+
+            @Override
+            protected void onPreExecute() {
+            }
+
+        }
+
         public ViewHolder(View itemView) {
             super(itemView);
+            fade_in_left = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.fade_in);
+            fade_in_left.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    left.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            fade_in_right = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.fade_in);
+            fade_in_right.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    right.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
            //this.label = (TextView) itemView.findViewById(R.id.name);
             this.left = (ImageView) itemView.findViewById(R.id.left_image);
             this.right = (ImageView) itemView.findViewById(R.id.right_image);
@@ -120,6 +196,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
         public void setImages() {
             // TODO: re-show spinner?
+            // TODO: fade-out spinner
 
             String a = "Adam";
             String b = "Becky";
@@ -155,67 +232,25 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 url_right = "http://i.imgur.com/p9vW3mn.jpg";
             }
 
+            ImageSetterTask l_task = new ImageSetterTask();
+            l_task.execute();
+
+            // technically, only checking if we have 1 or more sizes for the particular URLs
             List<String> l_keys = MemoryCacheUtils.findCacheKeysForImageUri(url_left, ImageLoader.getInstance().getMemoryCache());
             List<String> r_keys = MemoryCacheUtils.findCacheKeysForImageUri(url_right, ImageLoader.getInstance().getMemoryCache());
 
             boolean l_is_cached = false;
             boolean r_is_cached = false;
 
-            if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                String key_value = ClientData.getInstance().landscape_key_mapping.get(url_left);
-                if (key_value != null && !l_keys.isEmpty()) {
-                    for(int i=0; i<l_keys.size(); i++)
-                    {
-                        if(l_keys.get(i).equals(key_value)) {
-                            l_is_cached = true;
-                            Log.d("UserQuestionsFragmentListAdapter", "Left image is mem-cached!");
-                            break;
-                        }
-                    }
+                if (!l_keys.isEmpty()) {
+                    l_is_cached = true;
+                    Log.d("UserQuestionsFragmentListAdapter", "Left image is mem-cached!");
                 }
-                String key_value_right = ClientData.getInstance().landscape_key_mapping.get(url_right);
-                if (key_value_right != null && !r_keys.isEmpty()) {
-                    for(int i=0; i<r_keys.size(); i++)
-                    {
-                        if(r_keys.get(i).equals(key_value_right)) {
-                            r_is_cached = true;
-                            Log.d("UserQuestionsFragmentListAdapter", "Right image is mem-cached!");
-                            break;
-                        }
-                    }
-                }
-            }
-            else if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                String key_value = ClientData.getInstance().portrait_key_mapping.get(url_left);
-                if (key_value != null && !l_keys.isEmpty()) {
-                    for(int i=0; i<l_keys.size(); i++)
-                    {
-                        if(l_keys.get(i).equals(key_value)) {
-                            l_is_cached = true;
-                            Log.d("UserQuestionsFragmentListAdapter", "Left image is mem-cached!");
-                            break;
-                        }
-                    }
-                }
-                String key_value_right = ClientData.getInstance().portrait_key_mapping.get(url_right);
-                if (key_value_right != null && !r_keys.isEmpty()) {
-                    for(int i=0; i<r_keys.size(); i++)
-                    {
-                        if(r_keys.get(i).equals(key_value_right)) {
-                            r_is_cached = true;
-                            Log.d("UserQuestionsFragmentListAdapter", "Right image is mem-cached!");
-                            break;
-                        }
-                    }
-                }
-            }
 
-            // FIXED: technically, only checking if we have 1 or more sizes for the particular URLs (not necessarily the size we actually
-            // need), so might want to change this later to a ClientData HashMap or something (or switch to just portrait)
-            List<Bitmap> l_bitmap = MemoryCacheUtils.findCachedBitmapsForImageUri(url_left, ImageLoader.getInstance().getMemoryCache());
-
-            List<Bitmap> r_bitmap = MemoryCacheUtils.findCachedBitmapsForImageUri(url_right, ImageLoader.getInstance().getMemoryCache());
-
+                if (!r_keys.isEmpty()) {
+                    r_is_cached = true;
+                    Log.d("UserQuestionsFragmentListAdapter", "Right image is mem-cached!");
+                }
 
             File file_left = ImageLoader.getInstance().getDiskCache().get(url_left);
             if (!file_left.exists())
@@ -226,66 +261,51 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 Log.d("UserQuestionsFragmentListAdapter", "Right image not disk-cached!");
 
 
-            DisplayImageOptions options_left;
             // only fade-in if the mem-cache does not contain the image
+            DisplayImageOptions options_left;
             if(!l_is_cached || !r_is_cached) {
                 options_left = new DisplayImageOptions.Builder().cacheInMemory(true)
-                        .cacheOnDisk(true).displayer(new FadeInBitmapDisplayer(1000))
+                        .cacheOnDisk(true)
                         .build();
+                should_fade_left = true;
 
             }
             else
             {
-                options_left = new DisplayImageOptions.Builder().cacheInMemory(true)
-                        .cacheOnDisk(true)
+                options_left = new DisplayImageOptions.Builder()
                         .build();
             }
 
             DisplayImageOptions options_right;
             if(!r_is_cached || !l_is_cached) {
                 options_right = new DisplayImageOptions.Builder().cacheInMemory(true)
-                        .cacheOnDisk(true).displayer(new FadeInBitmapDisplayer(1000))
+                        .cacheOnDisk(true)
                         .build();
+                should_fade_right = true;
             }
             else
             {
-                options_right = new DisplayImageOptions.Builder().cacheInMemory(true)
-                        .cacheOnDisk(true)
+                options_right = new DisplayImageOptions.Builder()
                         .build();
             }
 
-            final boolean finalL_is_cached = l_is_cached;
-            ImageLoader.getInstance().displayImage(url_left, left, options_left, new SimpleImageLoadingListener() {
+            ImageLoader.getInstance().loadImage(url_left, options_left, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    left_bitmap = loadedImage;
+                    latch.countDown();
                     // hide the spinner
                     spinner_left.setVisibility(View.INVISIBLE);
-                    if(!finalL_is_cached)
-                    {
-                        List<String> l_keys = MemoryCacheUtils.findCacheKeysForImageUri(imageUri, ImageLoader.getInstance().getMemoryCache());
-                        if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-                            ClientData.getInstance().portrait_key_mapping.put(imageUri, l_keys.get(0));
-                        else
-                            ClientData.getInstance().landscape_key_mapping.put(imageUri, l_keys.get(0));
-                    }
                 }
             });
 
-
-            final boolean finalR_is_cached = r_is_cached;
-            ImageLoader.getInstance().displayImage(url_right, right,  options_right, new SimpleImageLoadingListener() {
+            ImageLoader.getInstance().loadImage(url_right, options_right, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    right_bitmap = loadedImage;
+                    latch.countDown();
                     // hide the spinner
                     spinner_right.setVisibility(View.INVISIBLE);
-                    if(!finalR_is_cached)
-                    {
-                        List<String> r_keys = MemoryCacheUtils.findCacheKeysForImageUri(imageUri, ImageLoader.getInstance().getMemoryCache());
-                        if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-                            ClientData.getInstance().portrait_key_mapping.put(imageUri, r_keys.get(0));
-                        else
-                            ClientData.getInstance().landscape_key_mapping.put(imageUri, r_keys.get(0));
-                    }
                 }
             });
         }
@@ -302,4 +322,4 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
         }
     }
 
-}
+    }
