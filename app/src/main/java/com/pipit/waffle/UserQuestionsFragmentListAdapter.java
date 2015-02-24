@@ -100,6 +100,9 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
         private boolean should_fade_left = false;
         private boolean should_fade_right = false;
 
+        private Animation fade_out_spinner_left;
+        private Animation fade_out_spinner_right;
+
         private Bitmap left_bitmap;
         private Bitmap right_bitmap;
 
@@ -181,6 +184,43 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
                 }
             });
+
+            fade_out_spinner_left = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.fade_out);
+            fade_out_spinner_left.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    spinner_left.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            fade_out_spinner_right = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.fade_out);
+            fade_out_spinner_right.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    spinner_right.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
            //this.label = (TextView) itemView.findViewById(R.id.name);
             this.left = (ImageView) itemView.findViewById(R.id.left_image);
             this.right = (ImageView) itemView.findViewById(R.id.right_image);
@@ -293,23 +333,44 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 should_fade_right = false;
             }
 
+
+            final boolean finalR_is_cached = r_is_cached;
+            final boolean finalL_is_cached = l_is_cached;
             ImageLoader.getInstance().loadImage(url_left, options_left, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    super.onLoadingStarted(imageUri, view);
+                    spinner_left.setVisibility(View.VISIBLE);
+                }
+
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     left_bitmap = loadedImage;
                     latch.countDown();
                     // hide the spinner
-                    spinner_left.setVisibility(View.INVISIBLE);
+                    if(finalR_is_cached || finalL_is_cached)
+                        spinner_left.startAnimation(fade_out_spinner_left);
+                    else
+                        spinner_left.setVisibility(View.INVISIBLE);
                 }
             });
 
             ImageLoader.getInstance().loadImage(url_right, options_right, new SimpleImageLoadingListener() {
                 @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    super.onLoadingStarted(imageUri, view);
+                    spinner_right.setVisibility(View.VISIBLE);
+                }
+
+                @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     right_bitmap = loadedImage;
                     latch.countDown();
                     // hide the spinner
-                    spinner_right.setVisibility(View.INVISIBLE);
+                    if(finalR_is_cached || finalL_is_cached)
+                        spinner_right.startAnimation(fade_out_spinner_right);
+                    else
+                        spinner_right.setVisibility(View.INVISIBLE);
                 }
             });
         }
