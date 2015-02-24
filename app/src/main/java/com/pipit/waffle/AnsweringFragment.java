@@ -2,7 +2,7 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -84,7 +84,7 @@ public class AnsweringFragment extends Fragment  {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(getActivity().getResources().getConfiguration().orientation == getActivity().getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if(imageView_cv_top1 != null)
                 outState.putInt("height_portrait", imageView_cv_top1.getHeight());
             outState.putInt("height_landscape", image_height_stored_landscape);
@@ -100,6 +100,8 @@ public class AnsweringFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        ((ToolbarActivity) getActivity()).current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
 
         ClientData.setAnsweringFragment(this);
         if(savedInstanceState != null) {

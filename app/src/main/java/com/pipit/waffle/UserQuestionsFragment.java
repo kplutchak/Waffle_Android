@@ -26,7 +26,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by Kyle on 1/4/2015.
  */
-public class UserQuestionsFragment extends Fragment {
+public class UserQuestionsFragment extends android.support.v4.app.Fragment {
 
     private RecyclerView mRecyclerView;
     private StickyHeadersItemDecoration top;

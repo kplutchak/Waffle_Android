@@ -1,7 +1,9 @@
 package com.pipit.waffle;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,16 +155,67 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 url_right = "http://i.imgur.com/p9vW3mn.jpg";
             }
 
+            List<String> l_keys = MemoryCacheUtils.findCacheKeysForImageUri(url_left, ImageLoader.getInstance().getMemoryCache());
+            List<String> r_keys = MemoryCacheUtils.findCacheKeysForImageUri(url_right, ImageLoader.getInstance().getMemoryCache());
 
-            // technically, only checking if we have 1 or more sizes for the particular URLs (not necessarily the size we actually
+            boolean l_is_cached = false;
+            boolean r_is_cached = false;
+
+            if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                String key_value = ClientData.getInstance().landscape_key_mapping.get(url_left);
+                if (key_value != null && !l_keys.isEmpty()) {
+                    for(int i=0; i<l_keys.size(); i++)
+                    {
+                        if(l_keys.get(i).equals(key_value)) {
+                            l_is_cached = true;
+                            Log.d("UserQuestionsFragmentListAdapter", "Left image is mem-cached!");
+                            break;
+                        }
+                    }
+                }
+                String key_value_right = ClientData.getInstance().landscape_key_mapping.get(url_right);
+                if (key_value_right != null && !r_keys.isEmpty()) {
+                    for(int i=0; i<r_keys.size(); i++)
+                    {
+                        if(r_keys.get(i).equals(key_value_right)) {
+                            r_is_cached = true;
+                            Log.d("UserQuestionsFragmentListAdapter", "Right image is mem-cached!");
+                            break;
+                        }
+                    }
+                }
+            }
+            else if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                String key_value = ClientData.getInstance().portrait_key_mapping.get(url_left);
+                if (key_value != null && !l_keys.isEmpty()) {
+                    for(int i=0; i<l_keys.size(); i++)
+                    {
+                        if(l_keys.get(i).equals(key_value)) {
+                            l_is_cached = true;
+                            Log.d("UserQuestionsFragmentListAdapter", "Left image is mem-cached!");
+                            break;
+                        }
+                    }
+                }
+                String key_value_right = ClientData.getInstance().portrait_key_mapping.get(url_right);
+                if (key_value_right != null && !r_keys.isEmpty()) {
+                    for(int i=0; i<r_keys.size(); i++)
+                    {
+                        if(r_keys.get(i).equals(key_value_right)) {
+                            r_is_cached = true;
+                            Log.d("UserQuestionsFragmentListAdapter", "Right image is mem-cached!");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // FIXED: technically, only checking if we have 1 or more sizes for the particular URLs (not necessarily the size we actually
             // need), so might want to change this later to a ClientData HashMap or something (or switch to just portrait)
             List<Bitmap> l_bitmap = MemoryCacheUtils.findCachedBitmapsForImageUri(url_left, ImageLoader.getInstance().getMemoryCache());
-            if(l_bitmap.isEmpty())
-                Log.d("UserQuestionsFragmentListAdapter", "Left image not mem-cached!");
 
             List<Bitmap> r_bitmap = MemoryCacheUtils.findCachedBitmapsForImageUri(url_right, ImageLoader.getInstance().getMemoryCache());
-            if(r_bitmap.isEmpty())
-                Log.d("UserQuestionsFragmentListAdapter", "Right image not mem-cached!");
+
 
             File file_left = ImageLoader.getInstance().getDiskCache().get(url_left);
             if (!file_left.exists())
@@ -175,10 +228,11 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
             DisplayImageOptions options_left;
             // only fade-in if the mem-cache does not contain the image
-            if(l_bitmap.isEmpty()) {
+            if(!l_is_cached || !r_is_cached) {
                 options_left = new DisplayImageOptions.Builder().cacheInMemory(true)
                         .cacheOnDisk(true).displayer(new FadeInBitmapDisplayer(1000))
                         .build();
+
             }
             else
             {
@@ -188,7 +242,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             }
 
             DisplayImageOptions options_right;
-            if(r_bitmap.isEmpty()) {
+            if(!r_is_cached || !l_is_cached) {
                 options_right = new DisplayImageOptions.Builder().cacheInMemory(true)
                         .cacheOnDisk(true).displayer(new FadeInBitmapDisplayer(1000))
                         .build();
@@ -200,18 +254,38 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                         .build();
             }
 
+            final boolean finalL_is_cached = l_is_cached;
             ImageLoader.getInstance().displayImage(url_left, left, options_left, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     // hide the spinner
                     spinner_left.setVisibility(View.INVISIBLE);
+                    if(!finalL_is_cached)
+                    {
+                        List<String> l_keys = MemoryCacheUtils.findCacheKeysForImageUri(imageUri, ImageLoader.getInstance().getMemoryCache());
+                        if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                            ClientData.getInstance().portrait_key_mapping.put(imageUri, l_keys.get(0));
+                        else
+                            ClientData.getInstance().landscape_key_mapping.put(imageUri, l_keys.get(0));
+                    }
                 }
             });
-            ImageLoader.getInstance().displayImage(url_right, right, options_right, new SimpleImageLoadingListener() {
+
+
+            final boolean finalR_is_cached = r_is_cached;
+            ImageLoader.getInstance().displayImage(url_right, right,  options_right, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     // hide the spinner
                     spinner_right.setVisibility(View.INVISIBLE);
+                    if(!finalR_is_cached)
+                    {
+                        List<String> r_keys = MemoryCacheUtils.findCacheKeysForImageUri(imageUri, ImageLoader.getInstance().getMemoryCache());
+                        if(itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                            ClientData.getInstance().portrait_key_mapping.put(imageUri, r_keys.get(0));
+                        else
+                            ClientData.getInstance().landscape_key_mapping.put(imageUri, r_keys.get(0));
+                    }
                 }
             });
         }

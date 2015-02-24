@@ -29,11 +29,17 @@ public class ClientData {
     // from Choice should be loaded into
     public HashMap<String, Integer> card_image_map;
 
+    public HashMap<String, String> portrait_key_mapping;
+    public HashMap<String, String> landscape_key_mapping;
+
     private ClientData(){
         //Initialize
         questions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
         card_image_map = new HashMap<>(4);
+
+        portrait_key_mapping = new HashMap<>();
+        landscape_key_mapping = new HashMap<>();
         Log.d("ClientData", "ClientData() - initializing questions arrays");
     }
 
