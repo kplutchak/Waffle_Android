@@ -2,12 +2,12 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -137,19 +138,21 @@ public class AnsweringFragment extends Fragment  {
         ClientData.getInstance().card_image_map.put(a1_1, 0);
         ClientData.getInstance().card_image_map.put(a1_2, 1);
         myMap =  ClientData.getInstance().card_image_map;
+        Queue<Question> questionsmap = ClientData.getInstance().questions;
+
 
         Question q2 = ClientData.getNextUnansweredQuestion(getActivity());
         String a2_1 = q2.getChoices().get(0).getAnswerID();
         String a2_2 = q2.getChoices().get(1).getAnswerID();
         int index2=1;
-        while (a2_2.equals(a2_1)){
+        while (a2_2.equals(a2_1) || ClientData.getInstance().card_image_map.containsKey(a2_2)){
             index2++;
             if (index2>=q2.getChoices().size()){
                 break;
             }else
             a2_2=q1.getChoices().get(index2).getAnswerID();
         }
-        if (a2_2.equals(a2_1)){
+        if (a2_2.equals(a2_1) || ClientData.getInstance().card_image_map.containsKey(a2_2)){
             Choice a2_new = new Choice();
             a2_new.setQuestionID(q2.getId());
             a2_new.setAnswerBody("Duplicate answer found \n Im only here so I don't get fined \n");
@@ -2749,6 +2752,7 @@ public class AnsweringFragment extends Fragment  {
 
     public void setImageViewBitmap(Bitmap b, String answerID_key) {
         HashMap<String, Integer> cardmap = ClientData.getInstance().card_image_map;
+        Queue<Question> questionsmap = ClientData.getInstance().questions;
         Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
         if (b==null){
             b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);

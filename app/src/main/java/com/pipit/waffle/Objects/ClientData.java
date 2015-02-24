@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -22,7 +21,7 @@ public class ClientData {
     public static final int MAXIMUM_QUEUED_QUESTIONS = 5;
 
     private static ClientData clientdata = new ClientData();
-    private static Queue<Question> questions;
+    public static Queue<Question> questions;
     private static List<String> idsOfAnsweredQuestions;
     private static AnsweringFragment answeringFragment;
     // maps Choice answerID to an integer that specifies the ImageView that the _image
