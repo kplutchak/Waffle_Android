@@ -27,7 +27,11 @@ public class Typewriter extends TextView {
     private Runnable characterAdder = new Runnable() {
         @Override
         public void run() {
-            setText(mText.subSequence(0, mIndex++));
+            setText(mText.subSequence(0, mIndex));
+            if(mIndex+2 <= mText.length())
+                mIndex = mIndex + 2;
+            else
+                mIndex = mIndex + 1;
             if(mIndex <= mText.length()) {
                 mHandler.postDelayed(characterAdder, mDelay);
             }

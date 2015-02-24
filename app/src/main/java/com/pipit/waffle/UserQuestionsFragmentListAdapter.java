@@ -272,8 +272,10 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             }
             else
             {
-                options_left = new DisplayImageOptions.Builder()
+                options_left = new DisplayImageOptions.Builder().cacheInMemory(true)
+                        .cacheOnDisk(true)
                         .build();
+                should_fade_left = false;
             }
 
             DisplayImageOptions options_right;
@@ -285,8 +287,10 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             }
             else
             {
-                options_right = new DisplayImageOptions.Builder()
+                options_right = new DisplayImageOptions.Builder().cacheInMemory(true)
+                    .cacheOnDisk(true)
                         .build();
+                should_fade_right = false;
             }
 
             ImageLoader.getInstance().loadImage(url_left, options_left, new SimpleImageLoadingListener() {

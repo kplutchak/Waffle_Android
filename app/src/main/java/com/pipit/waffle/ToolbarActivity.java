@@ -2,7 +2,9 @@ package com.pipit.waffle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Outline;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,10 +15,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.transition.Slide;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,14 +39,16 @@ import com.pipit.waffle.Objects.Self;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ToolbarActivity extends ActionBarActivity {
 
     private ActionBarDrawerToggle toggle;
     public int current_fragment_id;
-
-
+    private Typewriter writer_toolbar;
     private ListView drawerListView;
+    private android.support.v7.widget.Toolbar rl;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -70,12 +77,29 @@ public class ToolbarActivity extends ActionBarActivity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.activity_toolbar);
 
-
         // Set the toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ClientData.getNextUnansweredQuestion(this);
+
+        // Get the Typewriter
+        writer_toolbar = new Typewriter(this);
+
+        rl = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.START;
+        Resources r = getResources();
+        int margin_start = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
+        params.setMarginStart(margin_start);
+
+        writer_toolbar.setTextSize(20);
+        writer_toolbar.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+        writer_toolbar.setTextColor(getResources().getColor(R.color.off_white));
+
+        writer_toolbar.setText("Waffle");
+
+        rl.addView(writer_toolbar);
 
         // Set the drawer
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,43 +116,79 @@ public class ToolbarActivity extends ActionBarActivity {
         rl_me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check if we aren't already on the "Me" tab
+                // check if we aren't already on the "My Questions" tab
                 if (current_fragment_id != Constants.USER_QUESTIONS_FRAGMENT_ID) {
 
-                    UserQuestionsFragment frag = new UserQuestionsFragment();
+                    // TODO: disable clicks during break
+                    Timer delay_frag_trans = new Timer();
+                    delay_frag_trans.schedule(new TimerTask() {
 
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
 
+                                @Override
+                                public void run() {
+                                    UserQuestionsFragment frag = new UserQuestionsFragment();
 
-                    // In case this activity was started with special instructions from an
-                    // Intent, pass the Intent's extras to the fragment as arguments
-                    frag.setArguments(getIntent().getExtras());
+                                    // In case this activity was started with special instructions from an
+                                    // Intent, pass the Intent's extras to the fragment as arguments
+                                    frag.setArguments(getIntent().getExtras());
 
-                    // Flip to the back.
+                                    // Flip to the back.
 
-                    // Create and commit a new fragment transaction that adds the fragment for the back of
-                    // the card, uses custom animations, and is part of the fragment manager's back stack.
+                                    // Create and commit a new fragment transaction that adds the fragment for the back of
+                                    // the card, uses custom animations, and is part of the fragment manager's back stack.
 
-                    getSupportFragmentManager()
-                            .beginTransaction()
+                                    getFragmentManager()
+                                            .beginTransaction()
 
-                                    // Replace the default fragment animations with animator resources representing
-                                    // rotations when switching to the back of the card, as well as animator
-                                    // resources representing rotations when flipping back to the front (e.g. when
-                                    // the system Back button is pressed).
+                                                    // Replace the default fragment animations with animator resources representing
+                                                    // rotations when switching to the back of the card, as well as animator
+                                                    // resources representing rotations when flipping back to the front (e.g. when
+                                                    // the system Back button is pressed).
 
-                                    // Replace any fragments currently in the container view with a fragment
-                                    // representing the next page (indicated by the just-incremented currentPage
-                                    // variable).
-                            .replace(R.id.fragment_container, frag)
+                                                    // Replace any fragments currently in the container view with a fragment
+                                                    // representing the next page (indicated by the just-incremented currentPage
+                                                    // variable).
+                                            .replace(R.id.fragment_container, frag)
 
-                                    // Add this transaction to the back stack, allowing users to press Back
-                                    // to get to the front of the card.
-                            .addToBackStack(null)
+                                                    // Add this transaction to the back stack, allowing users to press Back
+                                                    // to get to the front of the card.
+                                            .addToBackStack(null)
 
-                                    // Commit the transaction.
-                            .commit();
-                    current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
+                                                    // Commit the transaction.
+                                            .commit();
 
+                                    Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
+                                    fade_in.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            writer_toolbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
+
+                                        }
+                                    });
+
+                                    rl.removeView(writer_toolbar);
+                                    rl.addView(writer_toolbar);
+                                    writer_toolbar.setCharacterDelay(2);
+
+                                    writer_toolbar.animateText("My Questions");
+                                    writer_toolbar.startAnimation(fade_in);
+                                    current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
+                                }
+                            });
+                        }
+                    }, 300);
                 }
                 // Close the drawer after the item has been clicked
                 drawerLayout.closeDrawer(Gravity.LEFT);
@@ -348,7 +408,7 @@ public class ToolbarActivity extends ActionBarActivity {
             firstFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
         }
 
@@ -363,10 +423,52 @@ public class ToolbarActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+
 
         } else {
-            getSupportFragmentManager().popBackStack();
+
+            // TODO: disable clicks during the break
+            Timer delay_back = new Timer();
+            delay_back.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
+                            fade_in.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    writer_toolbar.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+
+
+                            rl.removeView(writer_toolbar);
+                            rl.addView(writer_toolbar);
+                            writer_toolbar.setCharacterDelay(2);
+
+                            writer_toolbar.animateText("Waffle");
+                            writer_toolbar.startAnimation(fade_in);
+                            getFragmentManager().popBackStack();
+                        }
+                    });
+                }
+            }, 300);
+
         }
     }
 

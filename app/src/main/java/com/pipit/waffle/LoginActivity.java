@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
 
         Typewriter writer = (Typewriter) findViewById(R.id.typewriter_test);
         //Add a character every 150ms
-        writer.setCharacterDelay(5);
+        writer.setCharacterDelay(2);
         writer.animateText("Typewriters are cool!");
 
         /*Universal Image Loader*/
