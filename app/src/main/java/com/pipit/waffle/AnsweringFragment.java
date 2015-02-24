@@ -27,12 +27,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.makeramen.RoundedTransformationBuilder;
+import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -111,14 +114,51 @@ public class AnsweringFragment extends Fragment  {
 
         // get the next four unanswered questions and set their mappings
 
-        // TODO: implement this
+        Map myMap =  ClientData.getInstance().card_image_map;
         Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
-        ClientData.getInstance().card_image_map.put(q1.getChoices().get(0).getAnswerID(), 0);
-        ClientData.getInstance().card_image_map.put(q1.getChoices().get(1).getAnswerID(), 1);
+        String a1_1 = q1.getChoices().get(0).getAnswerID();
+        String a1_2 = q1.getChoices().get(1).getAnswerID();
+        int index1=1;
+        while (a1_2.equals(a1_1)){
+            index1++;
+            if (index1 >= q1.getChoices().size()){
+                break;
+            }
+            else
+            a1_2=q1.getChoices().get(index1).getAnswerID();
+        }
+        if (a1_2.equals(a1_1)){
+            Choice a1_new = new Choice();
+            a1_new.setQuestionID(q1.getId());
+            a1_new.setAnswerBody("Duplicate answer found \n Im only here so I don't get fined \n");
+            a1_2=a1_new.getAnswerID();
+            q1.addChoice(a1_new);
+        }
+        ClientData.getInstance().card_image_map.put(a1_1, 0);
+        ClientData.getInstance().card_image_map.put(a1_2, 1);
+        myMap =  ClientData.getInstance().card_image_map;
 
         Question q2 = ClientData.getNextUnansweredQuestion(getActivity());
-        ClientData.getInstance().card_image_map.put(q2.getChoices().get(0).getAnswerID(), 2);
-        ClientData.getInstance().card_image_map.put(q2.getChoices().get(1).getAnswerID(), 3);
+        String a2_1 = q2.getChoices().get(0).getAnswerID();
+        String a2_2 = q2.getChoices().get(1).getAnswerID();
+        int index2=1;
+        while (a2_2.equals(a2_1)){
+            index2++;
+            if (index2>=q2.getChoices().size()){
+                break;
+            }else
+            a2_2=q1.getChoices().get(index2).getAnswerID();
+        }
+        if (a2_2.equals(a2_1)){
+            Choice a2_new = new Choice();
+            a2_new.setQuestionID(q2.getId());
+            a2_new.setAnswerBody("Duplicate answer found \n Im only here so I don't get fined \n");
+            a2_2=a2_new.getAnswerID();
+            q2.addChoice(a2_new);
+        }
+        ClientData.getInstance().card_image_map.put(a2_1, 2);
+        ClientData.getInstance().card_image_map.put(a2_2, 3);
+        myMap =  ClientData.getInstance().card_image_map;
 
 
         View v = null;
@@ -213,6 +253,7 @@ public class AnsweringFragment extends Fragment  {
             if (savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                     && image_height_stored_landscape != 0)
                 cvbot1_image_params.height = image_height_stored_landscape;
+
 
             cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
             imageView_cv_bot1.setLayoutParams(cvbot1_image_params);
@@ -2707,6 +2748,7 @@ public class AnsweringFragment extends Fragment  {
 
 
     public void setImageViewBitmap(Bitmap b, String answerID_key) {
+        HashMap<String, Integer> cardmap = ClientData.getInstance().card_image_map;
         Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
         if (b==null){
             b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);

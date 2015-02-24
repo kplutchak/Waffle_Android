@@ -109,7 +109,7 @@ public class ToolbarActivity extends ActionBarActivity {
                     // the card, uses custom animations, and is part of the fragment manager's back stack.
 
                     getSupportFragmentManager()
-                            .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, R.anim.stay)
+                            .beginTransaction()
 
                                     // Replace the default fragment animations with animator resources representing
                                     // rotations when switching to the back of the card, as well as animator

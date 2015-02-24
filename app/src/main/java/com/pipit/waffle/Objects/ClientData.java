@@ -36,10 +36,11 @@ public class ClientData {
         //Initialize
         questions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
-        card_image_map = new HashMap<>(4);
 
         portrait_key_mapping = new HashMap<>();
         landscape_key_mapping = new HashMap<>();
+
+        card_image_map = new HashMap<String, Integer>();
         Log.d("ClientData", "ClientData() - initializing questions arrays");
     }
 
