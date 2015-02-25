@@ -150,7 +150,7 @@ public class AnsweringFragment extends Fragment  {
             if (index2>=q2.getChoices().size()){
                 break;
             }else
-            a2_2=q1.getChoices().get(index2).getAnswerID();
+            a2_2=q2.getChoices().get(index2).getAnswerID();
         }
         if (a2_2.equals(a2_1) || ClientData.getInstance().card_image_map.containsKey(a2_2)){
             Choice a2_new = new Choice();
