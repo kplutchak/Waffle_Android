@@ -2,10 +2,15 @@ package com.pipit.waffle;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 import com.pipit.waffle.Objects.ClientData;
@@ -33,12 +39,17 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
     private List<String> items;
     private Context mContext;
+    private static int screenWidth;
+    // TODO: remove this
+    private static int num_loaded;
 
     public UserQuestionsFragmentListAdapter(Context context, List<String> items) {
         this.mContext = context;
         this.items = items;
-
+        num_loaded = 0;
         setHasStableIds(true);
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        screenWidth = metrics.widthPixels;
     }
 
     @Override
@@ -239,8 +250,8 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
             // TODO: fade-out spinner
 
             String a = "Adam";
-            String b = "Becky";
-            String  c = "Carol";
+            String b = "Andy";
+            String  c = "Alex";
             String d = "David";
             String e = "Edward";
 
@@ -336,7 +347,12 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
             final boolean finalR_is_cached = r_is_cached;
             final boolean finalL_is_cached = l_is_cached;
-            ImageLoader.getInstance().loadImage(url_left, options_left, new SimpleImageLoadingListener() {
+
+            Resources r = itemView.getResources();
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, r.getDisplayMetrics());
+            ImageSize target_size = new ImageSize(screenWidth, height);
+
+            ImageLoader.getInstance().loadImage(url_left, target_size, options_left, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     super.onLoadingStarted(imageUri, view);
@@ -345,6 +361,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    Log.d("UserQuestionsFragmentListAdapter", "Loaded image: " + ++num_loaded + " images loaded.");
                     left_bitmap = loadedImage;
                     latch.countDown();
                     // hide the spinner
@@ -355,7 +372,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
                 }
             });
 
-            ImageLoader.getInstance().loadImage(url_right, options_right, new SimpleImageLoadingListener() {
+            ImageLoader.getInstance().loadImage(url_right, target_size, options_right, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     super.onLoadingStarted(imageUri, view);
@@ -364,6 +381,7 @@ public class UserQuestionsFragmentListAdapter extends RecyclerView.Adapter<UserQ
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    Log.d("UserQuestionsFragmentListAdapter", "Loaded image: " + ++num_loaded + " images loaded.");
                     right_bitmap = loadedImage;
                     latch.countDown();
                     // hide the spinner
