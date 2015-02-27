@@ -3,11 +3,14 @@ package com.pipit.waffle;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +35,11 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
@@ -41,14 +49,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 
 public class ToolbarActivity extends ActionBarActivity {
 
     private ActionBarDrawerToggle toggle;
-    public int current_fragment_id;
+    public static int current_fragment_id;
     private Typewriter writer_toolbar;
     private ListView drawerListView;
     private android.support.v7.widget.Toolbar rl;
+    private DrawerLayout drawerLayout;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -102,7 +112,7 @@ public class ToolbarActivity extends ActionBarActivity {
         rl.addView(writer_toolbar);
 
         // Set the drawer
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         drawerLayout.setScrimColor(getResources().getColor(R.color.black_tint_medium));
 
@@ -194,6 +204,81 @@ public class ToolbarActivity extends ActionBarActivity {
                 drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
+
+        RelativeLayout rl_settings = (RelativeLayout) findViewById(R.id.nav_item4);
+        rl_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // check if we aren't already on the "Settings" tab
+                if (current_fragment_id != Constants.USER_SETTINGS_FRAGMENT_ID) {
+
+                    // TODO: error handling in this block
+
+                    final CountDownLatch latch = new CountDownLatch(2);
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            DisplayImageOptions options;
+                            options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                                    .cacheOnDisk(true)
+                                    .build();
+
+                            ImageLoader.getInstance().loadImage("http://www.brandingmagazine.com/wp-content/uploads/2014/02/mila-kunis-jim-bean-cover.jpg", options, new ImageLoadingListener() {
+                                @Override
+                                public void onLoadingStarted(String imageUri, View view) {
+
+                                }
+
+                                @Override
+                                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                                }
+
+                                @Override
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    latch.countDown();
+                                }
+
+                                @Override
+                                public void onLoadingCancelled(String imageUri, View view) {
+
+                                }
+                            });
+                        }
+                    }).start();
+
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            try {
+                                Thread.sleep(300);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            latch.countDown();
+                        }
+                    }).start();
+
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            try {
+                                latch.await();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }).start();
+
+
+                    SettingsPrepTask task = new SettingsPrepTask(latch);
+                    task.execute();
+                }
+
+            }
+        });
+
 
         /*
         // Set drawer item click behavior
@@ -425,9 +510,7 @@ public class ToolbarActivity extends ActionBarActivity {
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
 
-
         } else {
-
             // TODO: disable clicks during the break
             Timer delay_back = new Timer();
             delay_back.schedule(new TimerTask() {
@@ -470,6 +553,93 @@ public class ToolbarActivity extends ActionBarActivity {
             }, 300);
 
         }
+    }
+
+    public class SettingsPrepTask extends AsyncTask<Void, Void, Void> {
+
+        private CountDownLatch cd;
+        public SettingsPrepTask(CountDownLatch latch) {
+            cd = latch;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                cd.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            UserSettingsFragment frag = new UserSettingsFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            frag.setArguments(getIntent().getExtras());
+
+            // Flip to the back.
+
+            // Create and commit a new fragment transaction that adds the fragment for the back of
+            // the card, uses custom animations, and is part of the fragment manager's back stack.
+
+            getFragmentManager()
+                    .beginTransaction()
+
+                            // Replace the default fragment animations with animator resources representing
+                            // rotations when switching to the back of the card, as well as animator
+                            // resources representing rotations when flipping back to the front (e.g. when
+                            // the system Back button is pressed).
+
+                            // Replace any fragments currently in the container view with a fragment
+                            // representing the next page (indicated by the just-incremented currentPage
+                            // variable).
+                    .replace(R.id.fragment_container, frag)
+
+                            // Add this transaction to the back stack, allowing users to press Back
+                            // to get to the front of the card.
+                    .addToBackStack(null)
+
+                            // Commit the transaction.
+                    .commit();
+
+            Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
+            fade_in.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    writer_toolbar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            // Close the drawer after the item has been clicked
+            drawerLayout.closeDrawer(Gravity.LEFT);
+
+            rl.removeView(writer_toolbar);
+            rl.addView(writer_toolbar);
+            writer_toolbar.setCharacterDelay(2);
+
+            writer_toolbar.animateText("Settings");
+            writer_toolbar.startAnimation(fade_in);
+            current_fragment_id = Constants.USER_SETTINGS_FRAGMENT_ID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
     }
 
 }

@@ -3,6 +3,7 @@ package com.pipit.waffle;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 
 import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,54 +27,41 @@ import java.util.List;
 /**
  * Created by Kyle on 1/4/2015.
  */
-public class UserQuestionsFragment extends Fragment {
+public class UserSettingsFragment extends Fragment {
 
-    private RecyclerView mRecyclerView;
-
-    private StickyHeadersItemDecoration top;
-    private StickyHeadersItemDecoration overlay;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private UserQuestionsFragmentListAdapter mAdapter;
+    private ImageView user_image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ToolbarActivity.current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
+        ToolbarActivity.current_fragment_id = Constants.USER_SETTINGS_FRAGMENT_ID;
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.user_questions_fragment, container, false);
+        View v = inflater.inflate(R.layout.user_settings_fragment, container, false);
 
-        // TODO: remove
-       /* ImageLoader.getInstance().clearDiskCache();
-        ImageLoader.getInstance().clearMemoryCache();
-        */
+        user_image = (ImageView) v.findViewById(R.id.user_settings_picture);
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.list);
+        ImageLoader.getInstance().loadImage("http://www.brandingmagazine.com/wp-content/uploads/2014/02/mila-kunis-jim-bean-cover.jpg", new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
 
-        String[] data = {"Adam", "Andy", "Alex", "David", "Edward"};
-        mRecyclerView.setHasFixedSize(true);
+            }
 
-                // use a linear layout manager
-                mLayoutManager = new LinearLayoutManager(v.getContext());
-                mRecyclerView.setLayoutManager(mLayoutManager);
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
 
-        List<String> items = new ArrayList<String>();
-        for(String s : data)
-        {
-            items.add(s);
-        }
+            }
 
-        mAdapter = new UserQuestionsFragmentListAdapter(v.getContext(), items);
-        mRecyclerView.setAdapter(mAdapter);
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                user_image.setImageBitmap(loadedImage);
+            }
 
-        top = new StickyHeadersBuilder()
-                .setAdapter(mAdapter)
-                .setRecyclerView(mRecyclerView)
-                .setStickyHeadersAdapter(new HeaderAdapter(items))
-                .build();
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
 
-        mRecyclerView.addItemDecoration(top);
+            }
+        });
 
         return v;
     }
