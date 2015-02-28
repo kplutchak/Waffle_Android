@@ -78,7 +78,7 @@ public class Network {
                                                 picurl = answerJsonList.get(j).get("picture").getAsString();
                                             }
 
-                                            Choice newans = new Choice();
+                                            Choice newans = new Choice(questionID);
                                             newans.setAnswerBody(answerBody);
                                             newans.setVotes(answerVotes);
                                             newans.setQuestionID(questionID);
@@ -176,7 +176,7 @@ public class Network {
                                                 picurl = answerJsonList.get(j).get("picture").getAsString();
                                             }
 
-                                            Choice newans = new Choice();
+                                            Choice newans = new Choice(questionID);
                                             newans.setAnswerBody(answerBody);
                                             newans.setVotes(answerVotes);
                                             newans.setQuestionID(questionID);
@@ -193,7 +193,7 @@ public class Network {
                                         }
                                     }
                                     if (nq.getChoices().size() == 2) {
-                                        ClientData.addQuestion(nq);
+                                        //ClientData.addQuestion(nq);
                                         k++;
                                     }
                                 }

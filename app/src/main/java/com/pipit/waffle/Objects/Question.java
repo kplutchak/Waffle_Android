@@ -1,5 +1,12 @@
 package com.pipit.waffle.Objects;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.View;
+
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +20,7 @@ public class Question {
     private String id;
     private List<Choice> choices;
     private User asker;
-    public QuestionState state=null;
+    public QuestionState state=QuestionState.NOT_LOADED;
     public int imagesLoaded = 0;
 
     public Question(String qbody, User asker){
@@ -31,7 +38,7 @@ public class Question {
         this.choices.add(ans);
 
         if (ans.imageState != Choice.LoadState.NO_IMAGE){
-            ans.loadURLintoBitmap(ans.getUrl());
+            loadURLintoBitmap(ans, ans.getUrl());
         }
         else{
             //ClientData.getAnsweringFragment().setNoImageBitmap(ans.getAnswerID());
@@ -100,6 +107,44 @@ public class Question {
 
     public enum QuestionState{
         LOADED, NOT_LOADED;
+    }
+
+    public boolean loadURLintoBitmap(final Choice ans, String imageUri){
+        ans.imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                ans.imageState = Choice.LoadState.LOADING;
+            }
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                ans.set_image(loadedImage);
+                ans.imageState = Choice.LoadState.IMAGE_READY;
+
+                boolean isReady = checkAndUpdateQuestionStatus();
+                Log.d("Question", "Image Loading Completed - Question ready to use = " + Boolean.toString(isReady));
+                //ClientData.getAnsweringFragment().setImageViewBitmap(_image, answerID);
+            }
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                ans.imageState = Choice.LoadState.FAILED;
+            }
+        });
+        return true;
+    }
+
+    public boolean checkAndUpdateQuestionStatus(){
+        //TODO: Currently only supports questions with 2 choices exactly
+        if (choices.size()!=2){
+            return false;
+        }
+        for (int i = 0; i < choices.size() ; i++){
+            if (!(choices.get(i).imageState==Choice.LoadState.IMAGE_READY ||choices.get(i).imageState==Choice.LoadState.NO_IMAGE)){
+                return false;
+            }
+        }
+        this.state = QuestionState.LOADED;
+        ClientData.moveQuestionToReady(this);
+        return true;
     }
 
 }
