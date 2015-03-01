@@ -35,8 +35,7 @@ android:layout_height="match_parent" >
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:indeterminateDuration="800"
-                    android:indeterminateDrawable="@drawable/rotate_spinner"
-                    android:visibility="invisible"/>
+                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
                 <TextView
                     android:id="@+id/info_texttop_extra"
@@ -120,7 +119,6 @@ android:layout_height="match_parent" >
                     android:layout_gravity="center"
                     android:indeterminateDuration="800"
                     android:indeterminateDrawable="@drawable/rotate_spinner"
-                    android:visibility="invisible"
                 />
 
                 <TextView
