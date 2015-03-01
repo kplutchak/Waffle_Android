@@ -21,7 +21,7 @@ public class Choice {
     public LoadState imageState;
     static ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public Choice(String answerID, Question parentQuestion){
+    public Choice(String answerID){
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
         setVotes(0);
         imageState = LoadState.NOT_LOADED;

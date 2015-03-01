@@ -35,6 +35,7 @@ public class ClientData {
     private ClientData(){
         //Initialize
         questions = new LinkedList<Question>();
+        readyQuestions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
 
         card_image_map = new HashMap<String, Integer>();
@@ -74,8 +75,7 @@ public class ClientData {
         q.addChoice(a);
 
         if (questions.size()<1){
-            Network.getOneQuestionWithCallback(mcontext, q);
-            Network.getAllQuestions(mcontext, numberQuestionsToPull()-1);
+            Network.getAllQuestions(mcontext, numberQuestionsToPull());
             q.state = Question.QuestionState.NOT_LOADED;
             q.generateAndSetID();
             Choice _a = new Choice();
@@ -123,8 +123,9 @@ public class ClientData {
         ClientData.answeringFragment = answeringFragment;
     }
 
-    public static boolean moveQuestionToReady(Question q){
+    public static boolean moveQuestionToReady(final Question q){
         //TODO: Check for race conditions
+
         if (q.state != Question.QuestionState.LOADED || q.getChoices().size()!=2 || !questions.contains(q)){
             return false;
         }
