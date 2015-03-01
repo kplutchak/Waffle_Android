@@ -6,8 +6,11 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -35,6 +38,7 @@ import com.squareup.picasso.Transformation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -231,7 +235,7 @@ public class AnsweringFragment extends Fragment  {
 
             // Transformation trans = new RoundedTransformation(20, 0);
 
-            final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
+            //final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
 
             imageView_cv_top1 = new ImageView(cardViewTop1.getContext());
             imageView_cv_bot1 = new ImageView(cardViewBot1.getContext());
@@ -261,6 +265,7 @@ public class AnsweringFragment extends Fragment  {
             if (savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                     && image_height_stored_landscape != 0)
                 cvbot1_image_params.height = image_height_stored_landscape;
+
 
 
             cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
@@ -311,8 +316,11 @@ public class AnsweringFragment extends Fragment  {
 
             */
 
+            imageView_cv_top1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView_cv_bot1.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
+            cardViewTop1.addView(imageView_cv_top1);
 
             //cardViewTop1Image.invalidate();
             //cardViewTop1Image.postInvalidate();
@@ -333,7 +341,7 @@ public class AnsweringFragment extends Fragment  {
                 }
             });
     */
-           // cardViewBot1.addView(imageView_cv_bot1);
+            cardViewBot1.addView(imageView_cv_bot1);
 
             //cardViewTop2.addView(imageView_cv_top2);
 
@@ -2699,6 +2707,7 @@ public class AnsweringFragment extends Fragment  {
                                     }
                                 });
 
+
                                 Animation alpha = new AlphaAnimation(1.0f, 0.0f);
                                 alpha.setInterpolator(new LinearInterpolator());
                                 alpha.setDuration(1000);
@@ -2742,10 +2751,12 @@ public class AnsweringFragment extends Fragment  {
             }else{
                 if (this.currentQuestion.getChoices().size()==2){
                     Choice c1 = this.currentQuestion.getChoices().get(0);
-                    Choice c2 = this.currentQuestion.getChoices().get(0);
-                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                    Choice c2 = this.currentQuestion.getChoices().get(1);
+                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c1.get_image()!=null){
                         Bitmap b = c1.get_image();
                         imageView_cv_top1.setImageBitmap(b);
+
+
                     }
                     if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
                         Bitmap b = c2.get_image();
@@ -2762,10 +2773,11 @@ public class AnsweringFragment extends Fragment  {
             }else{
                 if (this.nextQuestion.getChoices().size()==2){
                     Choice c1 = this.nextQuestion.getChoices().get(0);
-                    Choice c2 = this.nextQuestion.getChoices().get(0);
+                    Choice c2 = this.nextQuestion.getChoices().get(1);
                     if (c1.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
                         Bitmap b = c1.get_image();
                         imageView_cv_top2.setImageBitmap(b);
+                        Log.d("AnsweringFragment", "Set top image!");
                     }
                     if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
                         Bitmap b = c2.get_image();
@@ -2777,8 +2789,6 @@ public class AnsweringFragment extends Fragment  {
         }
         return false; //No questions needed
     }
-
-
 
     public void setImageViewBitmap(Bitmap b, String answerID_key) {
         HashMap<String, Integer> cardmap = ClientData.getInstance().card_image_map;
