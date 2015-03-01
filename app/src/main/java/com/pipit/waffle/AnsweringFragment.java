@@ -119,59 +119,9 @@ public class AnsweringFragment extends Fragment  {
             image_height_stored = savedInstanceState.getInt("height_portrait");
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
         }
-
-
-
         // get the next four unanswered questions and set their mappings
 
-        Map myMap =  ClientData.getInstance().card_image_map;
         Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
-        String a1_1 = q1.getChoices().get(0).getAnswerID();
-        String a1_2 = q1.getChoices().get(1).getAnswerID();
-        int index1=1;
-        while (a1_2.equals(a1_1)){
-            index1++;
-            if (index1 >= q1.getChoices().size()){
-                break;
-            }
-            else
-            a1_2=q1.getChoices().get(index1).getAnswerID();
-        }
-        if (a1_2.equals(a1_1)){
-            Choice a1_new = new Choice();
-            a1_new.setQuestionID(q1.getId());
-            a1_new.setAnswerBody("Duplicate answer found \n Im only here so I don't get fined \n");
-            a1_2=a1_new.getAnswerID();
-            q1.addChoice(a1_new);
-        }
-        ClientData.getInstance().card_image_map.put(a1_1, 0);
-        ClientData.getInstance().card_image_map.put(a1_2, 1);
-        myMap =  ClientData.getInstance().card_image_map;
-        Queue<Question> questionsmap = ClientData.getInstance().questions;
-
-
-        Question q2 = ClientData.getNextUnansweredQuestion(getActivity());
-        String a2_1 = q2.getChoices().get(0).getAnswerID();
-        String a2_2 = q2.getChoices().get(1).getAnswerID();
-        int index2=1;
-        while (a2_2.equals(a2_1) || ClientData.getInstance().card_image_map.containsKey(a2_2)){
-            index2++;
-            if (index2>=q2.getChoices().size()){
-                break;
-            }else
-            a2_2=q2.getChoices().get(index2).getAnswerID();
-        }
-        if (a2_2.equals(a2_1) || ClientData.getInstance().card_image_map.containsKey(a2_2)){
-            Choice a2_new = new Choice();
-            a2_new.setQuestionID(q2.getId());
-            a2_new.setAnswerBody("Duplicate answer found \n Im only here so I don't get fined \n");
-            a2_2=a2_new.getAnswerID();
-            q2.addChoice(a2_new);
-        }
-        ClientData.getInstance().card_image_map.put(a2_1, 2);
-        ClientData.getInstance().card_image_map.put(a2_2, 3);
-        myMap =  ClientData.getInstance().card_image_map;
-
 
         View v = null;
 
