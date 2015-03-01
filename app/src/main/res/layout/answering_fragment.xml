@@ -28,13 +28,27 @@ android:layout_height="match_parent" >
                 card_view:cardBackgroundColor="@color/off_white"
                 >
 
+
                 <ProgressBar
                     android:id="@+id/progress_bar_cvtop1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:indeterminateDuration="800"
-                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
+                    android:indeterminateDrawable="@drawable/rotate_spinner"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/info_texttop_extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|left"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="60dp"
+                    android:textSize="24sp"
+                    android:textColor="@color/black_tint"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Taco Bell"/>
 
 
 
@@ -59,10 +73,13 @@ android:layout_height="match_parent" >
                     android:id="@+id/info_text_extra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:textSize="20sp"
+                    android:layout_gravity="top|left"
                     android:textColor="@color/black_tint"
+                    android:fontFamily="sans-serif-light"
                     android:text="Choice 1"/>
+
+
 
                 <ImageView
 
@@ -102,8 +119,21 @@ android:layout_height="match_parent" >
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:indeterminateDuration="800"
-                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
+                    android:indeterminateDrawable="@drawable/rotate_spinner"
+                    android:visibility="invisible"
+                />
 
+                <TextView
+                    android:id="@+id/info_textbot_extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|left"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="60dp"
+                    android:textSize="24sp"
+                    android:textColor="@color/black_tint"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Pizza Hut"/>
 
 
 
