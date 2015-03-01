@@ -46,7 +46,6 @@ public class AnsweringFragment extends Fragment  {
 
     private static double TENSION = 800;
     private static double DAMPER = 20; //friction
-
     // CardViews -  there are two CardViews for top, two for bottom. The two swap when a selection
     // occurs
 
@@ -54,6 +53,10 @@ public class AnsweringFragment extends Fragment  {
     private CardView cardViewBot1;
     private CardView cardViewTop2;
     private CardView cardViewBot2;
+
+    private Question currentQuestion;
+    private Question nextQuestion;
+
 
     private ImageView plus_one;
 
@@ -112,6 +115,8 @@ public class AnsweringFragment extends Fragment  {
             image_height_stored = savedInstanceState.getInt("height_portrait");
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
         }
+
+
 
         // get the next four unanswered questions and set their mappings
 
@@ -1720,28 +1725,6 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard1.start();
                             if (selected) {
-                                /*Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
-                                        .fit().centerCrop()
-                                        .transform(transformation_rounded_image).into(imageView_cv_top2, new com.squareup.picasso.Callback() {
-
-                                    @Override
-                                    public void onSuccess() {
-                                        pb_cvtop1.setVisibility(View.INVISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        pb_cvtop1.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-                                */
-
-
-
-
-                                //plus_one.setText("+1");
-
                                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plus_one.getLayoutParams();
                                 // TODO: actually center the "+1", getWidth() probably returns 0
                                 //params.setMarginEnd(card_params.width/2 - plus_one.getWidth());
@@ -2736,18 +2719,65 @@ public class AnsweringFragment extends Fragment  {
                     }
                     return true;
                 }
-
-
             };
-
             cardViewTop1.setOnTouchListener(tl);
             cardViewBot1.setOnTouchListener(tl2);
             cardViewTop2.setOnTouchListener(tl3);
             cardViewBot2.setOnTouchListener(tl4);
         }
-
         return v;
     }
+
+    /**
+     * Notifys answeringfragment that a question is ready to be taken from the ready question queue
+     * If a queston is needed by fragment, this function will load the question
+     * @param
+     * @return true if a question was taken from readyQuestions queue, false otherwise
+     */
+    public boolean notifyOfReadyQuestion(){
+        if (this.currentQuestion==null){
+            this.currentQuestion = ClientData.readyQuestions.poll();
+            if (this.currentQuestion == null){
+                return false;
+            }else{
+                if (this.currentQuestion.getChoices().size()==2){
+                    Choice c1 = this.currentQuestion.getChoices().get(0);
+                    Choice c2 = this.currentQuestion.getChoices().get(0);
+                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                        Bitmap b = c1.get_image();
+                        imageView_cv_top1.setImageBitmap(b);
+                    }
+                    if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                        Bitmap b = c2.get_image();
+                        imageView_cv_bot1.setImageBitmap(b);
+                    }
+                }
+                return true;
+            }
+        }
+        if (this.nextQuestion==null){
+            this.nextQuestion = ClientData.readyQuestions.poll();
+            if (this.nextQuestion == null){
+                return false;
+            }else{
+                if (this.nextQuestion.getChoices().size()==2){
+                    Choice c1 = this.nextQuestion.getChoices().get(0);
+                    Choice c2 = this.nextQuestion.getChoices().get(0);
+                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                        Bitmap b = c1.get_image();
+                        imageView_cv_top2.setImageBitmap(b);
+                    }
+                    if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                        Bitmap b = c2.get_image();
+                        imageView_cv_bot2.setImageBitmap(b);
+                    }
+                }
+                return true;
+            }
+        }
+        return false; //No questions needed
+    }
+
 
 
     public void setImageViewBitmap(Bitmap b, String answerID_key) {
@@ -2770,27 +2800,6 @@ public class AnsweringFragment extends Fragment  {
                         break;
                 default:
                         break;
-            }
-        }
-    }
-
-    public void setNoImageBitmap(String answerID_key) {
-        Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
-        Bitmap b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);
-
-        if(card_num != null)
-        {
-            switch(card_num) {
-                case 0: imageView_cv_top1.setImageBitmap(b);
-                    break;
-                case 1: imageView_cv_bot1.setImageBitmap(b);
-                    break;
-                case 2: imageView_cv_top2.setImageBitmap(b);
-                    break;
-                case 3: imageView_cv_bot2.setImageBitmap(b);
-                    break;
-                default:
-                    break;
             }
         }
     }

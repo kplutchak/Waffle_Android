@@ -1,12 +1,8 @@
 package com.pipit.waffle.Objects;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-import android.view.View;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.UUID;
 
@@ -25,32 +21,17 @@ public class Choice {
     public LoadState imageState;
     static ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public Choice(){
+    public Choice(String answerID){
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
         setVotes(0);
         imageState = LoadState.NOT_LOADED;
-        answerID = UUID.randomUUID().toString();
     }
 
-    public boolean loadURLintoBitmap(String imageUri){
-        imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                imageState = LoadState.LOADING;
-            }
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                _image = loadedImage;
-                imageState = LoadState.IMAGE_READY;
-                Log.d("Choice", "Image Loading Completed");
-                ClientData.getAnsweringFragment().setImageViewBitmap(_image, answerID);
-            }
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                imageState = LoadState.FAILED;
-            }
-        });
-        return true;
+    public Choice(){
+        //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
+        answerID = UUID.randomUUID().toString();
+        setVotes(0);
+        imageState = LoadState.NOT_LOADED;
     }
 
     public String getQuestionID() {

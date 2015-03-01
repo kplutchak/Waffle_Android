@@ -21,7 +21,10 @@ public class ClientData {
     public static final int MAXIMUM_QUEUED_QUESTIONS = 5;
 
     private static ClientData clientdata = new ClientData();
-    public static Queue<Question> questions;
+    public static LinkedList<Question> questions;
+    //List of available questions
+    public static Queue<Question> readyQuestions;
+
     private static List<String> idsOfAnsweredQuestions;
     private static AnsweringFragment answeringFragment;
     // maps Choice answerID to an integer that specifies the ImageView that the _image
@@ -32,6 +35,7 @@ public class ClientData {
     private ClientData(){
         //Initialize
         questions = new LinkedList<Question>();
+        readyQuestions = new LinkedList<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
 
         card_image_map = new HashMap<String, Integer>();
@@ -71,7 +75,6 @@ public class ClientData {
         q.addChoice(a);
 
         if (questions.size()<1){
-            Network.getOneQuestionWithCallback(mcontext, q);
             Network.getAllQuestions(mcontext, numberQuestionsToPull());
             q.state = Question.QuestionState.NOT_LOADED;
             q.generateAndSetID();
@@ -79,6 +82,7 @@ public class ClientData {
             Choice _b = new Choice();
             q.addChoice(_a);
             q.addChoice(_b);
+            idsOfAnsweredQuestions.add(q.getId());
             return q;
         }
 
@@ -96,8 +100,6 @@ public class ClientData {
             idsOfAnsweredQuestions.add(q.getId());
             Log.d("ClientData", "Retrieved a question with body" + q.getQuestionBody());
         }
-
-
         return q;
     }
 
@@ -119,6 +121,18 @@ public class ClientData {
 
     public static void setAnsweringFragment(AnsweringFragment answeringFragment) {
         ClientData.answeringFragment = answeringFragment;
+    }
+
+    public static boolean moveQuestionToReady(final Question q){
+        //TODO: Check for race conditions
+
+        if (q.state != Question.QuestionState.LOADED || q.getChoices().size()!=2 || !questions.contains(q)){
+            return false;
+        }
+        readyQuestions.add(q);
+        questions.remove(q);
+        answeringFragment.notifyOfReadyQuestion(); //Offer new question if needed.
+        return true;
     }
 
 }
