@@ -180,7 +180,7 @@ public class Network {
                                             newans.setAnswerBody(answerBody);
                                             newans.setVotes(answerVotes);
                                             newans.setQuestionID(questionID);
-                                            if (picurl=="" || !picurl.contains("http")){
+                                            if (picurl.isEmpty() || !picurl.contains("http")){
                                                 newans.imageState = Choice.LoadState.NO_IMAGE;
                                             }else{
                                                 newans.imageState = Choice.LoadState.NOT_LOADED;

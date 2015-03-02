@@ -83,6 +83,6 @@ public class Choice {
     }
 
     public enum LoadState{
-        NO_IMAGE, NOT_LOADED, LOADING, IMAGE_READY, FAILED
+        NO_IMAGE, NOT_LOADED, IMAGE_READY, FAILED
     }
 }

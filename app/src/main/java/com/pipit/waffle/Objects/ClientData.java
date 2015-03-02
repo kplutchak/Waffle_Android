@@ -135,4 +135,18 @@ public class ClientData {
         return true;
     }
 
+    /**
+     * Checks for FAILED questions in the questions queue and removes any that are found.
+     * @return True if one is found and removed
+     */
+    public static boolean tipoffSecretPolice(){
+        boolean iGotOne = false;
+        for (Question q : questions){
+            if (q.state == Question.QuestionState.FAILED){
+                iGotOne = questions.remove(q);
+            }
+        }
+        return iGotOne;
+    }
+
 }

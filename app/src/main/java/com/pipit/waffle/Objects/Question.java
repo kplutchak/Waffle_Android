@@ -106,14 +106,14 @@ public class Question {
     }
 
     public enum QuestionState{
-        LOADED, NOT_LOADED;
+        LOADED, NOT_LOADED, FAILED;
     }
 
     public boolean loadURLintoBitmap(final Choice ans, String imageUri){
         ans.imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                ans.imageState = Choice.LoadState.LOADING;
+                ans.imageState = Choice.LoadState.NOT_LOADED;
             }
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -127,6 +127,8 @@ public class Question {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 ans.imageState = Choice.LoadState.FAILED;
+                state = QuestionState.FAILED;
+                ClientData.tipoffSecretPolice();
             }
         });
         return true;
@@ -138,6 +140,7 @@ public class Question {
             return false;
         }
         for (int i = 0; i < choices.size() ; i++){
+            List<Choice> choices_for_debugger = choices;
             if (!(choices.get(i).imageState==Choice.LoadState.IMAGE_READY ||choices.get(i).imageState==Choice.LoadState.NO_IMAGE)){
                 return false;
             }

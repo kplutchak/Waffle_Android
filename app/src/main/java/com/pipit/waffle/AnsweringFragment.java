@@ -2,15 +2,12 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.Parcel;
-import android.support.annotation.NonNull;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -38,8 +35,6 @@ import com.squareup.picasso.Transformation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -120,9 +115,6 @@ public class AnsweringFragment extends Fragment  {
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
         }
         // get the next four unanswered questions and set their mappings
-
-        Question q1 = ClientData.getNextUnansweredQuestion(getActivity());
-
         View v = null;
 
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -342,7 +334,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                           // Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -368,7 +360,7 @@ public class AnsweringFragment extends Fragment  {
 
                             Float max_vel = Collections.max(last_velocities);
 
-                            Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
+                           // Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                             float xValue = v.getX();
 
@@ -584,7 +576,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                           // Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -813,7 +805,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                            //Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -2763,6 +2755,32 @@ public class AnsweringFragment extends Fragment  {
             }
         }
     }
+
+    /**
+     * Call this when cards leave screen
+     * Submits the answer to the choice, if applicable, and prepares the next question.
+     * Requests more from server if we are running low on questions.
+     * @param ans - The chosen answer - Null if none chosen but card was swiped away anyway
+     */
+    public synchronized void submitCurrentQuestion(Choice ans){
+        if (ans!=null){
+            //Todo: Submit result
+        }
+        currentQuestion = nextQuestion;
+        nextQuestion = ClientData.readyQuestions.poll(); //Remember this will return null if none exist
+        if (nextQuestion==null && ClientData.questions.size() <= 1){
+            ClientData.getNextUnansweredQuestion(this.getActivity());
+        }
+    }
+
+    /**
+     * Call this when a new card needs to be populated with Question data
+     * @return Question if one is ready (meaning fully loaded), and NULL if no question is ready
+     */
+    public synchronized Question getCurrentQuestion(){
+        return currentQuestion;
+    }
+
 
     public static int randInt(int min, int max) {
 
