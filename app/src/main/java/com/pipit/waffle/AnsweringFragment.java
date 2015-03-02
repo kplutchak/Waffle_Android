@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -56,7 +57,6 @@ public class AnsweringFragment extends Fragment  {
     private Question currentQuestion;
     private Question nextQuestion;
 
-
     private ImageView plus_one;
 
     private Transformation transformation_rounded_image;
@@ -80,6 +80,9 @@ public class AnsweringFragment extends Fragment  {
     private int image_height_stored_landscape;
 
     private VelocityTracker velocity = null;
+
+    private ProgressBar pb_cvtop1;
+    private ProgressBar pb_cvbot1;
 
 
 
@@ -175,15 +178,13 @@ public class AnsweringFragment extends Fragment  {
                     .oval(false)
                     .build();
 
-            // Transformation trans = new RoundedTransformation(20, 0);
-
-            //final ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
+            pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
+            pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
 
             imageView_cv_top1 = new ImageView(cardViewTop1.getContext());
             imageView_cv_bot1 = new ImageView(cardViewBot1.getContext());
             imageView_cv_top2 = new ImageView(cardViewTop2.getContext());
             imageView_cv_bot2 = new ImageView(cardViewBot2.getContext());
-
 
             CardView.LayoutParams cvtop1_image_params = new CardView.LayoutParams(cardViewTop1.getLayoutParams());
             cvtop1_image_params.width = card_params.width - (2 * margin_images);
@@ -193,7 +194,6 @@ public class AnsweringFragment extends Fragment  {
             if (savedInstanceState != null && getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                     && image_height_stored_landscape != 0)
                 cvtop1_image_params.height = image_height_stored_landscape;
-
 
             cvtop1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
             imageView_cv_top1.setLayoutParams(cvtop1_image_params);
@@ -208,84 +208,18 @@ public class AnsweringFragment extends Fragment  {
                     && image_height_stored_landscape != 0)
                 cvbot1_image_params.height = image_height_stored_landscape;
 
-
-
             cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
             imageView_cv_bot1.setLayoutParams(cvbot1_image_params);
             imageView_cv_bot2.setLayoutParams(cvbot1_image_params);
 
 
-
-
-
-
-            //Picasso p = new Picasso.Builder(getActivity()).build();
-            //p.setIndicatorsEnabled(true);
-
-           // Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
-
-           // String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
-
-        /*Retrieve bitmap from picasso and edit it*/
-            /*Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
-                    .fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cv_top1, new com.squareup.picasso.Callback() {
-
-                @Override
-                public void onSuccess() {
-                    pb_cvtop1.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                    pb_cvtop1.setVisibility(View.VISIBLE);
-                }
-            });
-            */
-
-
-          /*  final Choice top1 = ClientData.getNextUnansweredQuestion(v.getContext()).getChoices().get(0);
-
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if(top1.imageState == Choice.LoadState.IMAGE_READY)
-                imageView_cv_top1.setImageBitmap(top1.get_image());
-
-
-            */
-
             imageView_cv_top1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView_cv_bot1.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-
+            // add the new ImageViews to their parent layouts
             cardViewTop1.addView(imageView_cv_top1);
-
-            //cardViewTop1Image.invalidate();
-            //cardViewTop1Image.postInvalidate();
-
-            final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
-            // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
-           /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(1).getUrl()).fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cv_bot1, new com.squareup.picasso.Callback() {
-
-                @Override
-                public void onSuccess() {
-                    pb_cvbot1.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                    pb_cvbot1.setVisibility(View.VISIBLE);
-                }
-            });
-    */
             cardViewBot1.addView(imageView_cv_bot1);
-
-            //cardViewTop2.addView(imageView_cv_top2);
+            // TODO: add the rest of the imageviews
 
             // CardView movement and touch behavior
             final View.OnTouchListener tl = new View.OnTouchListener() {
@@ -2695,14 +2629,58 @@ public class AnsweringFragment extends Fragment  {
                     Choice c1 = this.currentQuestion.getChoices().get(0);
                     Choice c2 = this.currentQuestion.getChoices().get(1);
                     if (c1.imageState== Choice.LoadState.IMAGE_READY && c1.get_image()!=null){
-                        Bitmap b = c1.get_image();
-                        imageView_cv_top1.setImageBitmap(b);
+                        final Bitmap b = c1.get_image();
 
+                        // TODO: fade out spinner
+                        Animation fade_in = AnimationUtils.loadAnimation(cardViewTop1.getContext(), R.anim.fade_in);
+                        fade_in.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                pb_cvtop1.setVisibility(View.INVISIBLE);
+                                imageView_cv_top1.setVisibility(View.INVISIBLE);
+                                imageView_cv_top1.setImageBitmap(b);
+                            }
 
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                                imageView_cv_top1.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+
+                        imageView_cv_top1.startAnimation(fade_in);
                     }
                     if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
-                        Bitmap b = c2.get_image();
-                        imageView_cv_bot1.setImageBitmap(b);
+                        final Bitmap b = c2.get_image();
+
+                        // TODO: fade out spinner
+                        Animation fade_in = AnimationUtils.loadAnimation(cardViewBot1.getContext(), R.anim.fade_in);
+                        fade_in.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                pb_cvbot1.setVisibility(View.INVISIBLE);
+                                imageView_cv_bot1.setVisibility(View.INVISIBLE);
+                                imageView_cv_bot1.setImageBitmap(b);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                                imageView_cv_bot1.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+
+                        imageView_cv_bot1.startAnimation(fade_in);
                     }
                 }
                 return true;
