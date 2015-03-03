@@ -215,11 +215,14 @@ public class AnsweringFragment extends Fragment  {
 
             imageView_cv_top1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView_cv_bot1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView_cv_top2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView_cv_bot2.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             // add the new ImageViews to their parent layouts
             cardViewTop1.addView(imageView_cv_top1);
             cardViewBot1.addView(imageView_cv_bot1);
-            // TODO: add the rest of the imageviews
+            cardViewTop2.addView(imageView_cv_top2);
+            cardViewBot2.addView(imageView_cv_bot2);
 
             // CardView movement and touch behavior
             final View.OnTouchListener tl = new View.OnTouchListener() {
@@ -450,6 +453,13 @@ public class AnsweringFragment extends Fragment  {
                                     }
                                 });
                                 */
+
+                                submitCurrentQuestion(currentQuestion.getChoices().get(0));
+                                if(currentQuestion != null) {
+                                    imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                }
+
                                 if (anim_bcard1 != null)
                                     anim_bcard1.cancel();
                                 cardViewBot1.startAnimation(anim_other);
@@ -676,6 +686,12 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard1.start();
                             if (selected) {
+
+                                submitCurrentQuestion(currentQuestion.getChoices().get(1));
+                                if(currentQuestion != null) {
+                                    imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                }
                                 if (anim_tcard1 != null)
                                     anim_tcard1.cancel();
                                 cardViewTop1.startAnimation(anim_other);
@@ -907,6 +923,11 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard2.start();
                             if (selected) {
+                                submitCurrentQuestion(currentQuestion.getChoices().get(0));
+                                if(currentQuestion != null) {
+                                    imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                }
                                 if (anim_bcard2 != null)
                                     anim_bcard2.cancel();
                                 cardViewBot2.startAnimation(anim_other);
@@ -1134,6 +1155,11 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard2.start();
                             if (selected) {
+                                submitCurrentQuestion(currentQuestion.getChoices().get(1));
+                                if(currentQuestion != null) {
+                                    imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                }
                                 if (anim_tcard2 != null)
                                     anim_tcard2.cancel();
                                 cardViewTop2.startAnimation(anim_other);
