@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.view.VelocityTrackerCompat;
@@ -35,8 +34,6 @@ import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -56,6 +53,7 @@ public class AnsweringFragment extends Fragment  {
 
     private Question currentQuestion;
     private Question nextQuestion;
+    private Object questionLock = new Object();
 
     private ImageView plus_one;
 
@@ -453,9 +451,9 @@ public class AnsweringFragment extends Fragment  {
                                     }
                                 });
                                 */
-
+                                synchronized(questionLock){
                                 submitCurrentQuestion(currentQuestion.getChoices().get(0));
-                                if(currentQuestion != null) {
+                                if(currentQuestion != null && currentQuestion.getChoices().size()>=2) {
                                     imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
                                     imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
                                 }
@@ -465,6 +463,7 @@ public class AnsweringFragment extends Fragment  {
                                 cardViewBot1.startAnimation(anim_other);
                                 cardViewTop2.startAnimation(anim_in);
                                 cardViewBot2.startAnimation(anim_in_right);
+                                }
                             }
                             break;
                         default:
@@ -686,17 +685,18 @@ public class AnsweringFragment extends Fragment  {
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard1.start();
                             if (selected) {
-
-                                submitCurrentQuestion(currentQuestion.getChoices().get(1));
-                                if(currentQuestion != null) {
-                                    imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                    imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                synchronized(AnsweringFragment.this.questionLock) {
+                                    submitCurrentQuestion(currentQuestion.getChoices().get(1));
+                                    if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
+                                        imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                        imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                    }
+                                    if (anim_tcard1 != null)
+                                        anim_tcard1.cancel();
+                                    cardViewTop1.startAnimation(anim_other);
+                                    cardViewBot2.startAnimation(anim_in);
+                                    cardViewTop2.startAnimation(anim_in_right);
                                 }
-                                if (anim_tcard1 != null)
-                                    anim_tcard1.cancel();
-                                cardViewTop1.startAnimation(anim_other);
-                                cardViewBot2.startAnimation(anim_in);
-                                cardViewTop2.startAnimation(anim_in_right);
                             }
                             break;
                         default:
@@ -922,17 +922,19 @@ public class AnsweringFragment extends Fragment  {
                             anim_in.setStartOffset(dur + 200);
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard2.start();
-                            if (selected) {
-                                submitCurrentQuestion(currentQuestion.getChoices().get(0));
-                                if(currentQuestion != null) {
-                                    imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                    imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                            synchronized(questionLock) {
+                                if (selected) {
+                                    submitCurrentQuestion(currentQuestion.getChoices().get(0));
+                                    if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
+                                        imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                        imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                    }
+                                    if (anim_bcard2 != null)
+                                        anim_bcard2.cancel();
+                                    cardViewBot2.startAnimation(anim_other);
+                                    cardViewTop1.startAnimation(anim_in);
+                                    cardViewBot1.startAnimation(anim_in_right);
                                 }
-                                if (anim_bcard2 != null)
-                                    anim_bcard2.cancel();
-                                cardViewBot2.startAnimation(anim_other);
-                                cardViewTop1.startAnimation(anim_in);
-                                cardViewBot1.startAnimation(anim_in_right);
                             }
                             break;
                         default:
@@ -1154,17 +1156,21 @@ public class AnsweringFragment extends Fragment  {
                             anim_in.setStartOffset(dur + 200);
                             anim_in_right.setStartOffset(dur + 200);
                             anim_bcard2.start();
-                            if (selected) {
-                                submitCurrentQuestion(currentQuestion.getChoices().get(1));
-                                if(currentQuestion != null) {
-                                    imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                    imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                            synchronized(questionLock) {
+                                if (selected) {
+                                    if (currentQuestion.getChoices().size()>1) {
+                                        submitCurrentQuestion(currentQuestion.getChoices().get(1));
+                                        if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
+                                            imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                            imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                        }
+                                        if (anim_tcard2 != null)
+                                            anim_tcard2.cancel();
+                                        cardViewTop2.startAnimation(anim_other);
+                                        cardViewBot1.startAnimation(anim_in);
+                                        cardViewTop1.startAnimation(anim_in_right);
+                                    }
                                 }
-                                if (anim_tcard2 != null)
-                                    anim_tcard2.cancel();
-                                cardViewTop2.startAnimation(anim_other);
-                                cardViewBot1.startAnimation(anim_in);
-                                cardViewTop1.startAnimation(anim_in_right);
                             }
                             break;
                         default:
@@ -2646,6 +2652,7 @@ public class AnsweringFragment extends Fragment  {
      * @return true if a question was taken from readyQuestions queue, false otherwise
      */
     public boolean notifyOfReadyQuestion(){
+        synchronized (questionLock){
         if (this.currentQuestion==null){
             this.currentQuestion = ClientData.readyQuestions.poll();
             if (this.currentQuestion == null){
@@ -2712,52 +2719,29 @@ public class AnsweringFragment extends Fragment  {
                 return true;
             }
         }
-        if (this.nextQuestion==null){
+        if (this.nextQuestion==null) {
             this.nextQuestion = ClientData.readyQuestions.poll();
-            if (this.nextQuestion == null){
+            if (this.nextQuestion == null) {
                 return false;
-            }else{
-                if (this.nextQuestion.getChoices().size()==2){
+            } else {
+                if (this.nextQuestion.getChoices().size() == 2) {
                     Choice c1 = this.nextQuestion.getChoices().get(0);
                     Choice c2 = this.nextQuestion.getChoices().get(1);
-                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                    if (c1.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
                         Bitmap b = c1.get_image();
-                        imageView_cv_top2.setImageBitmap(b);
+                       // imageView_cv_top2.setImageBitmap(b);
                         Log.d("AnsweringFragment", "Set top image!");
                     }
-                    if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
+                    if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
                         Bitmap b = c2.get_image();
-                        imageView_cv_bot2.setImageBitmap(b);
+                      //  imageView_cv_bot2.setImageBitmap(b);
                     }
                 }
                 return true;
             }
         }
+        }
         return false; //No questions needed
-    }
-
-    public void setImageViewBitmap(Bitmap b, String answerID_key) {
-        HashMap<String, Integer> cardmap = ClientData.getInstance().card_image_map;
-        Queue<Question> questionsmap = ClientData.getInstance().questions;
-        Integer card_num = ClientData.getInstance().card_image_map.get(answerID_key);
-        if (b==null){
-            b =  BitmapFactory.decodeResource(getResources(), R.drawable.chelsealogo);
-        }
-        if(card_num != null)
-        {
-            switch(card_num) {
-                case 0: imageView_cv_top1.setImageBitmap(b);
-                        break;
-                case 1: imageView_cv_bot1.setImageBitmap(b);
-                        break;
-                case 2: imageView_cv_top2.setImageBitmap(b);
-                        break;
-                case 3: imageView_cv_bot2.setImageBitmap(b);
-                        break;
-                default:
-                        break;
-            }
-        }
     }
 
     /**
@@ -2766,14 +2750,16 @@ public class AnsweringFragment extends Fragment  {
      * Requests more from server if we are running low on questions.
      * @param ans - The chosen answer - Null if none chosen but card was swiped away anyway
      */
-    public synchronized void submitCurrentQuestion(Choice ans){
-        if (ans!=null){
-            //Todo: Submit result
-        }
-        currentQuestion = nextQuestion;
-        nextQuestion = ClientData.readyQuestions.poll(); //Remember this will return null if none exist
-        if (nextQuestion==null && ClientData.questions.size() <= 1){
-            ClientData.getNextUnansweredQuestion(this.getActivity());
+    public void submitCurrentQuestion(Choice ans){
+        synchronized(questionLock) {
+            if (ans != null) {
+                //Todo: Submit result
+            }
+            currentQuestion = nextQuestion;
+            nextQuestion = ClientData.readyQuestions.poll(); //Remember this will return null if none exist
+            if (nextQuestion == null && ClientData.questions.size() <= 1) {
+                ClientData.getNextUnansweredQuestion(this.getActivity());
+            }
         }
     }
 
