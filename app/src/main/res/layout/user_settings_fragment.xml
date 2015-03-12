@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="3">
 
         <ImageView
             android:id="@+id/user_settings_picture"
@@ -15,13 +15,24 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:layout_centerInParent="true"
-/>
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black_tint"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/off_white"
+            android:textSize="20sp"
+            android:padding="4dp"
+            android:text="Mila Kunis"/>
 
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/list"
         android:scrollbars="none"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -42,56 +53,200 @@
                 <RelativeLayout
                     android:layout_height="70dp"
                     android:layout_width="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:id="@+id/nav_item2">
+
+
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="30dp"
+                        android:paddingTop="2dp"
+                        android:textSize="18sp"
+                        android:text="Level 27"
+                        android:textColor="@color/text_light"
+                        android:fontFamily="sans-serif-light"/>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:paddingTop="2dp"
+                        android:textSize="32sp"
+                        android:text="Question Warlock"
+                        android:textColor="@color/text_black"
+                        android:fontFamily="sans-serif"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:text="\?"
+                        android:textColor="@color/text_light"
+                        android:layout_marginRight="8dp"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/stats_divider"
+                    android:layout_margin="8dp"
+                    android:background="@color/divider_color"
+                    android:layout_below="@id/nav_item2"/>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/stats_divider"
+                    android:orientation="horizontal"
                     android:id="@+id/nav_item1">
 
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
 
                     <TextView
+                        android:id="@+id/num_votes_cast"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
+                        android:layout_centerHorizontal="true"
                         android:paddingTop="2dp"
-                        android:textSize="19sp"
-                        android:text="Test1"
+                        android:gravity="center"
+                        android:textSize="26sp"
+                        android:text="124"
                         android:textColor="@color/text_black"
                         android:fontFamily="sans-serif">
                     </TextView>
 
-                </RelativeLayout>
+                    <TextView
+                        android:id="@+id/num_votes_cast_text"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/num_votes_cast"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:lines="2"
 
-                <RelativeLayout
-                    android:layout_height="70dp"
-                    android:layout_width="match_parent"
-                    android:id="@+id/nav_item2"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_below="@id/nav_item1">
+                        android:text="votes cast"
+                        android:textColor="@color/text_light"
+                        android:fontFamily="sans-serif-light">
+                    </TextView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                       >
 
                     <TextView
+                        android:id="@+id/num_votes_rec"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
+                        android:layout_centerHorizontal="true"
                         android:paddingTop="2dp"
-                        android:textSize="19sp"
-                        android:text="Test2"
+                        android:gravity="center"
+                        android:textSize="26sp"
+                        android:text="87"
                         android:textColor="@color/text_black"
                         android:fontFamily="sans-serif">
                     </TextView>
 
-                </RelativeLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/divider_color"
+                            />
+
+
+
+                    <TextView
+                        android:id="@+id/num_votes_rec_text"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/num_votes_rec"
+                        android:layout_centerHorizontal="true"
+                        android:maxLines="2"
+                        android:lines="2"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:text="votes received"
+                        android:textColor="@color/text_light"
+                        android:fontFamily="sans-serif-light">
+                    </TextView>
+                        </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/num_questions_asked"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="2dp"
+                        android:textSize="26sp"
+                        android:text="12"
+                        android:textColor="@color/text_black"
+                        android:fontFamily="sans-serif">
+                    </TextView>
+
+
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/divider_color"
+                            />
+
+                    <TextView
+                        android:id="@+id/num_questions_asked_text"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/num_questions_asked"
+                        android:maxLines="2"
+                        android:lines="2"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:text="questions asked"
+                        android:textColor="@color/text_light"
+                        android:fontFamily="sans-serif-light">
+                    </TextView>
+
+
+                        </RelativeLayout>
+
+
+
+                </LinearLayout>
+
+
+
+
 
                 <RelativeLayout
                     android:layout_height="70dp"
                     android:layout_width="match_parent"
                     android:id="@+id/nav_item3"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"
                     android:layout_below="@id/nav_item2">
 
 
@@ -99,10 +254,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="60dp"
                         android:paddingTop="2dp"
                         android:textSize="19sp"
-                        android:text="Test3"
+                        android:text=""
                         android:textColor="@color/text_black"
                         android:fontFamily="sans-serif">
                     </TextView>
@@ -126,7 +281,7 @@
                         android:layout_marginLeft="20dp"
                         android:paddingTop="2dp"
                         android:textSize="19sp"
-                        android:text="Test4"
+                        android:text=""
                         android:textColor="@color/text_black"
                         android:fontFamily="sans-serif">
                     </TextView>
