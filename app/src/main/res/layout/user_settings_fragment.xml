@@ -32,16 +32,11 @@
     <RelativeLayout
         android:id="@+id/list"
         android:scrollbars="none"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:layout_gravity="start"
-            android:id="@+id/nav_scrollview">
+
             <!-- The navigation drawer -->
             <RelativeLayout
                 android:background="@color/off_white"
@@ -231,6 +226,8 @@
                         android:textColor="@color/text_light"
                         android:fontFamily="sans-serif-light">
                     </TextView>
+                        
+                  
 
 
                         </RelativeLayout>
@@ -247,46 +244,16 @@
                     android:layout_height="70dp"
                     android:layout_width="match_parent"
                     android:id="@+id/nav_item3"
-                    android:layout_below="@id/nav_item2">
+                    android:layout_below="@id/nav_item1"
+                    android:layout_marginTop="100dp">
 
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="60dp"
-                        android:paddingTop="2dp"
-                        android:textSize="19sp"
-                        android:text=""
-                        android:textColor="@color/text_black"
-                        android:fontFamily="sans-serif">
-                    </TextView>
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_height="70dp"
-                    android:layout_width="match_parent"
-                    android:id="@+id/nav_item4"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_below="@id/nav_item3">
 
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
-                        android:paddingTop="2dp"
-                        android:textSize="19sp"
-                        android:text=""
-                        android:textColor="@color/text_black"
-                        android:fontFamily="sans-serif">
-                    </TextView>
 
-                </RelativeLayout>
 
 
 
@@ -294,7 +261,32 @@
 
 
             </RelativeLayout>
-        </ScrollView>
+
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-light"
+
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
+            android:textColor="@color/text_light"
+            android:text="Logout"/>
+        
+        <View
+            android:layout_width="100dp"
+            android:layout_height="40dp" android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_rectangle_border"
+            />
 
         </RelativeLayout>
 

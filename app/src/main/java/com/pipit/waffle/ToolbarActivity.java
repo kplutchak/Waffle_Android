@@ -6,18 +6,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -25,28 +20,16 @@ import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
-import com.pipit.waffle.Objects.Question;
-import com.pipit.waffle.Objects.Self;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
@@ -122,8 +105,8 @@ public class ToolbarActivity extends ActionBarActivity {
 
         // TODO: add click behavior for nav. drawer
 
-        RelativeLayout rl_me = (RelativeLayout) findViewById(R.id.nav_item1);
-        rl_me.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout rl_my_questions = (RelativeLayout) findViewById(R.id.nav_item1);
+        rl_my_questions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // check if we aren't already on the "My Questions" tab
@@ -205,19 +188,19 @@ public class ToolbarActivity extends ActionBarActivity {
             }
         });
 
-        RelativeLayout rl_settings = (RelativeLayout) findViewById(R.id.nav_item4);
-        rl_settings.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout rl_me = (RelativeLayout) findViewById(R.id.me_nav_item);
+        rl_me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // check if we aren't already on the "Settings" tab
-                if (current_fragment_id != Constants.USER_SETTINGS_FRAGMENT_ID) {
+                if (current_fragment_id != Constants.USER_ME_FRAGMENT_ID) {
 
                     // TODO: error handling in this block
 
                     final CountDownLatch latch = new CountDownLatch(2);
-                    new Thread(new Runnable(){
+                    new Thread(new Runnable() {
                         @Override
-                        public void run(){
+                        public void run() {
                             DisplayImageOptions options;
                             options = new DisplayImageOptions.Builder().cacheInMemory(true)
                                     .cacheOnDisk(true)
@@ -247,9 +230,9 @@ public class ToolbarActivity extends ActionBarActivity {
                         }
                     }).start();
 
-                    new Thread(new Runnable(){
+                    new Thread(new Runnable() {
                         @Override
-                        public void run(){
+                        public void run() {
                             try {
                                 Thread.sleep(300);
                             } catch (InterruptedException e) {
@@ -259,9 +242,9 @@ public class ToolbarActivity extends ActionBarActivity {
                         }
                     }).start();
 
-                    new Thread(new Runnable(){
+                    new Thread(new Runnable() {
                         @Override
-                        public void run(){
+                        public void run() {
                             try {
                                 latch.await();
                             } catch (InterruptedException e) {
@@ -272,7 +255,7 @@ public class ToolbarActivity extends ActionBarActivity {
                     }).start();
 
 
-                    SettingsPrepTask task = new SettingsPrepTask(latch);
+                    MePrepTask task = new MePrepTask(latch);
                     task.execute();
                 }
 
@@ -555,10 +538,10 @@ public class ToolbarActivity extends ActionBarActivity {
         }
     }
 
-    public class SettingsPrepTask extends AsyncTask<Void, Void, Void> {
+    public class MePrepTask extends AsyncTask<Void, Void, Void> {
 
         private CountDownLatch cd;
-        public SettingsPrepTask(CountDownLatch latch) {
+        public MePrepTask(CountDownLatch latch) {
             cd = latch;
         }
         @Override
@@ -631,9 +614,9 @@ public class ToolbarActivity extends ActionBarActivity {
             rl.addView(writer_toolbar);
             writer_toolbar.setCharacterDelay(2);
 
-            writer_toolbar.animateText("Settings");
+            writer_toolbar.animateText("Me");
             writer_toolbar.startAnimation(fade_in);
-            current_fragment_id = Constants.USER_SETTINGS_FRAGMENT_ID;
+            current_fragment_id = Constants.USER_ME_FRAGMENT_ID;
         }
 
         @Override

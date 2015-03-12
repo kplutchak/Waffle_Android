@@ -76,7 +76,7 @@
                             android:layout_marginLeft="60dp"
                             android:paddingTop="2dp"
                             android:textSize="19sp"
-                            android:text="Me"
+                            android:text="My Questions"
                             android:textColor="@color/text_black"
                             android:fontFamily="sans-serif">
                         </TextView>
@@ -173,18 +173,20 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_below="@id/nav_item4">
+                        android:layout_height="70dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:id="@+id/me_nav_item"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:layout_alignParentBottom="true">
                     
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="8dp"
                         android:src="@drawable/mila_icon"
                         android:id="@+id/profile_nav"/>
 
@@ -192,11 +194,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/profile_nav"
-                        android:layout_alignParentBottom="true"
                         android:layout_marginLeft="12dp"
-                        android:paddingBottom="24dp"
+                        android:layout_centerVertical="true"
+
+                        android:paddingBottom="20dp"
                         android:textSize="20sp"
-                        android:fontFamily="sans-serif"
                         android:textColor="@color/text_black"
                         android:text="Mila Kunis"/>
 
@@ -204,9 +206,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/profile_nav"
-                        android:layout_alignParentBottom="true"
                         android:layout_marginLeft="11dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginTop="34dp"
                         android:textSize="14sp"
                         android:fontFamily="sans-serif-light"
                         android:textColor="@color/text_light"
