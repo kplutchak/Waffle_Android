@@ -38,10 +38,10 @@ public class ToolbarActivity extends ActionBarActivity {
 
     private ActionBarDrawerToggle toggle;
     public static int current_fragment_id;
-    private Typewriter writer_toolbar;
+    public Typewriter writer_toolbar;
     private ListView drawerListView;
-    private android.support.v7.widget.Toolbar rl;
-    private DrawerLayout drawerLayout;
+    public android.support.v7.widget.Toolbar rl;
+    public DrawerLayout drawerLayout;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -148,7 +148,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
                                                     // Add this transaction to the back stack, allowing users to press Back
                                                     // to get to the front of the card.
-                                            .addToBackStack(null)
+                                            .addToBackStack(Constants.USER_QUESTIONS_FRAGMENT_NAME)
 
                                                     // Commit the transaction.
                                             .commit();
@@ -527,7 +527,14 @@ public class ToolbarActivity extends ActionBarActivity {
                             rl.addView(writer_toolbar);
                             writer_toolbar.setCharacterDelay(2);
 
-                            writer_toolbar.animateText("Waffle");
+                            String tab_title = "";
+
+                            if(getFragmentManager().getBackStackEntryCount() >= 2)
+                                tab_title = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount()-2).getName();
+                            else
+                                tab_title = "Waffle";
+
+                            writer_toolbar.animateText(tab_title);
                             writer_toolbar.startAnimation(fade_in);
                             getFragmentManager().popBackStack();
                         }
@@ -558,7 +565,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            UserSettingsFragment frag = new UserSettingsFragment();
+            UserMeFragment frag = new UserMeFragment();
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
@@ -584,7 +591,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
                             // Add this transaction to the back stack, allowing users to press Back
                             // to get to the front of the card.
-                    .addToBackStack(null)
+                    .addToBackStack(Constants.USER_ME_FRAGMENT_NAME)
 
                             // Commit the transaction.
                     .commit();
