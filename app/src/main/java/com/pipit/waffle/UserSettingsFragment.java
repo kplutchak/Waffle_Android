@@ -28,10 +28,7 @@ public class UserSettingsFragment extends Fragment {
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
 
-
-
         Animator animator = null;
-
 
         animator = ObjectAnimator.ofFloat(this, "translationX", 0, 0);
         animator.setDuration(300);

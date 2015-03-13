@@ -148,7 +148,6 @@ public class UserMeFragment extends Fragment {
 
             }
 
-
         });
 
         return v;
