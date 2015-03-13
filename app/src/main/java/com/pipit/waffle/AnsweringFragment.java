@@ -246,14 +246,7 @@ public class AnsweringFragment extends Fragment  {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
 
-                            if(tcard1_lock)
-                                return true;
-                            else
-                            {
-                                tcard2_lock = true;
-                                bcard1_lock = true;
-                                bcard2_lock = true;
-                            }
+
 
                             last_velocities.clear();
 
@@ -486,11 +479,7 @@ public class AnsweringFragment extends Fragment  {
                                 }
                             }
 
-                            if(!tcard1_lock) {
-                                tcard2_lock = false;
-                                bcard1_lock = false;
-                                bcard2_lock = false;
-                            }
+
 
                             break;
                         default:
@@ -517,14 +506,7 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
-                            if(bcard1_lock)
-                                return true;
-                            else
-                            {
-                                tcard2_lock = true;
-                                tcard1_lock = true;
-                                bcard2_lock = true;
-                            }
+
                             last_velocities.clear();
 
                             selected = false;
@@ -733,11 +715,7 @@ public class AnsweringFragment extends Fragment  {
                                     cardViewTop2.startAnimation(anim_in_right);
                                 }
                             }
-                            if(!bcard1_lock) {
-                                tcard2_lock = false;
-                                tcard1_lock = false;
-                                bcard2_lock = false;
-                            }
+
                             break;
                         default:
                             break;
@@ -765,14 +743,7 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
-                            if(tcard2_lock)
-                                return true;
-                            else
-                            {
-                                tcard1_lock = true;
-                                bcard1_lock = true;
-                                bcard2_lock = true;
-                            }
+
                             last_velocities.clear();
 
                             selected = false;
@@ -984,11 +955,7 @@ public class AnsweringFragment extends Fragment  {
                                     cardViewBot1.startAnimation(anim_in_right);
                                 }
                             }
-                            if(!tcard2_lock) {
-                                tcard1_lock = false;
-                                bcard1_lock = false;
-                                bcard2_lock = false;
-                            }
+
                             break;
                         default:
                             break;
@@ -1014,14 +981,7 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
-                            if(bcard2_lock)
-                                return true;
-                            else
-                            {
-                                tcard2_lock = true;
-                                bcard1_lock = true;
-                                tcard1_lock = true;
-                            }
+
                             last_velocities.clear();
 
                             selected = false;
@@ -1233,11 +1193,7 @@ public class AnsweringFragment extends Fragment  {
                                     }
                                 }
                             }
-                            if(!bcard2_lock) {
-                                tcard2_lock = false;
-                                bcard1_lock = false;
-                                tcard1_lock = false;
-                            }
+
                             break;
                         default:
                             break;
