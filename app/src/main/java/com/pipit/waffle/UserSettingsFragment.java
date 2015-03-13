@@ -28,11 +28,21 @@ public class UserSettingsFragment extends Fragment {
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
 
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        float displayWidth = size.x;
+
         Animator animator = null;
 
-        animator = ObjectAnimator.ofFloat(this, "translationX", 0, 0);
-        animator.setDuration(300);
+        if(enter) {
+            animator = ObjectAnimator.ofFloat(this, "translationX", displayWidth, 0);
+            // TODO: play with interpolator
+            animator.setInterpolator(new AccelerateInterpolator(0.8f));
+            animator.setDuration(300);
+        }
+
+
         return animator;
     }
-
 }

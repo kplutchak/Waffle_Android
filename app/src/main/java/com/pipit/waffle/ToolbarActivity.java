@@ -259,6 +259,8 @@ public class ToolbarActivity extends ActionBarActivity {
                     task.execute();
                 }
 
+                drawerLayout.closeDrawer(Gravity.LEFT);
+
             }
         });
 

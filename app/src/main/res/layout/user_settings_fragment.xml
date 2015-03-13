@@ -7,7 +7,7 @@
         android:id="@+id/settings_item_header"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="@color/black_tint_light"
+        android:background="@color/button_material_light"
         android:layout_alignParentTop="true">
 
 

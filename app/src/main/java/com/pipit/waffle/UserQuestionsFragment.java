@@ -86,14 +86,22 @@ public class UserQuestionsFragment extends Fragment {
 
         if(enter) {
             animator = ObjectAnimator.ofFloat(this, "translationX", displayWidth, 0);
+            // TODO: play with interpolator
+            animator.setInterpolator(new AccelerateInterpolator(0.8f));
+            animator.setDuration(300);
         }
-        else {
-            animator = ObjectAnimator.ofFloat(this, "translationX", 0, displayWidth);
+        else
+        {
+            if(getFragmentManager().getBackStackEntryCount() == 0)
+            {
+                animator = ObjectAnimator.ofFloat(this, "translationX", 0, displayWidth);
+                // TODO: play with interpolator
+                animator.setInterpolator(new AccelerateInterpolator(0.8f));
+                animator.setDuration(300);
+            }
+
         }
 
-        // TODO: play with interpolator
-        animator.setInterpolator(new AccelerateInterpolator(0.8f));
-        animator.setDuration(300);
         return animator;
     }
 

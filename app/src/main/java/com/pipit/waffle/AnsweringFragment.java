@@ -82,6 +82,11 @@ public class AnsweringFragment extends Fragment  {
     private ProgressBar pb_cvtop1;
     private ProgressBar pb_cvbot1;
 
+    private boolean tcard1_lock = false;
+    private boolean tcard2_lock = false;
+    private boolean bcard1_lock = false;
+    private boolean bcard2_lock = false;
+
 
 
     // TODO: when a Choice is selected, remove it from the mapping
@@ -240,6 +245,16 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
+
+                            if(tcard1_lock)
+                                return true;
+                            else
+                            {
+                                tcard2_lock = true;
+                                bcard1_lock = true;
+                                bcard2_lock = true;
+                            }
+
                             last_velocities.clear();
 
                             selected = false;
@@ -292,6 +307,9 @@ public class AnsweringFragment extends Fragment  {
                             // x direction on ACTION_UP
                             // 2) at least 51/100 of the screen width in the positive x direction on
                             // ACTION_UP
+
+
+
 
                             Float max_vel = Collections.max(last_velocities);
 
@@ -435,6 +453,8 @@ public class AnsweringFragment extends Fragment  {
                             anim_in.setStartOffset(dur + 200);
                             anim_in_right.setStartOffset(dur + 200);
                             anim_tcard1.start();
+
+
                             if (selected) {
                                 /*Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
                                         .fit().centerCrop()
@@ -465,6 +485,13 @@ public class AnsweringFragment extends Fragment  {
                                 cardViewBot2.startAnimation(anim_in_right);
                                 }
                             }
+
+                            if(!tcard1_lock) {
+                                tcard2_lock = false;
+                                bcard1_lock = false;
+                                bcard2_lock = false;
+                            }
+
                             break;
                         default:
                             break;
@@ -490,6 +517,14 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
+                            if(bcard1_lock)
+                                return true;
+                            else
+                            {
+                                tcard2_lock = true;
+                                tcard1_lock = true;
+                                bcard2_lock = true;
+                            }
                             last_velocities.clear();
 
                             selected = false;
@@ -534,7 +569,6 @@ public class AnsweringFragment extends Fragment  {
                             break;
                         case MotionEvent.ACTION_UP:
                             // Button up
-
                             // Currently, the options for a "choice selection" are:
                             // 1) a velocity of 10,000 and at least 1/2 of the screen width in the positive
                             // x direction on ACTION_UP
@@ -561,6 +595,7 @@ public class AnsweringFragment extends Fragment  {
                             } else {
                                 dist = starting_pos - xValue;
                             }
+
 
                             TranslateAnimation anim_in = new TranslateAnimation(0, starting_pos - ending_pos_left, 0, 0);
                             anim_in.setAnimationListener(new Animation.AnimationListener() {
@@ -698,6 +733,11 @@ public class AnsweringFragment extends Fragment  {
                                     cardViewTop2.startAnimation(anim_in_right);
                                 }
                             }
+                            if(!bcard1_lock) {
+                                tcard2_lock = false;
+                                tcard1_lock = false;
+                                bcard2_lock = false;
+                            }
                             break;
                         default:
                             break;
@@ -725,6 +765,14 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
+                            if(tcard2_lock)
+                                return true;
+                            else
+                            {
+                                tcard1_lock = true;
+                                bcard1_lock = true;
+                                bcard2_lock = true;
+                            }
                             last_velocities.clear();
 
                             selected = false;
@@ -936,6 +984,11 @@ public class AnsweringFragment extends Fragment  {
                                     cardViewBot1.startAnimation(anim_in_right);
                                 }
                             }
+                            if(!tcard2_lock) {
+                                tcard1_lock = false;
+                                bcard1_lock = false;
+                                bcard2_lock = false;
+                            }
                             break;
                         default:
                             break;
@@ -961,6 +1014,14 @@ public class AnsweringFragment extends Fragment  {
                     switch (theAction) {
                         case MotionEvent.ACTION_DOWN:
                             // Button down
+                            if(bcard2_lock)
+                                return true;
+                            else
+                            {
+                                tcard2_lock = true;
+                                bcard1_lock = true;
+                                tcard1_lock = true;
+                            }
                             last_velocities.clear();
 
                             selected = false;
@@ -1172,6 +1233,11 @@ public class AnsweringFragment extends Fragment  {
                                     }
                                 }
                             }
+                            if(!bcard2_lock) {
+                                tcard2_lock = false;
+                                bcard1_lock = false;
+                                tcard1_lock = false;
+                            }
                             break;
                         default:
                             break;
@@ -1187,6 +1253,7 @@ public class AnsweringFragment extends Fragment  {
             cardViewTop2.setOnTouchListener(tl3);
             cardViewBot2.setOnTouchListener(tl4);
         }
+        // TODO: REMOVE - DEPRECATED
         else if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Inflate the layout for this fragment
             v = inflater.inflate(R.layout.answering_fragment_land, container, false);
@@ -2797,5 +2864,20 @@ public class AnsweringFragment extends Fragment  {
         plus_one.setTranslationX(newLoc.mX);
         plus_one.setTranslationY(newLoc.mY);
     }
+
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+
+        Animator animator = null;
+
+        if(enter)
+            animator = ObjectAnimator.ofFloat(this, "translationX", 0, 0);
+        if (animator != null) {
+            animator.setDuration(300);
+        }
+        return animator;
+    }
+
+
 
 }
