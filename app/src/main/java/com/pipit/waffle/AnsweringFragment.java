@@ -23,6 +23,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -87,6 +88,7 @@ public class AnsweringFragment extends Fragment  {
     private boolean bcard1_lock = false;
     private boolean bcard2_lock = false;
 
+    private LinearLayout card_holder_layout;
 
 
     // TODO: when a Choice is selected, remove it from the mapping
@@ -126,6 +128,8 @@ public class AnsweringFragment extends Fragment  {
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Inflate the layout for this fragment
             v = inflater.inflate(R.layout.answering_fragment, container, false);
+
+            card_holder_layout = (LinearLayout) v.findViewById(R.id.card_holder_layout);
 
             // Retrieve the CardViews
             cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
@@ -2860,11 +2864,28 @@ public class AnsweringFragment extends Fragment  {
         if(enter)
             animator = ObjectAnimator.ofFloat(this, "translationX", 0, 0);
         if (animator != null) {
-            animator.setDuration(300);
+            animator.setDuration(getResources().getInteger(R.integer.transition_time));
         }
         return animator;
     }
 
+    public void disableClicks() {
+        if(card_holder_layout != null)
+        {
+            disable(card_holder_layout);
+        }
+    }
 
+    public static void disable(ViewGroup layout) {
+        layout.setEnabled(false);
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                disable((ViewGroup) child);
+            } else {
+                child.setEnabled(false);
+            }
+        }
+    }
 
 }

@@ -112,7 +112,23 @@ public class ToolbarActivity extends ActionBarActivity {
                 // check if we aren't already on the "My Questions" tab
                 if (current_fragment_id != Constants.USER_QUESTIONS_FRAGMENT_ID) {
 
-                    // TODO: disable clicks during break
+                    // disable clicks
+                    if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID)
+                    {
+                        AnsweringFragment frag = (AnsweringFragment) getFragmentManager().findFragmentByTag(Constants.ANSWERING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_ME_FRAGMENT_ID)
+                    {
+                        UserMeFragment frag = (UserMeFragment) getFragmentManager().findFragmentByTag(Constants.USER_ME_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_SETTINGS_FRAGMENT_ID)
+                    {
+                        UserSettingsFragment frag = (UserSettingsFragment) getFragmentManager().findFragmentByTag(Constants.USER_SETTINGS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+
                     Timer delay_frag_trans = new Timer();
                     delay_frag_trans.schedule(new TimerTask() {
 
@@ -144,7 +160,7 @@ public class ToolbarActivity extends ActionBarActivity {
                                                     // Replace any fragments currently in the container view with a fragment
                                                     // representing the next page (indicated by the just-incremented currentPage
                                                     // variable).
-                                            .replace(R.id.fragment_container, frag)
+                                            .replace(R.id.fragment_container, frag, Constants.USER_QUESTIONS_FRAGMENT_NAME)
 
                                                     // Add this transaction to the back stack, allowing users to press Back
                                                     // to get to the front of the card.
@@ -181,7 +197,106 @@ public class ToolbarActivity extends ActionBarActivity {
                                 }
                             });
                         }
-                    }, 300);
+                    }, getResources().getInteger(R.integer.transition_time));
+                }
+                // Close the drawer after the item has been clicked
+                drawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+        RelativeLayout rl_settings = (RelativeLayout) findViewById(R.id.nav_item4);
+        rl_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // check if we aren't already on the "My Questions" tab
+                if (current_fragment_id != Constants.USER_SETTINGS_FRAGMENT_ID) {
+
+                    // disable clicks
+                    if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID)
+                    {
+                        AnsweringFragment frag = (AnsweringFragment) getFragmentManager().findFragmentByTag(Constants.ANSWERING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_ME_FRAGMENT_ID)
+                    {
+                        UserMeFragment frag = (UserMeFragment) getFragmentManager().findFragmentByTag(Constants.USER_ME_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID)
+                    {
+                        UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+
+                    Timer delay_frag_trans = new Timer();
+                    delay_frag_trans.schedule(new TimerTask() {
+
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    UserSettingsFragment frag = new UserSettingsFragment();
+
+                                    // In case this activity was started with special instructions from an
+                                    // Intent, pass the Intent's extras to the fragment as arguments
+                                    frag.setArguments(getIntent().getExtras());
+
+                                    // Flip to the back.
+
+                                    // Create and commit a new fragment transaction that adds the fragment for the back of
+                                    // the card, uses custom animations, and is part of the fragment manager's back stack.
+
+                                    getFragmentManager()
+                                            .beginTransaction()
+
+                                                    // Replace the default fragment animations with animator resources representing
+                                                    // rotations when switching to the back of the card, as well as animator
+                                                    // resources representing rotations when flipping back to the front (e.g. when
+                                                    // the system Back button is pressed).
+
+                                                    // Replace any fragments currently in the container view with a fragment
+                                                    // representing the next page (indicated by the just-incremented currentPage
+                                                    // variable).
+                                            .replace(R.id.fragment_container, frag, Constants.USER_SETTINGS_FRAGMENT_NAME)
+
+                                                    // Add this transaction to the back stack, allowing users to press Back
+                                                    // to get to the front of the card.
+                                            .addToBackStack(Constants.USER_SETTINGS_FRAGMENT_NAME)
+
+                                                    // Commit the transaction.
+                                            .commit();
+
+                                    Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
+                                    fade_in.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            writer_toolbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
+
+                                        }
+                                    });
+
+                                    rl.removeView(writer_toolbar);
+                                    rl.addView(writer_toolbar);
+                                    writer_toolbar.setCharacterDelay(2);
+
+                                    writer_toolbar.animateText("Settings");
+                                    writer_toolbar.startAnimation(fade_in);
+                                    current_fragment_id = Constants.USER_SETTINGS_FRAGMENT_ID;
+                                }
+                            });
+                        }
+                    }, getResources().getInteger(R.integer.transition_time));
                 }
                 // Close the drawer after the item has been clicked
                 drawerLayout.closeDrawer(Gravity.LEFT);
@@ -196,6 +311,24 @@ public class ToolbarActivity extends ActionBarActivity {
                 if (current_fragment_id != Constants.USER_ME_FRAGMENT_ID) {
 
                     // TODO: error handling in this block
+
+                    // disable clicks
+                    if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID)
+                    {
+                        AnsweringFragment frag = (AnsweringFragment) getFragmentManager().findFragmentByTag(Constants.ANSWERING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_SETTINGS_FRAGMENT_ID)
+                    {
+                        UserSettingsFragment frag = (UserSettingsFragment) getFragmentManager().findFragmentByTag(Constants.USER_SETTINGS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID)
+                    {
+                        UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+
 
                     final CountDownLatch latch = new CountDownLatch(2);
                     new Thread(new Runnable() {
@@ -234,7 +367,7 @@ public class ToolbarActivity extends ActionBarActivity {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(300);
+                                Thread.sleep(getResources().getInteger(R.integer.transition_time));
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -479,7 +612,7 @@ public class ToolbarActivity extends ActionBarActivity {
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+                    .add(R.id.fragment_container, firstFragment, Constants.ANSWERING_FRAGMENT_NAME).commit();
         }
 
     }
@@ -496,7 +629,28 @@ public class ToolbarActivity extends ActionBarActivity {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
 
         } else {
-            // TODO: disable clicks during the break
+            // disable clicks
+            if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID)
+            {
+                AnsweringFragment frag = (AnsweringFragment) getFragmentManager().findFragmentByTag(Constants.ANSWERING_FRAGMENT_NAME);
+                frag.disableClicks();
+            }
+            else if(current_fragment_id == Constants.USER_SETTINGS_FRAGMENT_ID)
+            {
+                UserSettingsFragment frag = (UserSettingsFragment) getFragmentManager().findFragmentByTag(Constants.USER_SETTINGS_FRAGMENT_NAME);
+                frag.disableClicks();
+            }
+            else if(current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID)
+            {
+                UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
+                frag.disableClicks();
+            }
+            else if(current_fragment_id == Constants.USER_ME_FRAGMENT_ID)
+            {
+                UserMeFragment frag = (UserMeFragment) getFragmentManager().findFragmentByTag(Constants.USER_ME_FRAGMENT_NAME);
+                frag.disableClicks();
+            }
+
             Timer delay_back = new Timer();
             delay_back.schedule(new TimerTask() {
 
@@ -542,7 +696,7 @@ public class ToolbarActivity extends ActionBarActivity {
                         }
                     });
                 }
-            }, 300);
+            }, getResources().getInteger(R.integer.transition_time));
 
         }
     }
@@ -589,7 +743,7 @@ public class ToolbarActivity extends ActionBarActivity {
                             // Replace any fragments currently in the container view with a fragment
                             // representing the next page (indicated by the just-incremented currentPage
                             // variable).
-                    .replace(R.id.fragment_container, frag)
+                    .replace(R.id.fragment_container, frag, Constants.USER_ME_FRAGMENT_NAME)
 
                             // Add this transaction to the back stack, allowing users to press Back
                             // to get to the front of the card.

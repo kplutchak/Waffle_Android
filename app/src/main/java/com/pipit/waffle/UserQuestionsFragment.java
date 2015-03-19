@@ -9,9 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 
 import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
@@ -32,6 +34,8 @@ public class UserQuestionsFragment extends Fragment {
 
     private UserQuestionsFragmentListAdapter mAdapter;
 
+    private LinearLayout holder_layout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +43,8 @@ public class UserQuestionsFragment extends Fragment {
         ToolbarActivity.current_fragment_id = Constants.USER_QUESTIONS_FRAGMENT_ID;
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.user_questions_fragment, container, false);
+
+        holder_layout = (LinearLayout) v;
 
         // TODO: remove
        /* ImageLoader.getInstance().clearDiskCache();
@@ -88,7 +94,7 @@ public class UserQuestionsFragment extends Fragment {
             animator = ObjectAnimator.ofFloat(this, "translationX", displayWidth, 0);
             // TODO: play with interpolator
             animator.setInterpolator(new AccelerateInterpolator(0.8f));
-            animator.setDuration(300);
+            animator.setDuration(getResources().getInteger(R.integer.transition_time));
         }
         else
         {
@@ -97,7 +103,7 @@ public class UserQuestionsFragment extends Fragment {
                 animator = ObjectAnimator.ofFloat(this, "translationX", 0, displayWidth);
                 // TODO: play with interpolator
                 animator.setInterpolator(new AccelerateInterpolator(0.8f));
-                animator.setDuration(300);
+                animator.setDuration(getResources().getInteger(R.integer.transition_time));
             }
 
         }
@@ -105,5 +111,23 @@ public class UserQuestionsFragment extends Fragment {
         return animator;
     }
 
+    public void disableClicks() {
+        if(holder_layout != null)
+        {
+            disable(holder_layout);
+        }
+    }
+
+    public static void disable(ViewGroup layout) {
+        layout.setEnabled(false);
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                disable((ViewGroup) child);
+            } else {
+                child.setEnabled(false);
+            }
+        }
+    }
 
 }
