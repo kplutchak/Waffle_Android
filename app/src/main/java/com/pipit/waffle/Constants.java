@@ -16,4 +16,6 @@ public class Constants {
     public static String USER_QUESTIONS_FRAGMENT_NAME = "My Questions";
     public static String USER_SETTINGS_FRAGMENT_NAME = "Settings";
     public static String USER_ME_FRAGMENT_NAME = "Me";
+
+    public static int NUMBER_OF_CHOICES_PER_QUESTION = 2;
 }

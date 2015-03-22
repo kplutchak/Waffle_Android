@@ -8,9 +8,8 @@ import com.pipit.waffle.Network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Eric on 12/14/2014.
@@ -18,12 +17,14 @@ import java.util.Queue;
 public class ClientData {
     //Singleton class to hold all data
 
-    public static final int MAXIMUM_QUEUED_QUESTIONS = 5;
+    public static final int MAXIMUM_QUEUED_QUESTIONS = 7;
+    public static final int MAXIMUM_IMAGE_LOADED_QUESTIONS = 3;
 
     private static ClientData clientdata = new ClientData();
-    public static LinkedList<Question> questions;
+    private static ConcurrentLinkedQueue<Question> questions;
+    private static ConcurrentLinkedQueue<Question> questions_being_loaded;
     //List of available questions
-    public static Queue<Question> readyQuestions;
+    private static ConcurrentLinkedQueue<Question> readyQuestions;
 
     private static List<String> idsOfAnsweredQuestions;
     private static AnsweringFragment answeringFragment;
@@ -34,8 +35,9 @@ public class ClientData {
 
     private ClientData(){
         //Initialize
-        questions = new LinkedList<Question>();
-        readyQuestions = new LinkedList<Question>();
+        questions = new ConcurrentLinkedQueue<Question>();
+        readyQuestions = new ConcurrentLinkedQueue<Question>();
+        questions_being_loaded = new ConcurrentLinkedQueue<Question>();
         idsOfAnsweredQuestions = new ArrayList<String>();
 
         card_image_map = new HashMap<String, Integer>();
@@ -55,8 +57,13 @@ public class ClientData {
             start the synchronous download of that image here.
          */
         //Todo: Check that question contains at least one option.
-
-        questions.add(q);
+        //If we take out a loaded question, start loading another one
+        if (readyQuestions.size() + questions_being_loaded.size() <= MAXIMUM_IMAGE_LOADED_QUESTIONS){
+            q.beginImageLoading();
+            questions_being_loaded.add(q);
+        }else{
+            questions.add(q);
+        }
         Log.d("ClientData", "addQuestion(q) added a question with text: '" + q.getQuestionBody() + "' and " + q.getChoices().get(0).getQuestionID() + " userID  - question array size is now" + Integer.toString(questions.size()));
         return;
     }
@@ -123,15 +130,34 @@ public class ClientData {
         ClientData.answeringFragment = answeringFragment;
     }
 
-    public static boolean moveQuestionToReady(final Question q){
+    public static boolean moveQuestionToReady(Question q){
         //TODO: Check for race conditions
-
-        if (q.state != Question.QuestionState.LOADED || q.getChoices().size()!=2 || !questions.contains(q)){
+        Question k = q;
+        if (q.state != Question.QuestionState.LOADED || q.getChoices().size()!=2){
             return false;
         }
         readyQuestions.add(q);
-        questions.remove(q);
+        if (questions_being_loaded.contains(q)){
+            questions_being_loaded.remove();
+        }
         answeringFragment.notifyOfReadyQuestion(); //Offer new question if needed.
+        return true;
+    }
+
+
+    public static boolean checkAndUpdateQuestionStatus(Question q){
+        //TODO: Currently only supports questions with 2 choices exactly
+        if (q.getChoices().size()!=2){
+            return false;
+        }
+        for (int i = 0; i < q.getChoices().size() ; i++){
+            List<Choice> choices_for_debugger = q.getChoices();
+            if (!(q.getChoices().get(i).imageState==Choice.LoadState.IMAGE_READY ||q.getChoices().get(i).imageState==Choice.LoadState.NO_IMAGE)){
+                return false;
+            }
+        }
+        q.state = Question.QuestionState.LOADED;
+        ClientData.moveQuestionToReady(q);
         return true;
     }
 
@@ -147,6 +173,25 @@ public class ClientData {
             }
         }
         return iGotOne;
+    }
+
+    public synchronized static Question pollReadyQuestions(){
+        //If we take out a loaded question, start loading another one
+        if (readyQuestions.size() + questions_being_loaded.size() <= MAXIMUM_IMAGE_LOADED_QUESTIONS){
+            Question q = pollNewQuestions();
+            if (q!=null){
+                q.beginImageLoading();
+                questions_being_loaded.add(q);
+            }
+        }
+        return readyQuestions.poll();
+    }
+
+    public synchronized static Question pollNewQuestions(){
+        if (ClientData.questions.size() <= 1) {
+            ClientData.getNextUnansweredQuestion(answeringFragment.getActivity());
+        }
+        return questions.poll();
     }
 
 }

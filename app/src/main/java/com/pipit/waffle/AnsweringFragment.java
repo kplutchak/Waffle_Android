@@ -1061,7 +1061,7 @@ public class AnsweringFragment extends Fragment  {
 
                             Float max_vel = Collections.max(last_velocities);
 
-                            Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
+                           // Log.d("AnsweringFragment", "Max velocity: " + Float.toString(max_vel));
 
                             float xValue = v.getX();
 
@@ -1248,89 +1248,6 @@ public class AnsweringFragment extends Fragment  {
                     new DecelerateInterpolator();
             boolean mTopLeft = true;
 
-               /* plus_one = (TextView) v.findViewById(R.id.button);
-                plus_one.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // Capture current location of button
-                        final int oldLeft = plus_one.getLeft();
-                        final int oldTop = plus_one.getTop();
-
-                        int random_num = randInt(0, 3);
-                        // Set up path to new location using a B�zier spline curve
-                        AnimatorPath path = new AnimatorPath();
-                        path.moveTo(0, 0);
-                        if(random_num==0)
-                            path.curveTo(40, -200, 80, -280, 120, -100);
-                        else if(random_num==1)
-                            path.curveTo(-40, -220, -80, -230, -120, -120);
-                        else
-                            path.curveTo(-60, -180, -90, -230, -140, -80);
-
-
-                        // Set up the animation
-                        final ObjectAnimator anim = ObjectAnimator.ofObject(
-                                AnsweringFragment.this, "buttonLoc",
-                                new PathEvaluator(), path.getPoints().toArray());
-                        anim.setDuration(1000);
-                        anim.setInterpolator(sDecelerateInterpolator);
-                        anim.addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animator) {
-
-                            }
-                        });
-
-                        Animation alpha = new AlphaAnimation(1.0f, 0.0f);
-                        alpha.setInterpolator(new LinearInterpolator());
-                        alpha.setDuration(1000);
-                        alpha.setFillAfter(true);
-
-                        v.startAnimation(alpha);
-                        anim.start();
-
-                        // Change layout parameters of button to move it
-
-
-                        // Add OnPreDrawListener to catch button after layout but before drawing
-                        plus_one.getViewTreeObserver().addOnPreDrawListener(
-                                new ViewTreeObserver.OnPreDrawListener() {
-                                    public boolean onPreDraw() {
-                                        plus_one.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                                        // Capture new location
-                                        int left = plus_one.getLeft();
-                                        int top = plus_one.getTop();
-                                        int deltaX = left - oldLeft;
-                                        int deltaY = top - oldTop;
-
-
-                                        return true;
-                                    }
-                                });
-                    }
-                });
-
-
-
-    */
-
             plus_one = (ImageView) v.findViewById(R.id.plus_one);
 
             final RelativeLayout frame_left = (RelativeLayout) v.findViewById(R.id.main_frame);
@@ -1430,50 +1347,10 @@ public class AnsweringFragment extends Fragment  {
             imageView_cv_bot1.setLayoutParams(cvbot1_image_params);
             imageView_cv_bot2.setLayoutParams(cvbot1_image_params);
 
-            //Picasso p = new Picasso.Builder(getActivity()).build();
-            //p.setIndicatorsEnabled(true);
-
-            //Toast.makeText(getActivity().getApplicationContext(), ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl(), Toast.LENGTH_LONG).show();
-
-            //String test = ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl();
-
-        /*Retrieve bitmap from picasso and edit it*/
-           /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
-                    .fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cv_top1, new com.squareup.picasso.Callback() {
-
-                @Override
-                public void onSuccess() {
-                    pb_cvtop1.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                    pb_cvtop1.setVisibility(View.VISIBLE);
-                }
-            });
-        */
             cardViewTop1.addView(imageView_cv_top1);
 
-            //cardViewTop1Image.invalidate();
-            //cardViewTop1Image.postInvalidate();
-
             final ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
-            // ImageView cardViewBot1Image = (ImageView) cardViewBot1.findViewById(R.id.cv_bot1_image);
-           /* Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(1).getUrl()).fit().centerCrop()
-                    .transform(transformation_rounded_image).into(imageView_cv_bot1, new com.squareup.picasso.Callback() {
 
-                @Override
-                public void onSuccess() {
-                    pb_cvbot1.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                    pb_cvbot1.setVisibility(View.VISIBLE);
-                }
-            });
-    */
             cardViewBot1.addView(imageView_cv_bot1);
 
             cardViewTop2.addView(imageView_cv_top2);
@@ -1525,7 +1402,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                           // Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -1828,7 +1705,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                          //  Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -2131,7 +2008,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                         //   Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -2434,7 +2311,7 @@ public class AnsweringFragment extends Fragment  {
                             velocity.computeCurrentVelocity(1000);
                             float current_vel = VelocityTrackerCompat.getXVelocity(velocity,
                                     pointerId);
-                            Log.d("AnsweringFragment", "Velocity: " + current_vel);
+                            //Log.d("AnsweringFragment", "Velocity: " + current_vel);
 
                             // Remember the last 3 velocities
                             last_velocities.set(2, last_velocities.get(1));
@@ -2690,6 +2567,7 @@ public class AnsweringFragment extends Fragment  {
                     return true;
                 }
             };
+
             cardViewTop1.setOnTouchListener(tl);
             cardViewBot1.setOnTouchListener(tl2);
             cardViewTop2.setOnTouchListener(tl3);
@@ -2707,7 +2585,7 @@ public class AnsweringFragment extends Fragment  {
     public boolean notifyOfReadyQuestion(){
         synchronized (questionLock){
         if (this.currentQuestion==null){
-            this.currentQuestion = ClientData.readyQuestions.poll();
+            this.currentQuestion = ClientData.pollReadyQuestions();
             if (this.currentQuestion == null){
                 return false;
             }else{
@@ -2725,13 +2603,11 @@ public class AnsweringFragment extends Fragment  {
                                 pb_cvtop1.setVisibility(View.INVISIBLE);
                                 imageView_cv_top1.setVisibility(View.INVISIBLE);
                                 imageView_cv_top1.setImageBitmap(b);
-                                Log.d("AnsweringFragment", "Set cv_top1 image! " + choiceBodyForLog_c1);
-
+                                Log.d("AnsweringFragment", "Set cv_top1 image! (OnNotifyReady) " + choiceBodyForLog_c1);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-
                                 imageView_cv_top1.setVisibility(View.VISIBLE);
                             }
 
@@ -2754,7 +2630,7 @@ public class AnsweringFragment extends Fragment  {
                                 pb_cvbot1.setVisibility(View.INVISIBLE);
                                 imageView_cv_bot1.setVisibility(View.INVISIBLE);
                                 imageView_cv_bot1.setImageBitmap(b);
-                                Log.d("AnsweringFragment", "Set cv_bot1 image! " + choiceBodyForLog_c2);
+                                Log.d("AnsweringFragment", "Set cv_bot1 image!(OnNotifyReady) " + choiceBodyForLog_c2);
                             }
 
                             @Override
@@ -2776,7 +2652,7 @@ public class AnsweringFragment extends Fragment  {
             }
         }
         if (this.nextQuestion==null) {
-            this.nextQuestion = ClientData.readyQuestions.poll();
+            this.nextQuestion = ClientData.pollReadyQuestions();
             if (this.nextQuestion == null) {
                 return false;
             } else {
@@ -2814,10 +2690,7 @@ public class AnsweringFragment extends Fragment  {
                 //Todo: Submit result
             }
             currentQuestion = nextQuestion;
-            nextQuestion = ClientData.readyQuestions.poll(); //Remember this will return null if none exist
-            if (nextQuestion == null && ClientData.questions.size() <= 1) {
-                ClientData.getNextUnansweredQuestion(this.getActivity());
-            }
+            nextQuestion = ClientData.pollReadyQuestions(); //Remember this will return null if none exist
         }
     }
 

@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.pipit.waffle.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,18 @@ public class Question {
         }
         this.choices.add(ans);
 
-        if (ans.imageState != Choice.LoadState.NO_IMAGE){
-            loadURLintoBitmap(ans, ans.getUrl());
+    }
+
+    public boolean beginImageLoading(){
+        if (choices.size()!= Constants.NUMBER_OF_CHOICES_PER_QUESTION){
+            return false;
         }
-        else{
-            //ClientData.getAnsweringFragment().setNoImageBitmap(ans.getAnswerID());
+        for (int i = 0 ; i < choices.size(); i++) {
+            if (choices.get(i).imageState != Choice.LoadState.NO_IMAGE) {
+                loadURLintoBitmap(choices.get(i), choices.get(i).getUrl());
+            }
         }
+        return true;
     }
 
     public void deleteAnswer(Choice ans){
@@ -120,7 +127,7 @@ public class Question {
                 ans.set_image(loadedImage);
                 ans.imageState = Choice.LoadState.IMAGE_READY;
 
-                boolean isReady = checkAndUpdateQuestionStatus();
+                boolean isReady = ClientData.checkAndUpdateQuestionStatus(getInstance());
                 Log.d("Question", "Image Loading Completed - Question ready to use = " + Boolean.toString(isReady));
                 //ClientData.getAnsweringFragment().setImageViewBitmap(_image, answerID);
             }
@@ -132,6 +139,10 @@ public class Question {
             }
         });
         return true;
+    }
+
+    public Question getInstance(){
+        return this;
     }
 
     public boolean checkAndUpdateQuestionStatus(){
