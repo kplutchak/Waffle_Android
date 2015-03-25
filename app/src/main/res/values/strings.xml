@@ -7,12 +7,14 @@
     <string name="close">Close</string>
     <string name="open">Open</string>
 
-    <color name="primary">#ff0288d1</color>
-    <color name="primary_blue_dark">#0D47A1</color>
+    <color name="primary">#00B0FF</color>
+    <color name="primary_blue_dark">#0091EA</color>
     <color name="primary_500">#03A9F4</color>
+    <color name="primary_200">#40C4FF</color>
+    <color name="primary_100">#80D8FF</color>
     <color name="primary_secondary">#ff42a5f5</color>
     <color name="dark_brown">#ff6B523B</color>
-    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_dark">#0091EA</color>
     <color name="nav_color">#ff1e1e1e</color>
     <color name="off_white">#fff7f7f7</color>
     <color name="grey">#ffefefef</color>
