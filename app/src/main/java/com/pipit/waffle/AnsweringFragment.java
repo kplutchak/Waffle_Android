@@ -2,8 +2,11 @@ package com.pipit.waffle;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -11,21 +14,26 @@ import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.pipit.waffle.Objects.Choice;
@@ -89,7 +97,9 @@ public class AnsweringFragment extends Fragment  {
     private boolean bcard2_lock = false;
 
     private LinearLayout card_holder_layout;
-
+    private ScrollView answering_scrollview;
+    private TouchableFrameLayout answering_frame;
+    private TouchableLinearLayout main_view;
 
     // TODO: when a Choice is selected, remove it from the mapping
     // TODO: when a Choice is being brought in via getNext...(), add it to the mapping using it's
@@ -102,6 +112,16 @@ public class AnsweringFragment extends Fragment  {
         outState.putInt("height_portrait", image_height_stored);
 
         super.onSaveInstanceState(outState);
+    }
+
+    // TODO: devices that have no status bar/different status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     @Override
@@ -123,6 +143,73 @@ public class AnsweringFragment extends Fragment  {
 
         card_holder_layout = (LinearLayout) v.findViewById(R.id.card_holder_layout);
 
+        // adjust the size of the LinearLayout that is contained within the ScrollView
+        final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
+                new int[]{android.R.attr.actionBarSize});
+        int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        final Point point = new Point();
+        try {
+            display.getSize(point);
+        } catch (java.lang.NoSuchMethodError ignore) { // Older device
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+
+        // Height of the screen minus the Toolbar and Status Bar
+        int true_height = point.y - mActionBarSize - getStatusBarHeight();
+
+        LinearLayout.LayoutParams card_holder_lp = (LinearLayout.LayoutParams) card_holder_layout.getLayoutParams();
+        card_holder_lp.height = true_height;
+        card_holder_layout.setLayoutParams(card_holder_lp);
+        // end adjustments
+
+        answering_frame = (TouchableFrameLayout) v.findViewById(R.id.answering_frame);
+
+        // Get the main view (a LinearLayout) that contains the FrameLayouts that contain the cards
+        main_view = (TouchableLinearLayout) v.findViewById(R.id.main_view);
+
+
+        answering_scrollview = (ScrollView) v.findViewById(R.id.answering_scrollview);
+
+
+        RelativeLayout dynamic_scrollspace = (RelativeLayout) answering_scrollview.findViewById(R.id.dynamic_scrollspace);
+        FrameLayout.LayoutParams rl_lp = (FrameLayout.LayoutParams) dynamic_scrollspace.getLayoutParams();
+        rl_lp.height = true_height*2;
+        dynamic_scrollspace.setLayoutParams(rl_lp);
+
+        RelativeLayout bottom_bar = (RelativeLayout) v.findViewById(R.id.bottom_bar_answering_2);
+        RelativeLayout.LayoutParams rl_lp2 = (RelativeLayout.LayoutParams) bottom_bar.getLayoutParams();
+
+        int bottom_bar_height = (int) (46 * getActivity().getResources().getDisplayMetrics().density);
+        rl_lp.topMargin = true_height - bottom_bar_height;
+        bottom_bar.setLayoutParams(rl_lp2);
+
+        // Get the largest FrameLayout and set it's child views
+        // Dispatch TouchEvents appropriately
+
+        answering_frame.setViews(answering_scrollview, main_view);
+
+        /*answering_scrollview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+
+                    case MotionEvent.ACTION_DOWN:
+                        float x = event.getRawX();
+                        float y = event.getRawY();
+                        Log.d("AnsweringFragment", "X: " + x + ", Y: " + y);
+                        break;
+                }
+                return true;
+            }
+        });
+        */
+
         // Retrieve the CardViews
         cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
         cardViewBot1 = (CardView) v.findViewById(R.id.card_view2);
@@ -130,7 +217,7 @@ public class AnsweringFragment extends Fragment  {
         cardViewBot2 = (CardView) v.findViewById(R.id.card_view2_extra);
 
         // Set the CardViews' size and margins
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        //Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         final int width = size.x;
@@ -442,21 +529,7 @@ public class AnsweringFragment extends Fragment  {
 
 
                         if (selected) {
-                            /*Picasso.with(cardViewTop1.getContext()).load(ClientData.getNextUnansweredQuestion(getActivity()).getChoices().get(0).getUrl())
-                                    .fit().centerCrop()
-                                    .transform(transformation_rounded_image).into(imageView_cv_top2, new com.squareup.picasso.Callback() {
 
-                                @Override
-                                public void onSuccess() {
-                                    pb_cvtop1.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onError() {
-                                    pb_cvtop1.setVisibility(View.VISIBLE);
-                                }
-                            });
-                            */
                             synchronized(questionLock){
                             if (currentQuestion == null){
                                     submitCurrentQuestion(null);
@@ -464,12 +537,10 @@ public class AnsweringFragment extends Fragment  {
                                 submitCurrentQuestion(currentQuestion.getChoices().get(0));
                             }
                             if(currentQuestion != null && currentQuestion.getChoices().size()>=2) {
-                                imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                //imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                //imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
                                 Log.d("AnsweringFragment", "Set cv_top2 (~476) with current question " + currentQuestion.getChoices().get(0).getAnswerBody());
                                 Log.d("AnsweringFragment", "Set cv_bot2 (~477) with current question " + currentQuestion.getChoices().get(1).getAnswerBody());
-
-
                             }
 
                             if (anim_bcard1 != null)
@@ -710,8 +781,8 @@ public class AnsweringFragment extends Fragment  {
                                     submitCurrentQuestion(currentQuestion.getChoices().get(1));
                                 }
                                 if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
-                                    imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                    imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                    //imageView_cv_top2.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    //imageView_cv_bot2.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
                                     Log.d("AnsweringFragment", "Set cv_top2 (~722) with current question " + currentQuestion.getChoices().get(0).getAnswerBody());
                                     Log.d("AnsweringFragment", "Set cv_bot2 (~722) with current question " + currentQuestion.getChoices().get(1).getAnswerBody());
                                 }
@@ -956,8 +1027,8 @@ public class AnsweringFragment extends Fragment  {
                                     submitCurrentQuestion(currentQuestion.getChoices().get(0));
                                 }
                                 if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
-                                    imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                    imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                    //imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                    //imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
                                     Log.d("AnsweringFragment", "Set cv_top1 (~968) with current question " + currentQuestion.getChoices().get(0).getAnswerBody());
                                     Log.d("AnsweringFragment", "Set cv_bot1 (~969) with current question " + currentQuestion.getChoices().get(1).getAnswerBody());
                                 }
@@ -1198,8 +1269,8 @@ public class AnsweringFragment extends Fragment  {
                                     if (currentQuestion.getChoices().size() > 1) {
                                         submitCurrentQuestion(currentQuestion.getChoices().get(1));
                                         if (currentQuestion != null && currentQuestion.getChoices().size() >= 2) {
-                                            imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
-                                            imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
+                                            //imageView_cv_top1.setImageBitmap(currentQuestion.getChoices().get(0).get_image());
+                                            //imageView_cv_bot1.setImageBitmap(currentQuestion.getChoices().get(1).get_image());
                                             Log.d("AnsweringFragment", "Set cv_top1 (~1210) with current question " + currentQuestion.getChoices().get(0).getAnswerBody());
                                             Log.d("AnsweringFragment", "Set cv_bot1 (~1211) with current question " + currentQuestion.getChoices().get(1).getAnswerBody());
                                         }
@@ -1257,7 +1328,7 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationStart(Animation animation) {
                                 pb_cvtop1.setVisibility(View.INVISIBLE);
                                 imageView_cv_top1.setVisibility(View.INVISIBLE);
-                                imageView_cv_top1.setImageBitmap(b);
+                                //imageView_cv_top1.setImageBitmap(b);
                                 Log.d("AnsweringFragment", "Set cv_top1 image! (OnNotifyReady) " + choiceBodyForLog_c1);
                             }
 
@@ -1284,7 +1355,7 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationStart(Animation animation) {
                                 pb_cvbot1.setVisibility(View.INVISIBLE);
                                 imageView_cv_bot1.setVisibility(View.INVISIBLE);
-                                imageView_cv_bot1.setImageBitmap(b);
+                                //imageView_cv_bot1.setImageBitmap(b);
                                 Log.d("AnsweringFragment", "Set cv_bot1 image!(OnNotifyReady) " + choiceBodyForLog_c2);
                             }
 
@@ -1316,12 +1387,12 @@ public class AnsweringFragment extends Fragment  {
                     Choice c2 = this.nextQuestion.getChoices().get(1);
                     if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
                         Bitmap b = c1.get_image();
-                        imageView_cv_top2.setImageBitmap(b);
+                        //imageView_cv_top2.setImageBitmap(b);
                         Log.d("AnsweringFragment", "Set cv_top2 image (in notifyOfReady) " + c1.getAnswerBody());
                     }
                     if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
                         Bitmap b = c2.get_image();
-                        imageView_cv_bot2.setImageBitmap(b);
+                        //imageView_cv_bot2.setImageBitmap(b);
                         Log.d("AnsweringFragment", "Set cv_bot2 image (in notifyOfReady) " + c2.getAnswerBody());
 
                     }
