@@ -40,46 +40,10 @@ public class ScrollLayout extends ViewGroup {
 
     private OnViewChangeListener mOnViewChangeListener;
 
-    /*
-    private GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-           // new Flinger(mScroller).start((int)velocityY);
-            //invalidate();
-            Log.d(TAG, "Fling detected!");
-            return true;
-        }
-    });
-
-*/
-
     // variable keeping track of scroll/fling offset
-    private int              offset     = 0;
+    private int offset = 0;
+
+    private int bottom_bar_height;
 
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -94,8 +58,7 @@ public class ScrollLayout extends ViewGroup {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            Log.d(TAG, "DOWN!" + getScrollY() + " " + mScroller.getCurrY());
-
+            Log.d(TAG, "Down..." + getScrollY() + " " + mScroller.getCurrY());
             return true;
         }
 
@@ -127,7 +90,8 @@ public class ScrollLayout extends ViewGroup {
 
     public ScrollLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        // Height of bottom bar
+        bottom_bar_height = (int) (46 * getResources().getDisplayMetrics().density);
         mScroller = new OverScroller(context);
         // TODO: adjust friction
         mScroller.setFriction(ViewConfiguration.getScrollFriction());
@@ -153,8 +117,6 @@ public class ScrollLayout extends ViewGroup {
         }
     }
 
-
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //Log.e(TAG, "onMeasure");
@@ -178,108 +140,81 @@ public class ScrollLayout extends ViewGroup {
             getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
         }
         // Log.e(TAG, "moving to screen "+mCurScreen);
-        scrollTo(0, mCurScreen * height);
+        //scrollTo(0, mCurScreen * height);
+        // Set the initial scroll (placing the bar at the bottom)
+        scrollTo(0, -computeViewableHeight());
+        offset = computeViewableHeight();
     }
 
-
-
     private GestureDetector  gestureDetector;
-    private int up_position;
-    private long last_movement_time;
 
-    private boolean isTop = true;
-
-    private boolean greaterThanThreshold = false;
+    // Bottom bar starts at the bottom
+    private boolean isTop = false;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // forward all touch events to the GestureDetector
-        if(event.getAction() == MotionEvent.ACTION_UP)
+
+
+        if(event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            Log.d(TAG, "ScrollY on down: " + getScrollY());
+            // Check coordinates of press
+            if(event.getRawY() <= -getScrollY())
+            {
+                // Ignore/pass to the rest of the view
+                Log.d(TAG, "Didn't click low enough. Clicked at: " + event.getRawY());
+            }
+
+            // If we are headed towards the very top or bottom on ACTION_DOWN, alert
+            if(mScroller.getFinalY() == 0)
+            {
+                isTop = true;
+            }
+            else if(mScroller.getFinalY() == -computeViewableHeight())
+            {
+                isTop = false;
+            }
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP)
         {
             flung = false;
-            // TODO: more thresholds depending on where we came from
-            int upper_threshold = (int) ((2.0/4.0) * (double) computeViewableHeight());
-            int lower_threshold = (int) ((2.0/4.0) * (double) computeViewableHeight());
-            Log.d(TAG, "Is " + Math.abs(getScrollY()) + " less than " + upper_threshold + "?");
-            if(Math.abs(getScrollY()) < upper_threshold)
+            int threshold;
+
+            if(isTop)
             {
-                snapToDestination(false);
-                greaterThanThreshold = false;
-                Log.d(TAG, "Snap up and consume!");
-                isTop = true;
-               // return true;
-            }
-
-
-            Log.d(TAG, "Is " + Math.abs(getScrollY()) + " greater than " + lower_threshold + "?");
-            if(Math.abs(getScrollY()) >= lower_threshold)
-            {
-                snapToDestination(true);
-                greaterThanThreshold = true;
-                Log.d(TAG, "Snap down and consume!");
-                isTop = false;
-                //return true;
-            }
-           // Log.d(TAG, "We're stuck in the middle...");
-        }
-
-
-
-       /* if(event.getAction() == MotionEvent.ACTION_UP)
-        {
-            long diff = System.currentTimeMillis() - last_movement_time;
-            if(diff>100) {
-
-                Log.d(TAG, "Been too long for a a fling!");
-                    Log.d(TAG, "We aren't flinging!");
-                    flung = false;
-                    if(Math.abs(getScrollY()) < computeViewableHeight()/2) {
-                        Log.d(TAG, "Snap to top!");
-                        snapToDestination(false);
-                        offset = 0;
-                    }
-                    else
-                    {
-                        Log.d(TAG, "Snap to bottom!");
-                        snapToDestination(true);
-                        offset = computeViewableHeight();
-                    }
-
-                return gestureDetector.onTouchEvent(event);
-            }
-
-/*
-            Log.d(TAG, "ACTION_UP ScrollY: " + Math.abs(getScrollY()) + ", current velocity: " + mScroller.getCurrVelocity());
-            if(-500 < mScroller.getCurrVelocity() && mScroller.getCurrVelocity() < 500) {
-                Log.d(TAG, "We aren't flinging!");
-                flung = false;
-                if(Math.abs(getScrollY()) < computeViewableHeight()/2) {
-                    Log.d(TAG, "Snap to top!");
+                threshold = (int) ((1.0/3.0) * (double) computeViewableHeight());
+                if(Math.abs(getScrollY()) < threshold) {
                     snapToDestination(false);
-                    offset = 0;
+                    Log.d(TAG, "Snap up and consume!");
                 }
                 else
                 {
-                    Log.d(TAG, "Snap to bottom!");
                     snapToDestination(true);
-                    offset = computeViewableHeight();
+                    Log.d(TAG, "Snap down and consume!");
                 }
-                return true;
+               // return true;
             }
+            else
+            {
+                threshold = (int) ((2.0/3.0) * (double) computeViewableHeight());
+                if(Math.abs(getScrollY()) >= threshold) {
+                    snapToDestination(true);
+                    Log.d(TAG, "Snap down and consume!");
+                }
+                else
+                {
+                    snapToDestination(false);
+                    Log.d(TAG, "Snap up and consume!");
+                }
+                //return true;
+            }
+        }
 
-            up_position = Math.abs(getScrollY());
-        }
-        if(event.getAction() == MotionEvent.ACTION_MOVE)
-        {
-            last_movement_time = System.currentTimeMillis();
-        }
-    */
+        // Forward all touch events to the GestureDetector
         return gestureDetector.onTouchEvent(event);
     }
 
-
-
-    // called when the GestureListener detects scroll
+    // Called when the GestureListener detects scroll
     public void scroll(int distanceY) {
         //mScroller.forceFinished(true);
 
@@ -297,24 +232,13 @@ public class ScrollLayout extends ViewGroup {
 
     }
 
-    // called when the GestureListener detects fling
+    // Called when the GestureListener detects fling
     public void fling(int velocityY) {
         //mScroller.forceFinished(true);
-        //Log.d(TAG, "Position at start of fling: " + getScrollY() + ". Velocity: " + velocityY);
         final int viewable_height = computeViewableHeight();
-        //Log.d(TAG, "Screen height: " + viewable_height);
-        /*
-        if(velocityY < 0 && velocityY < -1500 && Math.abs(getScrollY()) < viewable_height/2)
-        {
-            Log.d(TAG, "Snap to top!");
-            flung = false;
-            snapToDestination(false);
-            offset = 0;
-            return;
-        }
-        */
 
         // TODO: consider trying for a max velocity??
+
         mScroller.fling(0, offset, 0, velocityY, 0, 50, 0, computeViewableHeight());
         Log.d(TAG, "We are headed towards: " + mScroller.getFinalY());
         if(mScroller.getFinalY() == 0 || mScroller.getFinalY() == computeViewableHeight()) {
@@ -322,58 +246,31 @@ public class ScrollLayout extends ViewGroup {
             flung = true;
             return;
         }
-        // TODO: improve on this, currently we snap all the way in the direction of the velocity no matter what
-        // TODO: eventually, decide if we should return/proceed depending on magnitude of velocity
-        else // Don't have sufficient velocity to reach either side, but we still got flung...so...
+        // Don't have sufficient velocity to reach either side, but we still got flung
+        else
         {
-            Log.d(TAG, "Weak fling...");
+            // Decide if we should return/proceed depending on magnitude of velocity
+            // TODO: play with this threshold magnitude
+            if(isTop)
+                Log.d(TAG, "Weak fling with velocity of: " + velocityY + ". We started at the top!");
+            else
+                Log.d(TAG, "Weak fling with velocity of: " + velocityY + ". We started at the bottom!");
+
             if(isTop) {
-                snapToDestination(true);
-                isTop = false;
+                if(velocityY > 1000)
+                    snapToDestination(true);
+                else
+                    snapToDestination(false);
             }
             else {
-                snapToDestination(false);
-                isTop = true;
+                if(velocityY < -1000)
+                    snapToDestination(false);
+                else
+                    snapToDestination(true);
             }
         }
-       /* if(velocityY > 500)
-            snapToDestination(true);
-        else if(velocityY < -500)
-            snapToDestination(false);
-        else
-            snapToDestination(true);
 
-            */
-
-        /*
-        if(mScroller.getFinalY() > 0 && mScroller.getFinalY() < computeViewableHeight())
-        {
-            flung = false;
-            if(!mAtTop) {
-                Log.d(TAG, "Snap to bottom!");
-                flung = false;
-                snapToDestination(true);
-                offset = computeViewableHeight();
-            }
-            else
-            {
-                Log.d(TAG, "Snap to top!");
-                flung = false;
-                snapToDestination(false);
-                offset = 0;
-            }
-
-            return;
-        }
-        */
         flung = false;
-
-        if(mScroller.getFinalY() == 0)
-            mAtTop = true;
-        else
-            mAtTop = false;
-        //scrollTo(0, -mScroller.getFinalY());
-
         //invalidate();
     }
 
@@ -383,23 +280,21 @@ public class ScrollLayout extends ViewGroup {
         }
     }
 
-    public void snapToTop() {}
-
+    // TODO: clean up this code
     public void snapToDestination(boolean bottom) {
         final int screenWidth = getWidth();
         final int screenHeight = getHeight();
         final int destScreen;
-        if(bottom)
-            mAtTop = false;
-        else
-            mAtTop = true;
+        //if(bottom)
+           // isTop = false;
+       // else
+            //isTop = true;
 
         if(!bottom)
             destScreen = (getScrollY() + screenHeight / 2) / screenHeight;
         else
             destScreen = (getScrollY() + screenHeight / 2) / screenHeight + screenHeight;
 
-        Log.d(TAG, "destScreen: " + destScreen);
         snapToScreen(destScreen, bottom);
     }
 
@@ -416,14 +311,14 @@ public class ScrollLayout extends ViewGroup {
         Log.d(TAG, "Scrolling snap!");
         // get the valid layout page
         whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
-        Log.d(TAG, "whichScreen: " + whichScreen);
         if (/*getScrollY() != (whichScreen * getHeight())*/ true) {
             int delta;
             if(!bottom)
+
                  delta = whichScreen * getHeight() - getScrollY();
             else
                 delta = Math.abs(getScrollY()) - computeViewableHeight();
-            Log.d(TAG, "delta: " + delta);
+            //Log.d(TAG, "delta: " + delta);
             mScroller.startScroll(0, getScrollY(), 0, delta,
                     Math.abs(delta) * 1);
             mCurScreen = whichScreen;
@@ -461,7 +356,7 @@ public class ScrollLayout extends ViewGroup {
             //Log.d(TAG, "Flung to " + Math.abs(-mScroller.getCurrY()) + ", ScrollY: " + getScrollY());
             offset = mScroller.getCurrY();
             if(mScroller.isFinished())
-                Log.d(TAG, "FINISHED!");
+                Log.d(TAG, "Finished with the fling!");
 
             postInvalidate();
             return;
@@ -473,6 +368,7 @@ public class ScrollLayout extends ViewGroup {
             postInvalidate();
         }
     }
+
 /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {

@@ -39,11 +39,18 @@
             </RelativeLayout>
 
 
-            <View
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="800dp"
+                android:layout_height="600dp"
                 android:background="@color/off_white"
-                android:layout_below="@id/bottom_bar_answering_2"/>
+                android:layout_below="@id/bottom_bar_answering_2">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textSize="25sp"
+                    android:text="Here lies the comments."/>
+                </RelativeLayout>
 
 
 
