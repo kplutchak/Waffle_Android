@@ -32,11 +32,6 @@ public class LoginActivity extends Activity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.splash_screen);
 
-        Typewriter writer = (Typewriter) findViewById(R.id.typewriter_test);
-        //Add a character every 150ms
-        writer.setCharacterDelay(2);
-        writer.animateText("Typewriters are cool!");
-
         /*Universal Image Loader*/
         Context context = this;
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
@@ -50,6 +45,15 @@ public class LoginActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, ToolbarActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView testing = (ImageView) findViewById(R.id.dick_login);
+        testing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, TestFragment.class);
                 startActivity(intent);
             }
         });

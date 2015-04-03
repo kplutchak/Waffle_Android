@@ -14,12 +14,14 @@ import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -97,9 +99,15 @@ public class AnsweringFragment extends Fragment  {
     private boolean bcard2_lock = false;
 
     private LinearLayout card_holder_layout;
-    private ScrollView answering_scrollview;
+    private CustomScrollView answering_scrollview;
     private TouchableFrameLayout answering_frame;
     private TouchableLinearLayout main_view;
+
+    private boolean animating_bottom_bar = false;
+
+
+
+
 
     // TODO: when a Choice is selected, remove it from the mapping
     // TODO: when a Choice is being brought in via getNext...(), add it to the mapping using it's
@@ -141,6 +149,8 @@ public class AnsweringFragment extends Fragment  {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.answering_fragment, container, false);
 
+
+
         card_holder_layout = (LinearLayout) v.findViewById(R.id.card_holder_layout);
 
         // adjust the size of the LinearLayout that is contained within the ScrollView
@@ -160,7 +170,7 @@ public class AnsweringFragment extends Fragment  {
         }
 
         // Height of the screen minus the Toolbar and Status Bar
-        int true_height = point.y - mActionBarSize - getStatusBarHeight();
+        final int true_height = point.y - mActionBarSize - getStatusBarHeight();
 
         LinearLayout.LayoutParams card_holder_lp = (LinearLayout.LayoutParams) card_holder_layout.getLayoutParams();
         card_holder_lp.height = true_height;
@@ -173,10 +183,39 @@ public class AnsweringFragment extends Fragment  {
         main_view = (TouchableLinearLayout) v.findViewById(R.id.main_view);
 
 
-        answering_scrollview = (ScrollView) v.findViewById(R.id.answering_scrollview);
+      //  answering_scrollview = (CustomScrollView) v.findViewById(R.id.answering_scrollview);
+
+      //  answering_scrollview.set(true_height);
 
 
-        RelativeLayout dynamic_scrollspace = (RelativeLayout) answering_scrollview.findViewById(R.id.dynamic_scrollspace);
+
+        /*answering_scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+
+            @Override
+            public void onScrollChanged() {
+
+
+                int scrollX = answering_scrollview.getScrollX(); //for horizontalScrollView
+                int scrollY = answering_scrollview.getScrollY(); //for verticalScrollView
+                Log.d("ScrollView", "ScrollX: " + scrollX + ", ScrollY: " + scrollY);
+
+                if(scrollY < true_height/2)
+                    animating_bottom_bar = false;
+                if(scrollY > true_height/2 && !animating_bottom_bar) {
+                    animating_bottom_bar = true;
+                    //answering_scrollview.smoothScrollTo(0, true_height);
+                    ObjectAnimator animator = ObjectAnimator.ofInt(answering_scrollview, "scrollY", true_height - scrollX);
+                    // TODO: set variable duration depending on position/velocity
+                    animator.setDuration(800);
+                    animator.start();
+
+                }
+
+            }
+        });
+*/
+
+      /*  RelativeLayout dynamic_scrollspace = (RelativeLayout) answering_scrollview.findViewById(R.id.dynamic_scrollspace);
         FrameLayout.LayoutParams rl_lp = (FrameLayout.LayoutParams) dynamic_scrollspace.getLayoutParams();
         rl_lp.height = true_height*2;
         dynamic_scrollspace.setLayoutParams(rl_lp);
@@ -187,6 +226,8 @@ public class AnsweringFragment extends Fragment  {
         int bottom_bar_height = (int) (46 * getActivity().getResources().getDisplayMetrics().density);
         rl_lp.topMargin = true_height - bottom_bar_height;
         bottom_bar.setLayoutParams(rl_lp2);
+
+        */
 
         // Get the largest FrameLayout and set it's child views
         // Dispatch TouchEvents appropriately

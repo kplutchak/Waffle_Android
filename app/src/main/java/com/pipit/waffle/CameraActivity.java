@@ -454,8 +454,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
