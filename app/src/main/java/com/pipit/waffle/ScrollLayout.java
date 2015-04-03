@@ -197,6 +197,7 @@ public class ScrollLayout extends ViewGroup {
         if(event.getAction() == MotionEvent.ACTION_UP)
         {
             flung = false;
+            // TODO: more thresholds depending on where we came from
             int upper_threshold = (int) ((2.0/4.0) * (double) computeViewableHeight());
             int lower_threshold = (int) ((2.0/4.0) * (double) computeViewableHeight());
             Log.d(TAG, "Is " + Math.abs(getScrollY()) + " less than " + upper_threshold + "?");
@@ -285,7 +286,7 @@ public class ScrollLayout extends ViewGroup {
         if(offset - distanceY > computeViewableHeight() || offset - distanceY < 0)
             return;
         offset -= distanceY;
-        // TODO: no fling but released over threshold -> move to top
+
         Log.d(TAG, "Offset: " + offset + ", ScrollY: " + getScrollY());
         //checkOffset();
         scrollTo(0, -offset);
@@ -321,16 +322,18 @@ public class ScrollLayout extends ViewGroup {
             flung = true;
             return;
         }
-        else // Don't have sufficient velocity to reach either side, so we just return to whatever side we started at
+        // TODO: improve on this, currently we snap all the way in the direction of the velocity no matter what
+        // TODO: eventually, decide if we should return/proceed depending on magnitude of velocity
+        else // Don't have sufficient velocity to reach either side, but we still got flung...so...
         {
             Log.d(TAG, "Weak fling...");
             if(isTop) {
-                snapToDestination(false);
-                isTop = true;
-            }
-            else {
                 snapToDestination(true);
                 isTop = false;
+            }
+            else {
+                snapToDestination(false);
+                isTop = true;
             }
         }
        /* if(velocityY > 500)
