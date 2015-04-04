@@ -74,6 +74,8 @@ public class TestFragmentNew extends ActionBarActivity {
         top_comments_bar = (LinearLayout) findViewById(R.id.top_comments_bar);
         entire_drag_view = (LinearLayout) findViewById(R.id.dragView);
 
+
+
        // mLayout.setDragView(findViewById(R.id.comments_listview_scroller));
         //mLayout.setEnableDragViewTouchEvents(true);
         mLayout.setPanelState(PanelState.HIDDEN);
@@ -83,17 +85,17 @@ public class TestFragmentNew extends ActionBarActivity {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
                 if(isExpanded)
                 {
-                    mLayout.setDragView(entire_drag_view);
-                    isExpanded = false;
+
                 }
 
             }
+
 
             @Override
             public void onPanelExpanded(View panel) {
                 Log.i(TAG, "onPanelExpanded");
                 isExpanded = true;
-                mLayout.setDragView(top_comments_bar);
+               mLayout.setDragView(top_comments_bar);
 
 
             }
@@ -101,7 +103,10 @@ public class TestFragmentNew extends ActionBarActivity {
             @Override
             public void onPanelCollapsed(View panel) {
                 Log.i(TAG, "onPanelCollapsed");
-                isExpanded = false;
+                if(isExpanded)
+                {
+                    
+                }
 
             }
 
