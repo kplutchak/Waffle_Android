@@ -34,6 +34,13 @@
         </activity>
 
         <activity
+            android:name="com.pipit.waffle.TestFragmentNew"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+
+        </activity>
+
+        <activity
             android:name="com.pipit.waffle.LoginActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >

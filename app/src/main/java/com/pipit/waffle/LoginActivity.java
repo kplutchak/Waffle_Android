@@ -53,7 +53,7 @@ public class LoginActivity extends Activity {
         testing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, TestFragment.class);
+                Intent intent = new Intent(LoginActivity.this, TestFragmentNew.class);
                 startActivity(intent);
             }
         });
