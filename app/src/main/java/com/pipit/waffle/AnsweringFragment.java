@@ -1329,101 +1329,53 @@ public class AnsweringFragment extends Fragment  {
      * @param
      * @return true if a question was taken from readyQuestions queue, false otherwise
      */
-    public boolean notifyOfReadyQuestion(){
-        synchronized (questionLock){
-        if (this.currentQuestion==null && imageView_cv_top1==null && imageView_cv_bot1==null){
-            this.currentQuestion = ClientData.pollReadyQuestions();
-            if (this.currentQuestion == null){
-                return false;
-            }else{
-                if (this.currentQuestion.getChoices().size()==2){
-                    Choice c1 = this.currentQuestion.getChoices().get(0);
-                    Choice c2 = this.currentQuestion.getChoices().get(1);
-                    if (c1.imageState== Choice.LoadState.IMAGE_READY && c1.get_image()!=null){
-                        final Bitmap b = c1.get_image();
-                        final String choiceBodyForLog_c1 = c1.getAnswerBody();
-                        // LOADING CARDVIEW 1 TOP
-                        Animation fade_in = AnimationUtils.loadAnimation(cardViewTop1.getContext(), R.anim.fade_in);
-                        fade_in.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                pb_cvtop1.setVisibility(View.INVISIBLE);
-                                imageView_cv_top1.setVisibility(View.INVISIBLE);
-                                imageView_cv_top1.setImageBitmap(b);
-                                Log.d("AnsweringFragment", "Set cv_top1 image! (OnNotifyReady) " + choiceBodyForLog_c1);
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                imageView_cv_top1.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        imageView_cv_top1.startAnimation(fade_in);
-                    }
-                    //LOADING CARDVIEW 1 BOT
-                    if (c2.imageState== Choice.LoadState.IMAGE_READY && c2.get_image()!=null){
-                        final Bitmap b = c2.get_image();
-                        final String choiceBodyForLog_c2 = c2.getAnswerBody();
-                        // TODO: fade out spinner
-                        Animation fade_in = AnimationUtils.loadAnimation(cardViewBot1.getContext(), R.anim.fade_in);
-                        fade_in.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                pb_cvbot1.setVisibility(View.INVISIBLE);
-                                imageView_cv_bot1.setVisibility(View.INVISIBLE);
-                                imageView_cv_bot1.setImageBitmap(b);
-                                Log.d("AnsweringFragment", "Set cv_bot1 image!(OnNotifyReady) " + choiceBodyForLog_c2);
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-
-                                imageView_cv_bot1.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        imageView_cv_bot1.startAnimation(fade_in);
+    public boolean notifyOfReadyQuestion() {
+        synchronized (questionLock) {
+            if (this.currentQuestion == null && imageView_cv_top1 == null && imageView_cv_bot1 == null) {
+                this.currentQuestion = ClientData.pollReadyQuestions();
+                if (this.currentQuestion == null) {
+                    return false;
+                } else {
+                    if (this.currentQuestion.getChoices().size() == 2) {
+                        Choice c1 = this.currentQuestion.getChoices().get(0);
+                        Choice c2 = this.currentQuestion.getChoices().get(1);
+                        if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
+                            final Bitmap b = c1.get_image();
+                            setCardImageWithAnimation(b, cardViewTop1, imageView_cv_top1, pb_cvtop1);
+                        }
+                        if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
+                            final Bitmap b = c2.get_image();
+                            setCardImageWithAnimation(b, cardViewBot1, imageView_cv_bot1, pb_cvbot1);
+                        }
+                        return true;
                     }
                 }
-                return true;
-            }
-        }
-        if (this.nextQuestion==null && imageView_cv_top2==null && imageView_cv_bot2==null) {
-            this.nextQuestion = ClientData.pollReadyQuestions();
-            if (this.nextQuestion == null) {
-                return false;
-            } else {
-                if (this.nextQuestion.getChoices().size() == 2) {
-                    Choice c1 = this.nextQuestion.getChoices().get(0);
-                    Choice c2 = this.nextQuestion.getChoices().get(1);
-                    if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
-                        Bitmap b = c1.get_image();
-                        imageView_cv_top2.setImageBitmap(b);
-                        Log.d("AnsweringFragment", "Set cv_top2 image (in notifyOfReady) " + c1.getAnswerBody());
-                    }
-                    if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
-                        Bitmap b = c2.get_image();
-                        imageView_cv_bot2.setImageBitmap(b);
-                        Log.d("AnsweringFragment", "Set cv_bot2 image (in notifyOfReady) " + c2.getAnswerBody());
+                if (this.nextQuestion == null && imageView_cv_top2 == null && imageView_cv_bot2 == null) {
+                    this.nextQuestion = ClientData.pollReadyQuestions();
+                    if (this.nextQuestion == null) {
+                        return false;
+                    } else {
+                        if (this.nextQuestion.getChoices().size() == 2) {
+                            Choice c1 = this.nextQuestion.getChoices().get(0);
+                            Choice c2 = this.nextQuestion.getChoices().get(1);
+                            if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
+                                Bitmap b = c1.get_image();
+                                imageView_cv_top2.setImageBitmap(b);
+                                Log.d("AnsweringFragment", "Set cv_top2 image (in notifyOfReady) " + c1.getAnswerBody());
+                            }
+                            if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
+                                Bitmap b = c2.get_image();
+                                imageView_cv_bot2.setImageBitmap(b);
+                                Log.d("AnsweringFragment", "Set cv_bot2 image (in notifyOfReady) " + c2.getAnswerBody());
 
+                            }
+                        }
+                        return true;
                     }
                 }
-                return true;
             }
+            return false; //No questions needed
         }
-        }
-        return false; //No questions needed
     }
 
     private boolean setCardImageWithAnimation(final Bitmap b,final CardView cv, final ImageView iv, final ProgressBar pb ){
