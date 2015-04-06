@@ -105,7 +105,7 @@ public class TestFragmentNew extends ActionBarActivity {
                 Log.i(TAG, "onPanelCollapsed");
                 if(isExpanded)
                 {
-                    
+
                 }
 
             }
@@ -138,17 +138,11 @@ public class TestFragmentNew extends ActionBarActivity {
             list.add(values[i]);
         }
 
-
-
-
         listview.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-
-
-
             }
 
             int mPosition=0;

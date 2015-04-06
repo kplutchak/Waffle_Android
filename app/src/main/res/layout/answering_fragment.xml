@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <com.pipit.waffle.TouchableFrameLayout
         android:layout_width="match_parent"
@@ -10,182 +10,182 @@ android:layout_height="match_parent" >
         android:focusable="true"
         android:id="@+id/answering_frame">
 
-    <com.pipit.waffle.TouchableLinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:id="@+id/main_view">
+        <com.pipit.waffle.TouchableLinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/main_view">
 
-    <LinearLayout
-        android:layout_width="match_parent" android:layout_height="0dp"
-        android:orientation="vertical"
-        android:id="@+id/card_holder_layout"
-        android:layout_weight="1"
-        android:background="@color/grey"
-        >
-        <FrameLayout
-            android:layout_width="2000dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:id="@+id/moving_card_top">
-
-
-            <!-- A CardView that contains a TextView -->
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardBackgroundColor="@color/off_white"
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="0dp"
+                android:orientation="vertical"
+                android:id="@+id/card_holder_layout"
+                android:layout_weight="1"
+                android:background="@color/grey"
                 >
-
-
-                <ProgressBar
-                    android:id="@+id/progress_bar_cvtop1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:layout_width="2000dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:indeterminateDuration="800"
-                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
-
-                <TextView
-                    android:id="@+id/info_texttop_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:textSize="64sp"
-                    android:textColor="@color/text_light_alternate"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Taco Bell"/>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_extra"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardBackgroundColor="@color/off_white"
-                >
-                <TextView
-                    android:id="@+id/info_text_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_gravity="top|left"
-                    android:textColor="@color/black_tint"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Choice 1"/>
+                    android:id="@+id/moving_card_top">
 
 
-
-                <ImageView
-
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    />
-
-            </android.support.v7.widget.CardView>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="2000dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:id="@+id/moving_card_bottom">
+                    <!-- A CardView that contains a TextView -->
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardBackgroundColor="@color/off_white"
+                        >
 
 
+                        <ProgressBar
+                            android:id="@+id/progress_bar_cvtop1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminateDuration="800"
+                            android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
-            <!-- A CardView that contains a TextView -->
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                        <TextView
+                            android:id="@+id/info_texttop_extra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|left"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="30dp"
+                            android:textSize="64sp"
+                            android:textColor="@color/text_light_alternate"
+                            android:fontFamily="sans-serif-light"
+                            android:text="Taco Bell"/>
 
-                android:layout_margin="8dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardBackgroundColor="@color/off_white">
+                    </android.support.v7.widget.CardView>
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_cvbot1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view_extra"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardBackgroundColor="@color/off_white"
+                        >
+                        <TextView
+                            android:id="@+id/info_text_extra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:layout_gravity="top|left"
+                            android:textColor="@color/black_tint"
+                            android:fontFamily="sans-serif-light"
+                            android:text="Choice 1"/>
+
+
+
+                        <ImageView
+
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:scaleType="centerCrop"
+                            />
+
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="2000dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:indeterminateDuration="800"
-                    android:indeterminateDrawable="@drawable/rotate_spinner"
-                />
-
-                <TextView
-                    android:id="@+id/info_textbot_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:textSize="42sp"
-                    android:textColor="@color/text_light_alternate"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Pizza Hut is the best ever"
-                    android:lineSpacingMultiplier="1.14"
-                    android:minLines="2"/>
+                    android:id="@+id/moving_card_bottom">
 
 
 
+                    <!-- A CardView that contains a TextView -->
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
 
-            </android.support.v7.widget.CardView>
+                        android:layout_margin="8dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardBackgroundColor="@color/off_white">
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view2_extra"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                        <ProgressBar
+                            android:id="@+id/progress_bar_cvbot1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminateDuration="800"
+                            android:indeterminateDrawable="@drawable/rotate_spinner"
+                            />
 
-                android:layout_margin="8dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardBackgroundColor="@color/off_white">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    />
-
-                <TextView
-                    android:id="@+id/info_text2_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|top"
-                    android:textSize="20sp"
-                    android:textColor="@color/black_tint"
-                    android:text="Choice 2"/>
-
+                        <TextView
+                            android:id="@+id/info_textbot_extra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|left"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="30dp"
+                            android:textSize="42sp"
+                            android:textColor="@color/text_light_alternate"
+                            android:fontFamily="sans-serif-light"
+                            android:text="Pizza Hut is the best ever"
+                            android:lineSpacingMultiplier="1.14"
+                            android:minLines="2"/>
 
 
-            </android.support.v7.widget.CardView>
-        </FrameLayout>
 
-    </LinearLayout>
 
-    </com.pipit.waffle.TouchableLinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view2_extra"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:layout_margin="8dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardBackgroundColor="@color/off_white">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:scaleType="centerCrop"
+                            />
+
+                        <TextView
+                            android:id="@+id/info_text2_extra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|top"
+                            android:textSize="20sp"
+                            android:textColor="@color/black_tint"
+                            android:text="Choice 2"/>
+
+
+
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </com.pipit.waffle.TouchableLinearLayout>
 
 
     </com.pipit.waffle.TouchableFrameLayout>
