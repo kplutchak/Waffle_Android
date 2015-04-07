@@ -23,14 +23,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
@@ -41,6 +47,8 @@ import java.util.Random;
  * Created by Kyle on 11/19/2014.
  */
 public class AnsweringFragment extends Fragment  {
+
+    private static final String TAG = "AnsweringFragment";
 
     private static double TENSION = 800;
     private static double DAMPER = 20; //friction
@@ -91,13 +99,20 @@ public class AnsweringFragment extends Fragment  {
     private LinearLayout card_holder_layout;
     private CustomScrollView answering_scrollview;
     private TouchableFrameLayout answering_frame;
-    private TouchableLinearLayout main_view;
+    private LinearLayout main_view;
 
     private boolean animating_bottom_bar = false;
 
+    private ListView listview;
+    private boolean mAlreadyAtTop;
+    private SlidingUpPanelLayout mLayout;
 
+    private RelativeLayout top_comments_bar;
+    private LinearLayout entire_drag_view;
 
+    private boolean offsetIsAlreadyOne = true;
 
+    private boolean isExpanded = false;
 
     // TODO: when a Choice is selected, remove it from the mapping
     // TODO: when a Choice is being brought in via getNext...(), add it to the mapping using it's
@@ -133,15 +148,86 @@ public class AnsweringFragment extends Fragment  {
             image_height_stored = savedInstanceState.getInt("height_portrait");
             image_height_stored_landscape = savedInstanceState.getInt("height_landscape");
         }
-        // get the next four unanswered questions and set their mappings
-        View v = null;
+
+        View v;
 
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.answering_fragment, container, false);
 
-
-
         card_holder_layout = (LinearLayout) v.findViewById(R.id.card_holder_layout);
+
+        // Bottom bar code
+        mLayout = (SlidingUpPanelLayout) v.findViewById(R.id.sliding_layout);
+
+        top_comments_bar = (RelativeLayout) v.findViewById(R.id.top_comments_bar);
+        entire_drag_view = (LinearLayout) v.findViewById(R.id.dragView);
+
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelExpanded(View panel) {
+                Log.i(TAG, "onPanelExpanded");
+                isExpanded = true;
+                mLayout.setDragView(top_comments_bar);
+            }
+
+            @Override
+            public void onPanelCollapsed(View panel) {
+                Log.i(TAG, "onPanelCollapsed");
+            }
+
+            @Override
+            public void onPanelAnchored(View panel) {
+                Log.i(TAG, "onPanelAnchored");
+            }
+
+            @Override
+            public void onPanelHidden(View panel) {
+                Log.i(TAG, "onPanelHidden");
+            }
+        });
+
+        TextView t = (TextView) v.findViewById(R.id.name);
+        t.setText("Mila Kunis asked...");
+
+        listview = (ListView) v.findViewById(R.id.comments_listview);
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                "Android", "iPhone", "WindowsMobile" };
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for(int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+
+        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+            }
+
+            int mPosition=0;
+            int mOffset=0;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // if(!canScrollUp(view))
+                // Log.d(TAG, "We're at the bottom of the comments ListView first.");
+            }
+        });
+
+        CommentsArrayAdapter adapter = new CommentsArrayAdapter(v.getContext(), values);
+        listview.setAdapter(adapter);
+
+        // end bottom bar code
 
         // adjust the size of the LinearLayout that is contained within the ScrollView
         final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
@@ -166,80 +252,6 @@ public class AnsweringFragment extends Fragment  {
         card_holder_lp.height = true_height;
         card_holder_layout.setLayoutParams(card_holder_lp);
         // end adjustments
-
-        answering_frame = (TouchableFrameLayout) v.findViewById(R.id.answering_frame);
-
-        // Get the main view (a LinearLayout) that contains the FrameLayouts that contain the cards
-        main_view = (TouchableLinearLayout) v.findViewById(R.id.main_view);
-
-
-      //  answering_scrollview = (CustomScrollView) v.findViewById(R.id.answering_scrollview);
-
-      //  answering_scrollview.set(true_height);
-
-
-
-        /*answering_scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-
-            @Override
-            public void onScrollChanged() {
-
-
-                int scrollX = answering_scrollview.getScrollX(); //for horizontalScrollView
-                int scrollY = answering_scrollview.getScrollY(); //for verticalScrollView
-                Log.d("ScrollView", "ScrollX: " + scrollX + ", ScrollY: " + scrollY);
-
-                if(scrollY < true_height/2)
-                    animating_bottom_bar = false;
-                if(scrollY > true_height/2 && !animating_bottom_bar) {
-                    animating_bottom_bar = true;
-                    //answering_scrollview.smoothScrollTo(0, true_height);
-                    ObjectAnimator animator = ObjectAnimator.ofInt(answering_scrollview, "scrollY", true_height - scrollX);
-                    // TODO: set variable duration depending on position/velocity
-                    animator.setDuration(800);
-                    animator.start();
-
-                }
-
-            }
-        });
-*/
-
-      /*  RelativeLayout dynamic_scrollspace = (RelativeLayout) answering_scrollview.findViewById(R.id.dynamic_scrollspace);
-        FrameLayout.LayoutParams rl_lp = (FrameLayout.LayoutParams) dynamic_scrollspace.getLayoutParams();
-        rl_lp.height = true_height*2;
-        dynamic_scrollspace.setLayoutParams(rl_lp);
-
-        RelativeLayout bottom_bar = (RelativeLayout) v.findViewById(R.id.bottom_bar_answering_2);
-        RelativeLayout.LayoutParams rl_lp2 = (RelativeLayout.LayoutParams) bottom_bar.getLayoutParams();
-
-        int bottom_bar_height = (int) (46 * getActivity().getResources().getDisplayMetrics().density);
-        rl_lp.topMargin = true_height - bottom_bar_height;
-        bottom_bar.setLayoutParams(rl_lp2);
-
-        */
-
-        // Get the largest FrameLayout and set it's child views
-        // Dispatch TouchEvents appropriately
-
-        answering_frame.setViews(answering_scrollview, main_view);
-
-        /*answering_scrollview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction())
-                {
-
-                    case MotionEvent.ACTION_DOWN:
-                        float x = event.getRawX();
-                        float y = event.getRawY();
-                        Log.d("AnsweringFragment", "X: " + x + ", Y: " + y);
-                        break;
-                }
-                return true;
-            }
-        });
-        */
 
         // Retrieve the CardViews
         cardViewTop1 = (CardView) v.findViewById(R.id.card_view);
@@ -1488,6 +1500,28 @@ public class AnsweringFragment extends Fragment  {
             } else {
                 child.setEnabled(false);
             }
+        }
+    }
+
+    public class CommentsArrayAdapter extends ArrayAdapter<String> {
+        private final Context context;
+        private final String[] values;
+
+        public CommentsArrayAdapter(Context context, String[] values) {
+            super(context, R.layout.comments_list_item, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.comments_list_item, parent, false);
+            TextView textView = (TextView) rowView.findViewById(R.id.comments_text);
+            textView.setText(values[position]);
+
+            return rowView;
         }
     }
 
