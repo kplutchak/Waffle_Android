@@ -162,11 +162,29 @@ public class AnsweringFragment extends Fragment  {
         top_comments_bar = (RelativeLayout) v.findViewById(R.id.top_comments_bar);
         entire_drag_view = (LinearLayout) v.findViewById(R.id.dragView);
 
+        final TextView t = (TextView) v.findViewById(R.id.name);
+        t.setText("Mila Kunis asked...");
+
+        final TextView num_comments_tv = (TextView) v.findViewById(R.id.num_comments);
+        final ImageView comments_icon = (ImageView) v.findViewById(R.id.comments_icon);
+        final ImageView comments_profile = (ImageView) v.findViewById(R.id.comments_profile);
+        final TextView expanded_tv = (TextView) v.findViewById(R.id.expanded_textview);
+
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+
+                int image_alpha = (int) ((1-(slideOffset*2))*255);
+                if(image_alpha < 0)
+                    image_alpha = 0;
+
+                t.setAlpha(1-(slideOffset*2));
+                num_comments_tv.setAlpha(1-(slideOffset*2));
+                comments_icon.setImageAlpha(image_alpha);
+                comments_profile.setImageAlpha(image_alpha);
+                expanded_tv.setAlpha((slideOffset*2)-1);
             }
 
             @Override
@@ -179,6 +197,7 @@ public class AnsweringFragment extends Fragment  {
             @Override
             public void onPanelCollapsed(View panel) {
                 Log.i(TAG, "onPanelCollapsed");
+                isExpanded = false;
             }
 
             @Override
@@ -192,9 +211,25 @@ public class AnsweringFragment extends Fragment  {
             }
         });
 
-        TextView t = (TextView) v.findViewById(R.id.name);
-        t.setText("Mila Kunis asked...");
+        // Set the bar's contents appropriately, depending on the state of the bottom bar
+        if(isExpanded)
+        {
+            t.setAlpha(0);
+            num_comments_tv.setAlpha(0);
+            comments_icon.setImageAlpha(0);
+            comments_profile.setImageAlpha(0);
+            expanded_tv.setAlpha(1);
+        }
+        else
+        {
+            t.setAlpha(1);
+            num_comments_tv.setAlpha(1f);
+            comments_icon.setImageAlpha(255);
+            comments_profile.setImageAlpha(255);
+            expanded_tv.setAlpha(0);
+        }
 
+        // Set the hidden comments
         listview = (ListView) v.findViewById(R.id.comments_listview);
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",

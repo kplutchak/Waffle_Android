@@ -97,6 +97,15 @@
                                 card_view:cardCornerRadius="4dp"
                                 card_view:cardBackgroundColor="@color/off_white"
                                 >
+
+                                <ProgressBar
+                                    android:id="@+id/progress_bar_cvtop2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:indeterminateDuration="800"
+                                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
+
                                 <TextView
                                     android:id="@+id/info_text_extra"
                                     android:layout_width="wrap_content"
@@ -178,6 +187,14 @@
                                 card_view:cardCornerRadius="4dp"
                                 card_view:cardBackgroundColor="@color/off_white">
 
+                                <ProgressBar
+                                    android:id="@+id/progress_bar_cvbot2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:indeterminateDuration="800"
+                                    android:indeterminateDrawable="@drawable/rotate_spinner"/>
+
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -222,10 +239,22 @@
                     android:orientation="horizontal"
                     android:background="@color/primary_100"
                     android:id="@+id/top_comments_bar">
+                    
+                    <TextView
+                        android:id="@+id/expanded_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/off_white"
+                        android:text="Comments"
+                        android:paddingStart="15dp" />
 
                     <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
+                        android:id="@+id/comments_profile"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="15dp"
                         android:src="@drawable/mila_icon"/>
@@ -243,6 +272,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:id="@+id/comments_icon"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
@@ -252,6 +282,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/num_comments"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="45dp"
