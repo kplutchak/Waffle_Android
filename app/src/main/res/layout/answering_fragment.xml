@@ -82,7 +82,7 @@
                                     android:textSize="64sp"
                                     android:textColor="@color/text_light_alternate"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="Taco Bell"/>
+                                    />
 
                             </android.support.v7.widget.CardView>
 
@@ -168,7 +168,6 @@
                                     android:textSize="42sp"
                                     android:textColor="@color/text_light_alternate"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="Pizza Hut is the best ever"
                                     android:lineSpacingMultiplier="1.14"
                                     android:minLines="2"/>
 
