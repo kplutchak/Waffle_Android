@@ -31,6 +31,26 @@ public class QuestionSet {
     private ObjectAnimator anim_top;
     private ObjectAnimator anim_bot;
 
+    public LoadedStatus loadedStatus;
+    public ShowingStatus showingStatus;
+
+    public QuestionSet(CardView top, CardView bot ){
+        loadedStatus = LoadedStatus.NOT_READY;
+        cardViewTop = top;
+        cardViewBot = bot;
+        imageViewTop = new ImageView(cardViewTop.getContext());
+        imageViewBot = new ImageView(cardViewBot.getContext());
+    }
+
+    public void resetQuestionData(){
+        _question = null;
+        imageViewTop.setImageBitmap(null);
+        imageViewTop.destroyDrawingCache();
+        imageViewBot.setImageBitmap(null);
+        imageViewBot.destroyDrawingCache();
+        loadedStatus = LoadedStatus.NOT_READY;
+    }
+
     public CardView getCardViewTop() {
         return cardViewTop;
     }
@@ -47,11 +67,11 @@ public class QuestionSet {
         this.cardViewBot = cardViewBot;
     }
 
-    public Question get_question() {
+    public Question getQuestion() {
         return _question;
     }
 
-    public void set_question(Question _question) {
+    public void setQuestion(Question _question) {
         this._question = _question;
     }
 
@@ -101,6 +121,23 @@ public class QuestionSet {
 
     public void setAnim_bot(ObjectAnimator anim_bot) {
         this.anim_bot = anim_bot;
+    }
+
+    public enum LoadedStatus {
+        READY, NOT_READY
+    }
+
+    public enum ShowingStatus {
+        ACTIVE, STANDBY
+    }
+
+    /**
+     * Called when imageViews are ready to be attached to cardViews
+     */
+    public void applyImageviewsToCards(){
+        // add the new ImageViews to their parent layouts
+        cardViewTop.addView(imageViewTop);
+        cardViewBot.addView(imageViewBot);
     }
 
 
