@@ -54,7 +54,6 @@ public class AnsweringFragment extends Fragment  {
     private Object questionLock = new Object();
 
     private ImageView plus_one;
-
     private Transformation transformation_rounded_image;
 
     // ObjectAnimators that control the selection movement of each of the four cards. We use ObjectAnimator
@@ -1045,7 +1044,6 @@ public class AnsweringFragment extends Fragment  {
                                 setTwo.getCardViewTop().setEnabled(true);
                             }
 
-
                             @Override
                             public void onAnimationRepeat(Animation animation) {
 
@@ -1170,7 +1168,6 @@ public class AnsweringFragment extends Fragment  {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
                 iv.setVisibility(View.VISIBLE);
             }
 
@@ -1193,6 +1190,8 @@ public class AnsweringFragment extends Fragment  {
             if (ans != null) {
                 //Todo: Submit result
             }
+          //
+          //  setOne.resetQuestionData();
             setOne.setQuestion(ClientData.pollReadyQuestions()); //Remember this will return null if none exist
         }
     }
@@ -1202,6 +1201,7 @@ public class AnsweringFragment extends Fragment  {
             if (ans != null) {
                 //Todo: Submit result
             }
+           // setTwo.resetQuestionData();
             setTwo.setQuestion(ClientData.pollReadyQuestions());
 
         }

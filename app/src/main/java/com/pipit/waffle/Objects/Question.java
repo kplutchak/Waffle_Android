@@ -22,6 +22,8 @@ public class Question {
     private List<Choice> choices;
     private User asker;
     public QuestionState state=QuestionState.NOT_LOADED;
+
+    private QuestionType type;
     public int imagesLoaded = 0;
 
     public Question(String qbody, User asker){
@@ -37,11 +39,11 @@ public class Question {
             ans.imageState = Choice.LoadState.NO_IMAGE;
         }
         this.choices.add(ans);
-
     }
 
     public boolean beginImageLoading(){
         if (choices.size()!= Constants.NUMBER_OF_CHOICES_PER_QUESTION){
+            type = QuestionType.TEXT;
             return false;
         }
         for (int i = 0 ; i < choices.size(); i++) {
@@ -49,6 +51,7 @@ public class Question {
                 loadURLintoBitmap(choices.get(i), choices.get(i).getUrl());
             }
         }
+        type = QuestionType.PICTURE; //Todo: consider the possibility of caption
         return true;
     }
 
@@ -68,12 +71,6 @@ public class Question {
     public void setQuestionBody(String questionBody) {
         this.questionBody = questionBody;
     }
-
-    /**
-     * @return the choiceA
-     */
-
-
     /**
      * @return the asker
      */
@@ -97,7 +94,7 @@ public class Question {
     }
 
     public enum QuestionType {
-        TEXT, PICTURE
+        TEXT, PICTURE, CAPTIONED
     }
 
     public String getId() {
@@ -110,6 +107,15 @@ public class Question {
 
     public void generateAndSetID(){
         this.id = UUID.randomUUID().toString();
+    }
+
+
+    public QuestionType getType() {
+        return type;
+    }
+
+    public void setType(QuestionType type) {
+        this.type = type;
     }
 
     public enum QuestionState{

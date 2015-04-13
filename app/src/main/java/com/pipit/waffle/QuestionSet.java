@@ -123,6 +123,17 @@ public class QuestionSet {
         this.anim_bot = anim_bot;
     }
 
+    public String getText(int i){
+        if (_question!=null) {
+            if (_question.getChoices().size() == Constants.NUMBER_OF_CHOICES_PER_QUESTION
+                    && i < Constants.NUMBER_OF_CHOICES_PER_QUESTION ) {
+                return _question.getChoices().get(i).getAnswerBody();
+            }
+        }
+        return "";
+    }
+
+
     public enum LoadedStatus {
         READY, NOT_READY
     }
