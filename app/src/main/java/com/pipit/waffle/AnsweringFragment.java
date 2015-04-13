@@ -220,8 +220,8 @@ public class AnsweringFragment extends Fragment  {
             cvtop_image_params.height = image_height_stored;
 
         cvtop_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-        setOne.getCardViewTop().setLayoutParams(cvtop_image_params);
-        setTwo.getCardViewTop().setLayoutParams(cvtop_image_params);
+        setOne.getImageViewTop().setLayoutParams(cvtop_image_params);
+        setTwo.getImageViewTop().setLayoutParams(cvtop_image_params);
 
         CardView.LayoutParams cvbot1_image_params = new CardView.LayoutParams(cardViewBot1.getLayoutParams());
         cvbot1_image_params.width = card_params.width - (2 * margin_images);
@@ -233,8 +233,8 @@ public class AnsweringFragment extends Fragment  {
             cvbot1_image_params.height = image_height_stored_landscape;
 
         cvbot1_image_params.setMargins(margin_images, margin_images, margin_images, margin_images);
-        setOne.getCardViewTop().setLayoutParams(cvbot1_image_params);
-        setTwo.getCardViewTop().setLayoutParams(cvbot1_image_params);
+        setOne.getImageViewBot().setLayoutParams(cvbot1_image_params);
+        setTwo.getImageViewBot().setLayoutParams(cvbot1_image_params);
 
         setOne.getImageViewTop().setScaleType(ImageView.ScaleType.CENTER_CROP);
         setOne.getImageViewBot().setScaleType(ImageView.ScaleType.CENTER_CROP);
