@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.pipit.waffle.AnsweringFragment;
+import com.pipit.waffle.AskingFragment;
 import com.pipit.waffle.Network;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class ClientData {
 
     private static List<String> idsOfAnsweredQuestions;
     private static AnsweringFragment answeringFragment;
+
+    private static AskingFragment askingFragment;
     // maps Choice answerID to an integer that specifies the ImageView that the _image
     // from Choice should be loaded into
     public HashMap<String, Integer> card_image_map;
@@ -128,6 +131,12 @@ public class ClientData {
 
     public static void setAnsweringFragment(AnsweringFragment answeringFragment) {
         ClientData.answeringFragment = answeringFragment;
+    }
+    public static AskingFragment getAskingFragment() {
+        return askingFragment;
+    }
+    public static void setAskingFragment(AskingFragment askingFragment) {
+        ClientData.askingFragment = askingFragment;
     }
 
     public static boolean moveQuestionToReady(Question q){

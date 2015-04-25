@@ -7,6 +7,12 @@
     <string name="close">Close</string>
     <string name="open">Open</string>
 
+    <!-- speech -->
+    <string name="hello_world">Hello world!</string>
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="tap_on_mic">Tap on mic to speak</string>
+
     <color name="primary">#03A9F4</color>
     <color name="primary_blue_dark">#0288D1</color>
     <color name="primary_500">#03A9F4</color>
@@ -34,5 +40,7 @@
     <color name="black_tint_light">#40000000</color>
     <color name="black_tint_vlight">#20000000</color>
     <color name="black_tint_medium">#60000000</color>
+
+
 
 </resources>

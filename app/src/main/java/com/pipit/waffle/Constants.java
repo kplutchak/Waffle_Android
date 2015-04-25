@@ -11,11 +11,14 @@ public class Constants {
     public static int USER_QUESTIONS_FRAGMENT_ID = 3;
     public static int USER_SETTINGS_FRAGMENT_ID = 4;
     public static int USER_ME_FRAGMENT_ID = 5;
+    public static int ASKING_FRAGMENT_ID = 6;
 
     public static String ANSWERING_FRAGMENT_NAME = "Answer";
     public static String USER_QUESTIONS_FRAGMENT_NAME = "My Questions";
     public static String USER_SETTINGS_FRAGMENT_NAME = "Settings";
     public static String USER_ME_FRAGMENT_NAME = "Me";
+    public static String ASKING_FRAGMENT_NAME = "Ask";
+
 
     public static int NUMBER_OF_CHOICES_PER_QUESTION = 2;
 }
