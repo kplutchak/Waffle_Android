@@ -419,6 +419,7 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationEnd(Animation animation) {
                                 setOne.getCardViewBot().setX(ending_pos_left);
                                 setOne.getCardViewBot().setEnabled(true);
+                                setOne.resetQuestionData();
                             }
 
                             @Override
@@ -449,7 +450,6 @@ public class AnsweringFragment extends Fragment  {
                                 anim_bcard1.cancel();
 
                             setOne.getCardViewBot().startAnimation(anim_other);
-                            setOne.resetQuestionData();
                             setOne.showingStatus = QuestionSet.ShowingStatus.STANDBY;
 
                             setTwo.getCardViewTop().startAnimation(anim_in);
@@ -644,6 +644,7 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationEnd(Animation animation) {
                                 setOne.getCardViewTop().setX(ending_pos_left);
                                 setOne.getCardViewTop().setEnabled(true);
+                                setOne.resetQuestionData();
                             }
 
                             @Override
@@ -671,7 +672,6 @@ public class AnsweringFragment extends Fragment  {
                                 if (anim_tcard1 != null)
                                     anim_tcard1.cancel();
                                 setOne.getCardViewTop().startAnimation(anim_other);
-                                setOne.resetQuestionData();
                                 setOne.showingStatus = QuestionSet.ShowingStatus.STANDBY;
 
                                 setTwo.getCardViewBot().startAnimation(anim_in);
@@ -860,6 +860,8 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationEnd(Animation animation) {
                                 setTwo.getCardViewBot().setX(ending_pos_left);
                                 setTwo.getCardViewBot().setEnabled(true);
+                                //Reset the previous image
+                                setTwo.resetQuestionData();
                             }
 
                             @Override
@@ -887,7 +889,6 @@ public class AnsweringFragment extends Fragment  {
                                 if (anim_bcard2 != null)
                                     anim_bcard2.cancel();
                                 setTwo.getCardViewBot().startAnimation(anim_other);
-                                setTwo.resetQuestionData();
                                 setTwo.showingStatus = QuestionSet.ShowingStatus.STANDBY;
 
                                 setOne.getCardViewTop().startAnimation(anim_in);
@@ -1061,6 +1062,7 @@ public class AnsweringFragment extends Fragment  {
                             public void onAnimationEnd(Animation animation) {
                                 setTwo.getCardViewTop().setX(ending_pos_left);
                                 setTwo.getCardViewTop().setEnabled(true);
+                                setTwo.resetQuestionData();
                             }
 
                             @Override
@@ -1090,7 +1092,6 @@ public class AnsweringFragment extends Fragment  {
                                         if (anim_tcard2 != null)
                                             anim_tcard2.cancel();
                                         setTwo.getCardViewTop().startAnimation(anim_other);
-                                        setTwo.resetQuestionData();
                                         setTwo.showingStatus = QuestionSet.ShowingStatus.STANDBY;
 
                                         setOne.getCardViewBot().startAnimation(anim_in);

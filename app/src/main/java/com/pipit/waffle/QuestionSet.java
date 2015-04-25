@@ -50,11 +50,11 @@ public class QuestionSet {
         imageViewTop.destroyDrawingCache();
         imageViewBot.setImageDrawable(null);
         imageViewBot.destroyDrawingCache();
-        loadedStatus = LoadedStatus.NOT_READY;/*
+        loadedStatus = LoadedStatus.NOT_READY;
         if (pb_cvbot !=null && pb_cvtop !=null){
             pb_cvbot.setVisibility(View.VISIBLE);
             pb_cvtop.setVisibility(View.VISIBLE);
-        }*/
+        }
     }
 
     public CardView getCardViewTop() {
