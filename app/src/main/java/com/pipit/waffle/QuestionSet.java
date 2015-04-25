@@ -1,7 +1,9 @@
 package com.pipit.waffle;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -25,8 +27,8 @@ public class QuestionSet {
     private ImageView imageViewTop;
     private ImageView imageViewBot;
 
-    private ProgressBar pb_cvtop1;
-    private ProgressBar pb_cvbot1;
+    private ProgressBar pb_cvtop;
+    private ProgressBar pb_cvbot;
 
     private ObjectAnimator anim_top;
     private ObjectAnimator anim_bot;
@@ -43,12 +45,16 @@ public class QuestionSet {
     }
 
     public void resetQuestionData(){
-        _question = null;
-        imageViewTop.setImageBitmap(null);
+        //_question = null;
+        imageViewTop.setImageDrawable(null);
         imageViewTop.destroyDrawingCache();
-        imageViewBot.setImageBitmap(null);
+        imageViewBot.setImageDrawable(null);
         imageViewBot.destroyDrawingCache();
-        loadedStatus = LoadedStatus.NOT_READY;
+        loadedStatus = LoadedStatus.NOT_READY;/*
+        if (pb_cvbot !=null && pb_cvtop !=null){
+            pb_cvbot.setVisibility(View.VISIBLE);
+            pb_cvtop.setVisibility(View.VISIBLE);
+        }*/
     }
 
     public CardView getCardViewTop() {
@@ -82,6 +88,36 @@ public class QuestionSet {
     public void setImageViewTop(ImageView imageViewTop) {
         this.imageViewTop = imageViewTop;
     }
+    
+    public void setBitmapTop(){
+        try {
+            setBitmapTop(_question.getChoices().get(0).get_image());
+        } catch (Exception e) {
+            //Todo: set default image
+        }
+    }
+
+    public void setBitmapTop(Bitmap b){
+        if(pb_cvtop!=null){
+            pb_cvtop.setVisibility(View.INVISIBLE);
+        }
+        imageViewTop.setImageBitmap(b);
+    }
+
+    public void setBitmapBot(){
+        try {
+            setBitmapBot(_question.getChoices().get(1).get_image());
+        }catch(Exception e){
+            //Todo: set default
+        }
+    }
+
+    public void setBitmapBot(Bitmap b){
+        if(pb_cvbot!=null){
+            pb_cvbot.setVisibility(View.INVISIBLE);
+        }
+        imageViewBot.setImageBitmap(b);
+    }
 
     public ImageView getImageViewBot() {
         return imageViewBot;
@@ -91,20 +127,20 @@ public class QuestionSet {
         this.imageViewBot = imageViewBot;
     }
 
-    public ProgressBar getPb_cvtop1() {
-        return pb_cvtop1;
+    public ProgressBar getPb_cvtop() {
+        return pb_cvtop;
     }
 
-    public void setPb_cvtop1(ProgressBar pb_cvtop1) {
-        this.pb_cvtop1 = pb_cvtop1;
+    public void setPb_cvtop(ProgressBar pb_cvtop) {
+        this.pb_cvtop = pb_cvtop;
     }
 
-    public ProgressBar getPb_cvbot1() {
-        return pb_cvbot1;
+    public ProgressBar getPb_cvbot() {
+        return pb_cvbot;
     }
 
-    public void setPb_cvbot1(ProgressBar pb_cvbot1) {
-        this.pb_cvbot1 = pb_cvbot1;
+    public void setPb_cvbot(ProgressBar pb_cvbot) {
+        this.pb_cvbot = pb_cvbot;
     }
 
     public ObjectAnimator getAnim_top() {
