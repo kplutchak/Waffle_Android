@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class AskingFragment extends Fragment {
     private TextView txtSpeechInput;
     private ImageButton btnSpeak;
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private LinearLayout holder_layout;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,6 +61,25 @@ public class AskingFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(),
                             getString(R.string.speech_not_supported),
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void disableClicks() {
+        if(holder_layout != null)
+        {
+            disable(holder_layout);
+        }
+    }
+
+    public static void disable(ViewGroup layout) {
+        layout.setEnabled(false);
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                disable((ViewGroup) child);
+            } else {
+                child.setEnabled(false);
+            }
         }
     }
 

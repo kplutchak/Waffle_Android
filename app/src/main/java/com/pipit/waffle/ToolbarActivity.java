@@ -128,6 +128,11 @@ public class ToolbarActivity extends ActionBarActivity {
                         UserSettingsFragment frag = (UserSettingsFragment) getFragmentManager().findFragmentByTag(Constants.USER_SETTINGS_FRAGMENT_NAME);
                         frag.disableClicks();
                     }
+                    else if (current_fragment_id == Constants.ASKING_FRAGMENT_ID)
+                    {
+                        AskingFragment frag = (AskingFragment) getFragmentManager().findFragmentByTag(Constants.ASKING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
 
                     Timer delay_frag_trans = new Timer();
                     delay_frag_trans.schedule(new TimerTask() {
@@ -227,6 +232,11 @@ public class ToolbarActivity extends ActionBarActivity {
                         UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
                         frag.disableClicks();
                     }
+                    else if (current_fragment_id == Constants.ASKING_FRAGMENT_ID)
+                    {
+                        AskingFragment frag = (AskingFragment) getFragmentManager().findFragmentByTag(Constants.ASKING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
 
                     Timer delay_frag_trans = new Timer();
                     delay_frag_trans.schedule(new TimerTask() {
@@ -238,42 +248,18 @@ public class ToolbarActivity extends ActionBarActivity {
                                 @Override
                                 public void run() {
                                     UserSettingsFragment frag = new UserSettingsFragment();
-
-                                    // In case this activity was started with special instructions from an
-                                    // Intent, pass the Intent's extras to the fragment as arguments
                                     frag.setArguments(getIntent().getExtras());
-
-                                    // Flip to the back.
-
-                                    // Create and commit a new fragment transaction that adds the fragment for the back of
-                                    // the card, uses custom animations, and is part of the fragment manager's back stack.
 
                                     getFragmentManager()
                                             .beginTransaction()
-
-                                                    // Replace the default fragment animations with animator resources representing
-                                                    // rotations when switching to the back of the card, as well as animator
-                                                    // resources representing rotations when flipping back to the front (e.g. when
-                                                    // the system Back button is pressed).
-
-                                                    // Replace any fragments currently in the container view with a fragment
-                                                    // representing the next page (indicated by the just-incremented currentPage
-                                                    // variable).
                                             .replace(R.id.fragment_container, frag, Constants.USER_SETTINGS_FRAGMENT_NAME)
-
-                                                    // Add this transaction to the back stack, allowing users to press Back
-                                                    // to get to the front of the card.
                                             .addToBackStack(Constants.USER_SETTINGS_FRAGMENT_NAME)
-
-                                                    // Commit the transaction.
                                             .commit();
 
                                     Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
                                     fade_in.setAnimationListener(new Animation.AnimationListener() {
                                         @Override
-                                        public void onAnimationStart(Animation animation) {
-
-                                        }
+                                        public void onAnimationStart(Animation animation) {}
 
                                         @Override
                                         public void onAnimationEnd(Animation animation) {
@@ -281,9 +267,7 @@ public class ToolbarActivity extends ActionBarActivity {
                                         }
 
                                         @Override
-                                        public void onAnimationRepeat(Animation animation) {
-
-                                        }
+                                        public void onAnimationRepeat(Animation animation) {}
                                     });
 
                                     rl.removeView(writer_toolbar);
@@ -326,6 +310,11 @@ public class ToolbarActivity extends ActionBarActivity {
                     else if(current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID)
                     {
                         UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if (current_fragment_id == Constants.ASKING_FRAGMENT_ID)
+                    {
+                        AskingFragment frag = (AskingFragment) getFragmentManager().findFragmentByTag(Constants.ASKING_FRAGMENT_NAME);
                         frag.disableClicks();
                     }
 
@@ -396,6 +385,103 @@ public class ToolbarActivity extends ActionBarActivity {
 
             }
         });
+
+        RelativeLayout rl_ask = (RelativeLayout) findViewById(R.id.nav_item2);
+        rl_ask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // check if we aren't already on the "My Questions" tab
+                if (current_fragment_id != Constants.ASKING_FRAGMENT_ID) {
+
+                    // disable clicks
+                    if(current_fragment_id == Constants.ANSWERING_FRAGMENT_ID)
+                    {
+                        AnsweringFragment frag = (AnsweringFragment) getFragmentManager().findFragmentByTag(Constants.ANSWERING_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_ME_FRAGMENT_ID)
+                    {
+                        UserMeFragment frag = (UserMeFragment) getFragmentManager().findFragmentByTag(Constants.USER_ME_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_SETTINGS_FRAGMENT_ID)
+                    {
+                        UserSettingsFragment frag = (UserSettingsFragment) getFragmentManager().findFragmentByTag(Constants.USER_SETTINGS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+                    else if(current_fragment_id == Constants.USER_QUESTIONS_FRAGMENT_ID)
+                    {
+                        UserQuestionsFragment frag = (UserQuestionsFragment) getFragmentManager().findFragmentByTag(Constants.USER_QUESTIONS_FRAGMENT_NAME);
+                        frag.disableClicks();
+                    }
+
+                    Timer delay_frag_trans = new Timer();
+                    delay_frag_trans.schedule(new TimerTask() {
+
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    AskingFragment frag = new AskingFragment();
+
+                                    // In case this activity was started with special instructions from an
+                                    // Intent, pass the Intent's extras to the fragment as arguments
+                                    frag.setArguments(getIntent().getExtras());
+
+                                    // Flip to the back.
+
+                                    // Create and commit a new fragment transaction that adds the fragment for the back of
+                                    // the card, uses custom animations, and is part of the fragment manager's back stack.
+
+                                    getFragmentManager()
+                                            .beginTransaction()
+
+                                            .replace(R.id.fragment_container, frag, Constants.ASKING_FRAGMENT_NAME)
+
+                                                    // Add this transaction to the back stack, allowing users to press Back
+                                                    // to get to the front of the card.
+                                            .addToBackStack(Constants.ASKING_FRAGMENT_NAME)
+                                                    // Commit the transaction.
+                                            .commit();
+
+                                    Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_toolbar_text);
+                                    fade_in.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            writer_toolbar.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
+
+                                        }
+                                    });
+
+                                    rl.removeView(writer_toolbar);
+                                    rl.addView(writer_toolbar);
+                                    writer_toolbar.setCharacterDelay(2);
+
+                                    writer_toolbar.animateText("Asking Fragment");
+                                    writer_toolbar.startAnimation(fade_in);
+                                    current_fragment_id = Constants.ASKING_FRAGMENT_ID;
+                                }
+                            });
+                        }
+                    }, getResources().getInteger(R.integer.transition_time));
+                }
+                // Close the drawer after the item has been clicked
+                drawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+
 
         // Create the buttons
         final Button swap_icon = (Button) findViewById(R.id.fab);
@@ -486,6 +572,11 @@ public class ToolbarActivity extends ActionBarActivity {
             else if(current_fragment_id == Constants.USER_ME_FRAGMENT_ID)
             {
                 UserMeFragment frag = (UserMeFragment) getFragmentManager().findFragmentByTag(Constants.USER_ME_FRAGMENT_NAME);
+                frag.disableClicks();
+            }
+            else if (current_fragment_id == Constants.ASKING_FRAGMENT_ID)
+            {
+                AskingFragment frag = (AskingFragment) getFragmentManager().findFragmentByTag(Constants.ASKING_FRAGMENT_NAME);
                 frag.disableClicks();
             }
 
