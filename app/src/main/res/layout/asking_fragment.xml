@@ -6,16 +6,46 @@
     android:background="@drawable/bg_gradient"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/txtSpeechInput"
+    <EditText
+        android:id="@+id/txtSpeechInputTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="30dp"
+        android:textStyle="normal"
+        android:hint="Choice One"/>
+
+
+    <TextView
+        android:id="@+id/seperator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtSpeechInputTop"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:textSize="26dp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:text="or"/>
+
+    <EditText
+        android:id="@+id/txtSpeechInputBot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seperator"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="normal"
+        android:textColorHint="@color/white"
+        android:hint="Choice Two"/>
+
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -42,5 +72,17 @@
             android:textSize="15dp"
             android:textStyle="normal" />
     </LinearLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="Submit"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
@@ -34,7 +35,7 @@ public class UserQuestionsFragment extends Fragment {
 
     private UserQuestionsFragmentListAdapter mAdapter;
 
-    private LinearLayout holder_layout;
+    private RelativeLayout holder_layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +45,7 @@ public class UserQuestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.user_questions_fragment, container, false);
 
-        holder_layout = (LinearLayout) v;
+        holder_layout = (RelativeLayout) v;
 
         // TODO: remove
        /* ImageLoader.getInstance().clearDiskCache();

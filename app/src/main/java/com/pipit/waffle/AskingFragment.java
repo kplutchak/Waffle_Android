@@ -9,10 +9,17 @@ import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pipit.waffle.Objects.Choice;
+import com.pipit.waffle.Objects.Question;
+import com.pipit.waffle.Objects.Self;
+import com.pipit.waffle.Speech.SpeechToText;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -20,8 +27,10 @@ import java.util.Locale;
  * Created by Eric on 4/25/2015.
  */
 public class AskingFragment extends Fragment {
-    private TextView txtSpeechInput;
     private ImageButton btnSpeak;
+    private Button btnSubmit;
+    private EditText textInputSpeechTop;
+    private EditText textInputSpeechBot;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private LinearLayout holder_layout;
 
@@ -31,8 +40,10 @@ public class AskingFragment extends Fragment {
                              Bundle savedInstanceState) {
         ((ToolbarActivity) getActivity()).current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
         View v = inflater.inflate(R.layout.asking_fragment, container, false);
-        txtSpeechInput = (TextView) v.findViewById(R.id.txtSpeechInput);
         btnSpeak = (ImageButton) v.findViewById(R.id.btnSpeak);
+        btnSubmit = (Button) v.findViewById(R.id.submit);
+        textInputSpeechTop = (EditText) v.findViewById(R.id.txtSpeechInputTop);
+        textInputSpeechBot = (EditText) v.findViewById(R.id.txtSpeechInputBot);
 
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
@@ -41,6 +52,39 @@ public class AskingFragment extends Fragment {
                 promptSpeechInput();
             }
         });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String inputTextTop = textInputSpeechTop.getText().toString();
+                String inputTextBot =  textInputSpeechBot.getText().toString();
+                //Valid Question - Try to post
+                if ((inputTextTop != null && ! inputTextTop.isEmpty()) && (inputTextBot != null && ! inputTextBot.isEmpty())){
+                    //TODO: Make function in question to build with choices, rather than creating by hand
+                    //Todo: Network postQuestion should return with error codes
+                    String questionBody = inputTextTop + " or " + inputTextBot;
+                    Question question = new Question(questionBody, Self.getUser() );
+                    Choice c1 = new Choice();
+                    Choice c2 = new Choice();
+                    c1.setQuestionID(question.getId());
+                    c2.setQuestionID(question.getId());
+                    c1.setAnswerBody(inputTextTop);
+                    c2.setAnswerBody(inputTextBot);
+                    question.addChoice(c1);
+                    question.addChoice(c2);
+                    Network.postQuestion( getActivity().getApplicationContext() , question);
+                    Toast.makeText(getActivity().getApplicationContext(), "Question Submitted (Todo: switch fragment)",
+                            Toast.LENGTH_LONG).show();
+                }
+                //Invalid Question - Reject
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Your question is not formatted correctly",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
 
         return v;
     }
@@ -96,11 +140,17 @@ public class AskingFragment extends Fragment {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    txtSpeechInput.setText(result.get(0));
+                    String choices[] = SpeechToText.stringToTwoChoices(result.get(0));
+
+                    textInputSpeechTop.setText(choices[0]);
+                    textInputSpeechBot.setText(choices[1]);
+
                 }
                 break;
             }
 
         }
     }
+
+
 }
