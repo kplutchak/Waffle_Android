@@ -42,6 +42,7 @@ public class ToolbarActivity extends ActionBarActivity {
     private ListView drawerListView;
     public android.support.v7.widget.Toolbar rl;
     public DrawerLayout drawerLayout;
+    private static Context mcontext;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -49,6 +50,10 @@ public class ToolbarActivity extends ActionBarActivity {
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public static Context getMcontext() {
+        return mcontext;
     }
 
     /**
@@ -59,7 +64,7 @@ public class ToolbarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        final Context mcontext = this;
+        mcontext = this;
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             current_fragment_id = savedInstanceState.getInt("current_frag");

@@ -1,12 +1,15 @@
 package com.pipit.waffle.Objects;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pipit.waffle.Constants;
+import com.pipit.waffle.R;
+import com.pipit.waffle.ToolbarActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +46,16 @@ public class Question {
 
     public boolean beginImageLoading(){
         if (choices.size()!= Constants.NUMBER_OF_CHOICES_PER_QUESTION){
-            type = QuestionType.TEXT;
             return false;
         }
         for (int i = 0 ; i < choices.size(); i++) {
             if (choices.get(i).imageState != Choice.LoadState.NO_IMAGE) {
                 loadURLintoBitmap(choices.get(i), choices.get(i).getUrl());
+            }else{
+                loadTextOnlyBackground(choices.get(i));
             }
         }
-        type = QuestionType.PICTURE; //Todo: consider the possibility of caption
+        //type = QuestionType.PICTURE; //Todo: consider the possibility of caption
         return true;
     }
 
@@ -120,6 +124,29 @@ public class Question {
 
     public enum QuestionState{
         LOADED, NOT_LOADED, FAILED;
+    }
+
+    /**
+     * For all text-only choices, load a blank placeholder image in background
+     * Currently we set the imagestate to IMAGE_READY when this happens, although this is
+     * a bit of a possible misnomer, as NO_IMAGE is still a more accurate status. For now,
+     * this allows us to pass the image through.
+     * @return True if successful
+     */
+    public boolean loadTextOnlyBackground(final Choice ans){
+        try {
+            ans.set_image(BitmapFactory.decodeResource(ToolbarActivity.getMcontext().getResources(), R.drawable.chelsealogo));
+            ans.imageState = Choice.LoadState.IMAGE_READY;
+
+            boolean isReady = ClientData.checkAndUpdateQuestionStatus(getInstance());
+            Log.d("Question", "Placeholder image loaded - Question ready to use = " + Boolean.toString(isReady));
+        }catch (Exception e){
+            ans.imageState = Choice.LoadState.FAILED;
+            state = QuestionState.FAILED;
+            ClientData.tipoffSecretPolice();
+            return false;
+        }
+        return true;
     }
 
     public boolean loadURLintoBitmap(final Choice ans, String imageUri){

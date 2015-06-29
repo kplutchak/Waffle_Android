@@ -258,16 +258,26 @@ public class Network {
         JsonArray answerarray = new JsonArray();
         JsonObject answerjson = new JsonObject();
         JsonObject answerjson2 = new JsonObject();
+
         answerjson.addProperty("text", mquestion.getChoices().get(0).getAnswerBody());
+        answerjson.addProperty("votes", 0);
+        answerjson.addProperty("id", mquestion.getId());
+
         answerjson2.addProperty("text", mquestion.getChoices().get(1).getAnswerBody());
+        answerjson2.addProperty("votes", 0);
+        answerjson2.addProperty("id", mquestion.getId());
+
+
         answerarray.add(answerjson);
         answerarray.add(answerjson2);
+
 
         JsonObject json = new JsonObject();
         json.addProperty("text", mquestion.getQuestionBody());
         json.add("answers", answerarray);
         json.addProperty("user_id", "temp user id");
         final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
+        Log.d("ConnectToBackend", json.toString());
         Ion.with(mcontext)
                 .load(url)
                 .setJsonObjectBody(json)
