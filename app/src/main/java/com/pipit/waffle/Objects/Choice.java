@@ -19,7 +19,7 @@ public class Choice {
     private Bitmap _image;
     private int votes;
     public LoadState imageState;
-    static ImageLoader imageLoader = ImageLoader.getInstance();
+    public static ImageLoader imageLoader = ImageLoader.getInstance();
 
     public Choice(String answerID){
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
@@ -32,6 +32,7 @@ public class Choice {
         answerID = UUID.randomUUID().toString();
         setVotes(0);
         imageState = LoadState.NOT_LOADED;
+
     }
 
     public String getQuestionID() {

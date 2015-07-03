@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.internal.app.ToolbarActionBar;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.TypedValue;
@@ -26,8 +27,10 @@ import android.widget.RelativeLayout;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 
 import java.util.Timer;
@@ -64,6 +67,11 @@ public class ToolbarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+
+        /**
+         * Intialization stuff
+         */
+        Choice.imageLoader.init(ImageLoaderConfiguration.createDefault(this));
         mcontext = this;
         if (savedInstanceState != null) {
             // Restore value of members from saved state

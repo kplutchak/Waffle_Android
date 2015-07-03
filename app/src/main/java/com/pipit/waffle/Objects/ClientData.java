@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ClientData {
     //Singleton class to hold all data
 
-    public static final int MAXIMUM_QUEUED_QUESTIONS = 7;
+    public static final int MAXIMUM_QUEUED_QUESTIONS = 15;
     public static final int MAXIMUM_IMAGE_LOADED_QUESTIONS = 3;
 
     private static ClientData clientdata = new ClientData();

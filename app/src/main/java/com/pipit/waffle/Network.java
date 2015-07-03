@@ -52,7 +52,7 @@ public class Network {
                             int jsonlistindex = 0;
 
                             while(k < numberOfQuestionsNeeded && k < jsonlist.size() && jsonlistindex<jsonlist.size()) {
-                                Log.d("ConnectToBackend", "jsonList" + jsonlist.get(k).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
+                                Log.d("ConnectToBackend", "jsonList" + jsonlist.get(jsonlistindex).get("text").getAsString() + " k=" + k + " jsonlistindex=" + jsonlistindex + " ");
 
                                 //Get text body, user of question
                                 if (!ClientData.getInstance().getIdsOfAnsweredQuestions().contains(jsonlist.get(jsonlistindex).get("id").getAsString())) {
@@ -75,7 +75,9 @@ public class Network {
                                             int answerVotes = answerJsonList.get(j).get("votes").getAsInt();
                                             String picurl = "";
                                             if( answerJsonList.get(j).has("picture")){
-                                                picurl = answerJsonList.get(j).get("picture").getAsString();
+                                                if (!answerJsonList.get(j).get("picture").isJsonNull()) {
+                                                    picurl = answerJsonList.get(j).get("picture").getAsString();
+                                                }
                                             }
 
                                             Choice newans = new Choice(questionID);
@@ -90,6 +92,7 @@ public class Network {
                                             }
                                             nq.addChoice(newans);
                                         } catch (Exception e1){
+                                            Log.d("Network", "Poorly formatted question " + e1.toString() +  " " + nq.getQuestionBody());
                                             //Poorly formatted question
                                             //Todo: Announce or log poorly formatted question.
                                         }
