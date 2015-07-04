@@ -69,7 +69,7 @@ android:layout_height="wrap_content"
                 card_view:cardBackgroundColor="@color/off_white"
                 >
                 <TextView
-                    android:id="@+id/info_text_extra"
+                    android:id="@+id/cardOne_botText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -142,7 +142,7 @@ android:layout_height="wrap_content"
                 card_view:cardBackgroundColor="@color/off_white">
 
                 <TextView
-                    android:id="@+id/info_text2_extra"
+                    android:id="@+id/cardTwo_botText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

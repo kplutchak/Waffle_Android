@@ -203,6 +203,7 @@ public class AnsweringFragment extends Fragment  {
                 .oval(false)
                 .build();
 
+        //Set Progress Bars
         ProgressBar pb_cvtop1 = (ProgressBar) cardViewTop1.findViewById(R.id.progress_bar_cvtop1);
         ProgressBar pb_cvbot1 = (ProgressBar) cardViewBot1.findViewById(R.id.progress_bar_cvbot1);
         setOne.setPb_cvbot(pb_cvbot1);
@@ -243,6 +244,12 @@ public class AnsweringFragment extends Fragment  {
         setOne.applyImageviewsToCards();
         setTwo.applyImageviewsToCards();
 
+        //Set textViews
+        setOne.getTextViewBot().setLayoutParams(cvbot1_image_params);
+        setTwo.getTextViewBot().setLayoutParams(cvbot1_image_params);
+
+        setOne.applyTextviewsToCards();
+        setTwo.applyTextviewsToCards();
         // CardView movement and touch behavior
         final View.OnTouchListener tl = new View.OnTouchListener() {
             public float offsetX;
@@ -440,6 +447,8 @@ public class AnsweringFragment extends Fragment  {
                             if(setTwo.getQuestion() != null && setTwo.getQuestion().getChoices().size()>=2) {
                                 setTwo.setBitmapTop();
                                 setTwo.setBitmapBot();
+                                setTwo.setTextBot();
+                                setTwo.setTextTop();
                                 //setTwo.getImageViewTop().setImageBitmap(setTwo.getQuestion().getChoices().get(0).get_image());
                                 //setTwo.getImageViewBot().setImageBitmap(setTwo.getQuestion().getChoices().get(1).get_image());
                                 Log.d("AnsweringFragment", "Set cv_top2 (~476) with current question " + setTwo.getQuestion().getChoices().get(0).getAnswerBody());
@@ -664,6 +673,8 @@ public class AnsweringFragment extends Fragment  {
                                 if (setTwo.getQuestion() != null && setTwo.getQuestion().getChoices().size() >= 2) {
                                     setTwo.setBitmapTop();
                                     setTwo.setBitmapBot();
+                                    setTwo.setTextBot();
+                                    setTwo.setTextTop();
                                     //setTwo.getImageViewTop().setImageBitmap(setTwo.getQuestion().getChoices().get(0).get_image());
                                     //setTwo.getImageViewBot().setImageBitmap(setTwo.getQuestion().getChoices().get(1).get_image());
                                     Log.d("AnsweringFragment", "Set cv_top2 (~722) with current question " + setTwo.getQuestion().getChoices().get(0).getAnswerBody());
@@ -881,6 +892,8 @@ public class AnsweringFragment extends Fragment  {
                                 if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
                                     setOne.setBitmapTop();
                                     setOne.setBitmapBot();
+                                    setTwo.setTextBot();
+                                    setTwo.setTextTop();
                                     //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
                                     //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
                                     Log.d("AnsweringFragment", "Set cv_top1 (~968) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
@@ -1084,6 +1097,8 @@ public class AnsweringFragment extends Fragment  {
                                         if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
                                             setOne.setBitmapTop();
                                             setOne.setBitmapBot();
+                                            setTwo.setTextBot();
+                                            setTwo.setTextTop();
                                             //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
                                             //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
                                             Log.d("AnsweringFragment", "Set cv_top1 (~1210) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
@@ -1142,11 +1157,13 @@ public class AnsweringFragment extends Fragment  {
                         Choice c2 = setOne.getQuestion().getChoices().get(1);
                         if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
                             final Bitmap b = c1.get_image();
-                            setCardImageWithAnimation(b, setOne.getCardViewTop(), setOne.getImageViewTop(), setOne.getPb_cvtop());
+                            final String text = c1.getAnswerBody();
+                            setCardImageWithAnimation(b, setOne.getCardViewTop(), setOne.getImageViewTop(), setOne.getPb_cvtop(), setOne.getTextViewTop(), text);
                         }
                         if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
                             final Bitmap b = c2.get_image();
-                            setCardImageWithAnimation(b, setOne.getCardViewBot(), setOne.getImageViewBot(), setOne.getPb_cvbot());
+                            final String text = c2.getAnswerBody();
+                            setCardImageWithAnimation(b, setOne.getCardViewBot(), setOne.getImageViewBot(), setOne.getPb_cvbot(), setOne.getTextViewBot(), text);
                         }
                         return true;
                         }
@@ -1164,12 +1181,14 @@ public class AnsweringFragment extends Fragment  {
                         Choice c2 = setTwo.getQuestion().getChoices().get(1);
                         if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
                             Bitmap b = c1.get_image();
-                            setCardImageWithAnimation(b, setTwo.getCardViewTop(), setTwo.getImageViewTop(), setTwo.getPb_cvtop());
+                            final String text = c1.getAnswerBody();
+                            setCardImageWithAnimation(b, setTwo.getCardViewTop(), setTwo.getImageViewTop(), setTwo.getPb_cvtop(), setTwo.getTextViewTop(), text);
                             Log.d("AnsweringFragment", "Set cv_top2 image (in notifyOfReady) " + c1.getAnswerBody());
                         }
                         if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
                             Bitmap b = c2.get_image();
-                            setCardImageWithAnimation(b, setTwo.getCardViewBot(), setTwo.getImageViewBot(), setTwo.getPb_cvbot());
+                            final String text = c2.getAnswerBody();
+                            setCardImageWithAnimation(b, setTwo.getCardViewBot(), setTwo.getImageViewBot(), setTwo.getPb_cvbot(), setTwo.getTextViewBot(), text);
                             Log.d("AnsweringFragment", "Set cv_bot2 image (in notifyOfReady) " + c2.getAnswerBody());
                         }
                     }
@@ -1180,7 +1199,7 @@ public class AnsweringFragment extends Fragment  {
             return false; //No questions needed
     }
 
-    private boolean setCardImageWithAnimation(final Bitmap b,final CardView cv, final ImageView iv, final ProgressBar pb ){
+    private boolean setCardImageWithAnimation(final Bitmap b,final CardView cv, final ImageView iv, final ProgressBar pb, final AutoResizeTextView tv, final String txt ){
         if (iv.getDrawable()!=null){
             return false;
         }
@@ -1193,6 +1212,7 @@ public class AnsweringFragment extends Fragment  {
                 }
                 iv.setVisibility(View.INVISIBLE);
                 iv.setImageBitmap(b);
+                tv.setText(txt);
                 Log.d("AnsweringFragment", "Set an image (OnNotifyReady) in setCardImagewithAnimation");
             }
 

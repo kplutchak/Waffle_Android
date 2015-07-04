@@ -27,6 +27,9 @@ public class QuestionSet {
     private ImageView imageViewTop;
     private ImageView imageViewBot;
 
+    private AutoResizeTextView textViewTop;
+    private AutoResizeTextView textViewBot;
+
     private ProgressBar pb_cvtop;
     private ProgressBar pb_cvbot;
 
@@ -42,6 +45,8 @@ public class QuestionSet {
         cardViewBot = bot;
         imageViewTop = new ImageView(cardViewTop.getContext());
         imageViewBot = new ImageView(cardViewBot.getContext());
+        textViewTop = new AutoResizeTextView(cardViewTop.getContext());
+        textViewBot = new AutoResizeTextView(cardViewBot.getContext());
     }
 
     public void resetQuestionData(){
@@ -55,6 +60,8 @@ public class QuestionSet {
             pb_cvbot.setVisibility(View.VISIBLE);
             pb_cvtop.setVisibility(View.VISIBLE);
         }
+        textViewTop.setText("");
+        textViewBot.setText("");
     }
 
     public CardView getCardViewTop() {
@@ -88,6 +95,18 @@ public class QuestionSet {
     public void setImageViewTop(ImageView imageViewTop) {
         this.imageViewTop = imageViewTop;
     }
+
+    public AutoResizeTextView getTextViewTop(){ return textViewTop; }
+
+    public AutoResizeTextView getTextViewBot(){ return textViewBot; }
+
+    public void setTextViewTop(AutoResizeTextView textViewTop){
+        this.textViewTop = textViewTop;
+    }
+
+    public void setTextViewBot(AutoResizeTextView textViewBot){
+        this.textViewBot = textViewBot;
+    }
     
     public void setBitmapTop(){
         try {
@@ -118,6 +137,31 @@ public class QuestionSet {
         }
         imageViewBot.setImageBitmap(b);
     }
+
+    public void setTextTop(){
+        try {
+            setTextTop(_question.getChoices().get(0).getAnswerBody());
+        }catch(Exception e){
+            //Todo: set default
+        }
+    }
+
+    public void setTextTop(String text){
+        textViewTop.setText(text);
+    }
+
+    public void setTextBot(){
+        try {
+            setTextBot(_question.getChoices().get(1).getAnswerBody());
+        }catch(Exception e){
+            //Todo: set default
+        }
+    }
+
+    public void setTextBot(String text){
+        textViewBot.setText(text);
+    }
+
 
     public ImageView getImageViewBot() {
         return imageViewBot;
@@ -185,6 +229,15 @@ public class QuestionSet {
         // add the new ImageViews to their parent layouts
         cardViewTop.addView(imageViewTop);
         cardViewBot.addView(imageViewBot);
+    }
+
+    public void applyTextviewsToCards(){
+        //textViewTop.setElevation(1);
+        //textViewBot.setElevation(1);
+        textViewTop.bringToFront();
+        textViewBot.bringToFront();
+        cardViewTop.addView(textViewTop);
+        cardViewBot.addView(textViewBot);
     }
 
 

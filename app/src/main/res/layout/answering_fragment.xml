@@ -72,10 +72,10 @@
                                     android:indeterminateDuration="800"
                                     android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
-                                <TextView
-                                    android:id="@+id/info_texttop_extra"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <com.pipit.waffle.AutoResizeTextView
+                                    android:id="@+id/cardOne_topText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="top|left"
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginTop="30dp"
@@ -106,20 +106,16 @@
                                     android:indeterminateDuration="800"
                                     android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
-                                <TextView
-                                    android:id="@+id/info_text_extra"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <com.pipit.waffle.AutoResizeTextView
+                                    android:id="@+id/cardOne_botText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:textSize="20sp"
                                     android:layout_gravity="top|left"
                                     android:textColor="@color/black_tint"
                                     android:fontFamily="sans-serif-light"/>
 
-
-
                                 <ImageView
-
-
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_margin="5dp"
@@ -135,8 +131,6 @@
                             android:layout_weight="1"
                             android:layout_gravity="center"
                             android:id="@+id/moving_card_bottom">
-
-
 
                             <!-- A CardView that contains a TextView -->
                             <android.support.v7.widget.CardView
@@ -158,10 +152,10 @@
                                     android:indeterminateDrawable="@drawable/rotate_spinner"
                                     />
 
-                                <TextView
-                                    android:id="@+id/info_textbot_extra"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <com.pipit.waffle.AutoResizeTextView
+                                    android:id="@+id/cardTwo_topText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="top|left"
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginTop="30dp"
@@ -170,9 +164,6 @@
                                     android:fontFamily="sans-serif-light"
                                     android:lineSpacingMultiplier="1.14"
                                     android:minLines="2"/>
-
-
-
 
                             </android.support.v7.widget.CardView>
 
@@ -194,20 +185,20 @@
                                     android:indeterminateDuration="800"
                                     android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
+                                <com.pipit.waffle.AutoResizeTextView
+                                    android:id="@+id/cardTwo_botText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="left|top"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black_tint"/>
+
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_margin="5dp"
                                     android:scaleType="centerCrop"
                                     />
-
-                                <TextView
-                                    android:id="@+id/info_text2_extra"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="left|top"
-                                    android:textSize="20sp"
-                                    android:textColor="@color/black_tint"/>
 
                             </android.support.v7.widget.CardView>
                         </FrameLayout>

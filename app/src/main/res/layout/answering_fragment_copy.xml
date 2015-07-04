@@ -56,7 +56,7 @@ android:layout_height="match_parent" >
                     android:indeterminateDrawable="@drawable/rotate_spinner"/>
 
                 <TextView
-                    android:id="@+id/info_texttop_extra"
+                    android:id="@+id/cardOne_topText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|left"
@@ -81,7 +81,7 @@ android:layout_height="match_parent" >
                 card_view:cardBackgroundColor="@color/off_white"
                 >
                 <TextView
-                    android:id="@+id/info_text_extra"
+                    android:id="@+id/cardOne_botText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
@@ -134,7 +134,7 @@ android:layout_height="match_parent" >
                 />
 
                 <TextView
-                    android:id="@+id/info_textbot_extra"
+                    android:id="@+id/cardTwo_topText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|left"
@@ -170,7 +170,7 @@ android:layout_height="match_parent" >
                     />
 
                 <TextView
-                    android:id="@+id/info_text2_extra"
+                    android:id="@+id/cardTwo_botText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|top"
