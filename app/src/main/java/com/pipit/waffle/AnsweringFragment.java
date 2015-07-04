@@ -892,8 +892,8 @@ public class AnsweringFragment extends Fragment  {
                                 if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
                                     setOne.setBitmapTop();
                                     setOne.setBitmapBot();
-                                    setTwo.setTextBot();
-                                    setTwo.setTextTop();
+                                    setOne.setTextBot();
+                                    setOne.setTextTop();
                                     //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
                                     //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
                                     Log.d("AnsweringFragment", "Set cv_top1 (~968) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
@@ -1097,8 +1097,8 @@ public class AnsweringFragment extends Fragment  {
                                         if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
                                             setOne.setBitmapTop();
                                             setOne.setBitmapBot();
-                                            setTwo.setTextBot();
-                                            setTwo.setTextTop();
+                                            setOne.setTextBot();
+                                            setOne.setTextTop();
                                             //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
                                             //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
                                             Log.d("AnsweringFragment", "Set cv_top1 (~1210) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
