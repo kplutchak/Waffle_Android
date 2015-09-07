@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.pipit.waffle.Objects.Choice;
@@ -44,6 +45,7 @@ public class AskingFragment extends Fragment {
         btnSubmit = (Button) v.findViewById(R.id.submit);
         textInputSpeechTop = (EditText) v.findViewById(R.id.txtSpeechInputTop);
         textInputSpeechBot = (EditText) v.findViewById(R.id.txtSpeechInputBot);
+        final ProgressBar uploadProgress = (ProgressBar) v.findViewById(R.id.uploadprogress);
 
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
@@ -72,7 +74,8 @@ public class AskingFragment extends Fragment {
                     c2.setAnswerBody(inputTextBot);
                     question.addChoice(c1);
                     question.addChoice(c2);
-                    Network.postQuestion( getActivity().getApplicationContext() , question);
+                    //Network.postQuestion(getActivity(), question);
+                    Network.postQuestionWithImage(getActivity().getApplicationContext(), question, uploadProgress);
                     Toast.makeText(getActivity().getApplicationContext(), "Question Submitted (Todo: switch fragment)",
                             Toast.LENGTH_LONG).show();
                 }

@@ -28,7 +28,11 @@ public class ClientData {
     private static ConcurrentLinkedQueue<Question> readyQuestions;
 
     private static List<String> idsOfAnsweredQuestions;
+    private static List<String> idsOfAskedQuestions;
     private static AnsweringFragment answeringFragment;
+
+     /* Data about self */
+
 
     private static AskingFragment askingFragment;
     // maps Choice answerID to an integer that specifies the ImageView that the _image

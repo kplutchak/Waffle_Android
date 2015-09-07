@@ -2,6 +2,8 @@ package com.pipit.waffle;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -10,11 +12,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
 import com.pipit.waffle.Objects.Question;
 import com.pipit.waffle.Objects.User;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -216,21 +224,6 @@ public class Network {
         }
 
     }
-    public static void newQuestion(final Context mcontext, Question mquestion){
-        JsonObject json = new JsonObject();
-        json.addProperty("foo", "bar");
-
-        Ion.with(mcontext)
-                .load("http://obscure-fjord-2523.herokuapp.com/api/questions/")
-                .setJsonObjectBody(json)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        // do stuff with the result or error
-                    }
-                });
-    }
 
     public static void answerQuestion(final Context mcontext, Choice providedAnswer){
         JsonObject json = new JsonObject();
@@ -312,4 +305,61 @@ public class Network {
                 });
     }
 
+    public static void postQuestionWithImage(final Context mcontext, Question mquestion, final ProgressBar uploadProgressBar){
+        JsonObject json = new JsonObject();
+        json.addProperty("text", mquestion.getQuestionBody());
+        json.addProperty("user_id", "temp user id");
+        final String url = "http://obscure-fjord-2523.herokuapp.com/api/questions/";
+        Ion.with(mcontext)
+                .load(url)
+
+                .setMultipartParameter("answerOneText", mquestion.getChoices().get(0).getAnswerBody())
+                .setMultipartParameter("answerTwoText", mquestion.getChoices().get(1).getAnswerBody())
+                .setMultipartParameter("text", mquestion.getQuestionBody())
+                .setMultipartParameter("user_id", "temp_user_posting_picture")
+                .setMultipartFile("imageOne", persistImage(mcontext, sampleBitmap(mcontext), "sample"))
+                .setMultipartFile("imageTwo", persistImage(mcontext, sampleBitmap(mcontext), "sample"))
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                if (e != null) {
+                                    Log.d("ConnectToBackend", "postQuestionWithPicture called with " + url + " and has error" + e.toString());
+                                    if (result == null) {
+                                        Log.d("ConnectToBackend", "postQuestionWithPicture returns result with NULL");
+                                    }
+                                    Toast.makeText(mcontext, "Error submitting question " + e.toString(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(mcontext, "Sucessfully posted questionWithPicture", Toast.LENGTH_LONG).show();
+                                    Log.d("ConnectToBackend", "postQuestionWithPicture asked with url " + url + " : and result " + result.toString());
+                                }
+
+                            }
+                        });
+    }
+
+    /**
+     * Used for testing
+     * @return A file with an image
+     */
+    private static File persistImage(Context mcontext, Bitmap bitmap, String name) {
+        File filesDir = mcontext.getFilesDir();
+        File imageFile = new File(filesDir, name + ".png");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e("ConnectToBackend", "Error writing bitmap", e);
+        }
+        return imageFile;
+    }
+
+    private static Bitmap sampleBitmap(Context mcontext){
+        Bitmap bm = BitmapFactory.decodeResource(mcontext.getResources(), R.drawable.test_image4);
+        return bm;
+    }
 }

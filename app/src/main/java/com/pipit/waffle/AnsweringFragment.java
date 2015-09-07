@@ -318,9 +318,10 @@ public class AnsweringFragment extends Fragment  {
 
                         float xValue = v.getX();
                         float halfway = (float) frame_width / 2.0f;
+                        float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > halfway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 12000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             Log.d("AnsweringFragment", "Selected! Released at " + Float.toString(xValue) + " pixels with a " +
                                     "velocity of " + Float.toString(max_vel) + " pixels per second.");
@@ -544,9 +545,10 @@ public class AnsweringFragment extends Fragment  {
                         float xValue = v.getX();
 
                         float halfway = (float) frame_width / 2.0f;
+                        float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > halfway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 12000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             Log.d("AnsweringFragment", "Selected! Released at " + Float.toString(xValue) + " pixels with a " +
                                     "velocity of " + Float.toString(max_vel) + " pixels per second.");
@@ -767,8 +769,10 @@ public class AnsweringFragment extends Fragment  {
                         Float max_vel = Collections.max(last_velocities);
                         float xValue = v.getX();
                         float halfway = (float) frame_width / 2.0f;
+                        float eighthway = (float) frame_width /8.0f;
+
                         float dist;
-                        if (((xValue > halfway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 12000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             dist = ending_pos - xValue;
                             selected = true;
@@ -974,8 +978,10 @@ public class AnsweringFragment extends Fragment  {
 
                         float xValue = v.getX();
                         float halfway = (float) frame_width / 2.0f;
+                        float eighthway = (float) frame_width /8.0f;
+
                         float dist;
-                        if (((xValue > halfway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 12000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             dist = ending_pos - xValue;
                             selected = true;
