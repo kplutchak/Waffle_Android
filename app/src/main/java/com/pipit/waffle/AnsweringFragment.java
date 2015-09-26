@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.makeramen.RoundedTransformationBuilder;
 import com.pipit.waffle.Objects.Choice;
 import com.pipit.waffle.Objects.ClientData;
+import com.pipit.waffle.Objects.Question;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Transformation;
 
@@ -321,7 +322,7 @@ public class AnsweringFragment extends Fragment  {
                         float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > eighthway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 1000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             Log.d("AnsweringFragment", "Selected! Released at " + Float.toString(xValue) + " pixels with a " +
                                     "velocity of " + Float.toString(max_vel) + " pixels per second.");
@@ -440,9 +441,9 @@ public class AnsweringFragment extends Fragment  {
 
                         if (selected) {
                             synchronized(questionLock){
-                        if (setOne.getQuestion() == null){
-                                    submitQuestionOne(null);
-                            }else {
+                            if (setOne.getQuestion() == null){
+                                submitQuestionOne(null);
+                            }else{
                                 submitQuestionOne(setOne.getQuestion().getChoices().get(0));
                             }
                             if(setTwo.getQuestion() != null && setTwo.getQuestion().getChoices().size()>=2) {
@@ -458,7 +459,6 @@ public class AnsweringFragment extends Fragment  {
 
                             if (anim_bcard1 != null)
                                 anim_bcard1.cancel();
-
                             setOne.getCardViewBot().startAnimation(anim_other);
                             setOne.showingStatus = QuestionSet.ShowingStatus.STANDBY;
 
@@ -548,7 +548,7 @@ public class AnsweringFragment extends Fragment  {
                         float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > eighthway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 1000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             Log.d("AnsweringFragment", "Selected! Released at " + Float.toString(xValue) + " pixels with a " +
                                     "velocity of " + Float.toString(max_vel) + " pixels per second.");
@@ -665,8 +665,9 @@ public class AnsweringFragment extends Fragment  {
                         anim_in.setStartOffset(dur + AnsweringFragmentHelpers.ANIM_STARTING_OFFSET);
                         anim_in_right.setStartOffset(dur + AnsweringFragmentHelpers.ANIM_STARTING_OFFSET);
                         anim_bcard1.start();
+
                         if (selected) {
-                            synchronized(AnsweringFragment.this.questionLock) {
+                            synchronized(questionLock) {
                                 if (setOne.getQuestion() == null){
                                     submitQuestionOne(null);
                                 }else {
@@ -772,7 +773,7 @@ public class AnsweringFragment extends Fragment  {
                         float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > eighthway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 1000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             dist = ending_pos - xValue;
                             selected = true;
@@ -981,7 +982,7 @@ public class AnsweringFragment extends Fragment  {
                         float eighthway = (float) frame_width /8.0f;
 
                         float dist;
-                        if (((xValue > eighthway && (max_vel > 12000))) ||
+                        if (((xValue > eighthway && (max_vel > 1000))) ||
                                 (xValue > ((51.0f / 100.0f) * (float) frame_width))) {
                             dist = ending_pos - xValue;
                             selected = true;
@@ -1098,28 +1099,26 @@ public class AnsweringFragment extends Fragment  {
                                 if (setTwo.getQuestion() == null) {
                                     submitQuestionTwo(null);
                                 } else {
-                                    if (setTwo.getQuestion().getChoices().size() > 1) {
-                                        submitQuestionTwo(setTwo.getQuestion().getChoices().get(1));
-                                        if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
-                                            setOne.setBitmapTop();
-                                            setOne.setBitmapBot();
-                                            setOne.setTextBot();
-                                            setOne.setTextTop();
-                                            //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
-                                            //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
-                                            Log.d("AnsweringFragment", "Set cv_top1 (~1210) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
-                                            Log.d("AnsweringFragment", "Set cv_bot1 (~1211) with current question " + setOne.getQuestion().getChoices().get(1).getAnswerBody());
-                                        }
-                                        if (anim_tcard2 != null)
-                                            anim_tcard2.cancel();
-                                        setTwo.getCardViewTop().startAnimation(anim_other);
-                                        setTwo.showingStatus = QuestionSet.ShowingStatus.STANDBY;
-
-                                        setOne.getCardViewBot().startAnimation(anim_in);
-                                        setOne.getCardViewTop().startAnimation(anim_in_right);
-                                        setOne.showingStatus = QuestionSet.ShowingStatus.ACTIVE;
-                                    }
+                                    submitQuestionTwo(setTwo.getQuestion().getChoices().get(1));
                                 }
+                                if (setOne.getQuestion() != null && setOne.getQuestion().getChoices().size() >= 2) {
+                                    setOne.setBitmapTop();
+                                    setOne.setBitmapBot();
+                                    setOne.setTextBot();
+                                    setOne.setTextTop();
+                                    //setOne.getImageViewTop().setImageBitmap(setOne.getQuestion().getChoices().get(0).get_image());
+                                    //setOne.getImageViewBot().setImageBitmap(setOne.getQuestion().getChoices().get(1).get_image());
+                                    Log.d("AnsweringFragment", "Set cv_top1 (~1210) with current question " + setOne.getQuestion().getChoices().get(0).getAnswerBody());
+                                    Log.d("AnsweringFragment", "Set cv_bot1 (~1211) with current question " + setOne.getQuestion().getChoices().get(1).getAnswerBody());
+                                }
+                                if (anim_tcard2 != null)
+                                    anim_tcard2.cancel();
+                                setTwo.getCardViewTop().startAnimation(anim_other);
+                                setTwo.showingStatus = QuestionSet.ShowingStatus.STANDBY;
+
+                                setOne.getCardViewBot().startAnimation(anim_in);
+                                setOne.getCardViewTop().startAnimation(anim_in_right);
+                                setOne.showingStatus = QuestionSet.ShowingStatus.ACTIVE;
                             }
                         }
 
@@ -1129,8 +1128,6 @@ public class AnsweringFragment extends Fragment  {
                 }
                 return true;
             }
-
-
         };
 
         cardViewTop1.setOnTouchListener(tl);
@@ -1161,15 +1158,19 @@ public class AnsweringFragment extends Fragment  {
                     if (setOne.getQuestion().getChoices().size() == 2) {
                         Choice c1 = setOne.getQuestion().getChoices().get(0);
                         Choice c2 = setOne.getQuestion().getChoices().get(1);
-                        if (c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) {
+                        if ((c1.imageState == Choice.LoadState.IMAGE_READY && c1.get_image() != null) || c1.imageState == Choice.LoadState.NO_IMAGE) {
                             final Bitmap b = c1.get_image();
                             final String text = c1.getAnswerBody();
                             setCardImageWithAnimation(b, setOne.getCardViewTop(), setOne.getImageViewTop(), setOne.getPb_cvtop(), setOne.getTextViewTop(), text);
+                            Log.d("AnsweringFragment", "Set cv_top1 image (in notifyOfReady) " + c1.getAnswerBody());
+
                         }
-                        if (c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) {
+                        if ((c2.imageState == Choice.LoadState.IMAGE_READY && c2.get_image() != null) || c2.imageState == Choice.LoadState.NO_IMAGE)  {
                             final Bitmap b = c2.get_image();
                             final String text = c2.getAnswerBody();
                             setCardImageWithAnimation(b, setOne.getCardViewBot(), setOne.getImageViewBot(), setOne.getPb_cvbot(), setOne.getTextViewBot(), text);
+                            Log.d("AnsweringFragment", "Set cv_top2 image (in notifyOfReady) " + c2.getAnswerBody());
+
                         }
                         return true;
                         }

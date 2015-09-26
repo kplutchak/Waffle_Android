@@ -178,20 +178,5 @@ public class Question {
         return this;
     }
 
-    public boolean checkAndUpdateQuestionStatus(){
-        //TODO: Currently only supports questions with 2 choices exactly
-        if (choices.size()!=2){
-            return false;
-        }
-        for (int i = 0; i < choices.size() ; i++){
-            List<Choice> choices_for_debugger = choices;
-            if (!(choices.get(i).imageState==Choice.LoadState.IMAGE_READY ||choices.get(i).imageState==Choice.LoadState.NO_IMAGE)){
-                return false;
-            }
-        }
-        this.state = QuestionState.LOADED;
-        ClientData.moveQuestionToReady(this);
-        return true;
-    }
 
 }

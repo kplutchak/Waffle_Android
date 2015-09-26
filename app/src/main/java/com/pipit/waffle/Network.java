@@ -99,11 +99,11 @@ public class Network {
                                                 newans.imageState = Choice.LoadState.NOT_LOADED;
                                             }
                                             nq.addChoice(newans);
-                                        } catch (Exception e1){
-                                            Log.d("Network", "Poorly formatted question " + e1.toString() +  " " + nq.getQuestionBody());
-                                            //Poorly formatted question
-                                            //Todo: Announce or log poorly formatted question.
-                                        }
+                                            } catch (Exception e1){
+                                                Log.d("Network", "Poorly formatted question " + e1.toString() +  " " + nq.getQuestionBody());
+                                                //Poorly formatted question
+                                                //Todo: Announce or log poorly formatted question.
+                                            }
                                     }
                                     if (nq.getChoices().size() == 2) {
                                         ClientData.addQuestion(nq);

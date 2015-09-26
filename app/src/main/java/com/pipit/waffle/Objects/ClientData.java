@@ -190,7 +190,7 @@ public class ClientData {
 
     public synchronized static Question pollReadyQuestions(){
         //If we take out a loaded question, start loading another one
-        if (readyQuestions.size() + questions_being_loaded.size() <= MAXIMUM_IMAGE_LOADED_QUESTIONS){
+        if (readyQuestions.size()<= MAXIMUM_IMAGE_LOADED_QUESTIONS){
             Question q = pollNewQuestions();
             if (q!=null){
                 q.beginImageLoading();
@@ -201,10 +201,18 @@ public class ClientData {
     }
 
     public synchronized static Question pollNewQuestions(){
+        Log.d("ClientData", "pollNewQuestions - ClientData.questions.size() = " + ClientData.questions.size());
         if (ClientData.questions.size() <= 1) {
             ClientData.getNextUnansweredQuestion(answeringFragment.getActivity());
         }
         return questions.poll();
     }
+
+    /**
+     * Func 1 - Just pull all questions and parse the package (dont load images)
+     * Func 2 - Get a question (Called in the AskingFragment screen) - Pull a question from the queue
+     * Func 3 - Loading is done when specified
+     */
+    //public static Question getQuestion
 
 }
