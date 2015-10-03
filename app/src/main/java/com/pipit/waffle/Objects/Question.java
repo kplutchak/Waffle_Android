@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pipit.waffle.Constants;
 import com.pipit.waffle.R;
@@ -40,6 +41,9 @@ public class Question {
         if (ans.getUrl() == null || ans.getUrl().equals("")){
             //No image
             ans.imageState = Choice.LoadState.NO_IMAGE;
+        }
+        else{
+            ans.imageState = Choice.LoadState.NOT_LOADED;
         }
         this.choices.add(ans);
     }
@@ -150,7 +154,8 @@ public class Question {
     }
 
     public boolean loadURLintoBitmap(final Choice ans, String imageUri){
-        ans.imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
+        ImageSize targetSize = new ImageSize(ClientData.getCardWidth(), ClientData.getCardHeight());
+        ans.imageLoader.loadImage(imageUri, targetSize, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 ans.imageState = Choice.LoadState.NOT_LOADED;
@@ -161,8 +166,9 @@ public class Question {
                 ans.imageState = Choice.LoadState.IMAGE_READY;
 
                 boolean isReady = ClientData.checkAndUpdateQuestionStatus(getInstance());
-                Log.d("Question", "Image Loading Completed - Question ready to use = " + Boolean.toString(isReady));
-                //ClientData.getAnsweringFragment().setImageViewBitmap(_image, answerID);
+                Log.d("Question", "Image Loading Completed - Question ready to use = " + " and size is "
+                        + Boolean.toString(isReady)
+                        + loadedImage.getRowBytes()*loadedImage.getHeight());
             }
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {

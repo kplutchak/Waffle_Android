@@ -1,7 +1,15 @@
 package com.pipit.waffle.Objects;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Point;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.pipit.waffle.AnsweringFragment;
 import com.pipit.waffle.AskingFragment;
@@ -32,6 +40,8 @@ public class ClientData {
     private static AnsweringFragment answeringFragment;
 
      /* Data about self */
+    private static int cardWidth;
+    private static int cardHeight;
 
 
     private static AskingFragment askingFragment;
@@ -84,20 +94,29 @@ public class ClientData {
         Log.d("ClientData", "getNextUnAnsweredQuestion: questions.size() = " +Integer.toString(questions.size()));
         Question q = new Question("", Self.getUser());
         Choice a = new Choice();
-        a.setAnswerBody("developer dun goofed");
+        Choice b = new Choice();
+        a.setAnswerBody("Something went wrong trying to load this");
+        b.setAnswerBody("Something went wrong trying to load this");
         q.addChoice(a);
-        q.addChoice(a);
+        q.addChoice(b);
 
         if (questions.size()<1){
-            Network.getAllQuestions(mcontext, numberQuestionsToPull());
-            q.state = Question.QuestionState.NOT_LOADED;
-            q.generateAndSetID();
+            Toast toast = Toast.makeText(mcontext, "No more new questions", Toast.LENGTH_SHORT);
+            toast.show();
+            Network.getAllQuestions(mcontext, numberQuestionsToPull()); //TODO: Currently not pulling new questions.
+            Question emptyquestion = new Question("Nothing left", Self.getUser());
+            emptyquestion.state = Question.QuestionState.NOT_LOADED;
+            //q.generateAndSetID();
             Choice _a = new Choice();
             Choice _b = new Choice();
-            q.addChoice(_a);
-            q.addChoice(_b);
-            idsOfAnsweredQuestions.add(q.getId());
-            return q;
+            _a.setAnswerBody("No Questions Left");
+            _b.setAnswerBody("No Questions Left");
+            _a.setUrl("");
+            _b.setUrl("");
+            emptyquestion.addChoice(_a);
+            emptyquestion.addChoice(_b);
+            idsOfAnsweredQuestions.add(emptyquestion.getId());
+            return emptyquestion;
         }
 
         Log.d("ClientData", "getNextUnAnsweredQuestion: questions.size() = " +Integer.toString(questions.size()));
@@ -215,4 +234,54 @@ public class ClientData {
      */
     //public static Question getQuestion
 
+    public static int getCardWidth(){
+        return cardWidth;
+    }
+    public static int getCardHeight(){
+        return cardHeight;
+    }
+    public static void setCardWidth(int w){
+        cardWidth = w;
+    }
+    public static void setCardHeight(int h){
+        cardHeight = h;
+    }
+
+    /**
+     *
+     */
+    public static void calculateWindowDimensions(Activity mactivity){
+
+        final TypedArray styledAttributes = mactivity.getTheme().obtainStyledAttributes(
+                new int[]{android.R.attr.actionBarSize});
+        int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
+
+        WindowManager wm = (WindowManager) mactivity.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        final Point point = new Point();
+        try {
+            display.getSize(point);
+        } catch (java.lang.NoSuchMethodError ignore) { // Older device
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+
+        int resourceId = mactivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int statusbarheight = mactivity.getResources().getDimensionPixelSize(resourceId);
+
+        // Height of the screen minus the Toolbar and Status Bar
+        final int true_height = point.y - mActionBarSize - statusbarheight;
+
+        Point size = new Point();
+        display.getSize(size);
+        final int width = size.x;
+
+        int margin = (int) (8 * mactivity.getResources().getDisplayMetrics().density);
+
+        cardWidth = width - (2 * margin);
+        cardHeight = true_height/2;
+        Log.d("ClientData", "cardwidth:" + cardWidth + ", cardHeight:" + cardHeight);
+
+    }
 }

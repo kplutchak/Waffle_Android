@@ -83,6 +83,9 @@ public class ToolbarActivity extends ActionBarActivity {
         getWindow().setEnterTransition(new Fade());
         setContentView(R.layout.activity_toolbar);
 
+       //Calculate height and width for clientdata - this is used to load images
+        ClientData.calculateWindowDimensions(this);
+
         // Set the toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

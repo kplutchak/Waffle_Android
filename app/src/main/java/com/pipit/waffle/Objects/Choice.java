@@ -24,14 +24,16 @@ public class Choice {
     public Choice(String answerID){
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
         setVotes(0);
-        imageState = LoadState.NOT_LOADED;
+        url = null;
+        imageState = LoadState.NO_IMAGE;
     }
 
     public Choice(){
         //Todo: Make the constructor require fields, use a 'hasImage' flag for best practice, instead of checking url length at runtime
         answerID = UUID.randomUUID().toString();
         setVotes(0);
-        imageState = LoadState.NOT_LOADED;
+        url = null;
+        imageState = LoadState.NO_IMAGE;
 
     }
 

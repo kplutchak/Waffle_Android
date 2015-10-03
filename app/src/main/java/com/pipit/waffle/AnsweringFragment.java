@@ -107,7 +107,6 @@ public class AnsweringFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         ((ToolbarActivity) getActivity()).current_fragment_id = Constants.ANSWERING_FRAGMENT_ID;
 
         ClientData.setAnsweringFragment(this);
@@ -251,6 +250,7 @@ public class AnsweringFragment extends Fragment  {
 
         setOne.applyTextviewsToCards();
         setTwo.applyTextviewsToCards();
+
         // CardView movement and touch behavior
         final View.OnTouchListener tl = new View.OnTouchListener() {
             public float offsetX;
